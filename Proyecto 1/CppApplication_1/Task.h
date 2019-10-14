@@ -18,7 +18,7 @@
 #include <setjmp.h>
 
 typedef struct process_struct processStruct;
-ypedef struct process_info processInfo;
+typedef struct process_info processInfo;
 
 enum PROCESS_STATE
 {
