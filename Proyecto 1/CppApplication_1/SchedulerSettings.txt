@@ -1,0 +1,8 @@
+Algorithm = RoundRobin
+Mode = preemtive
+ProcessesCount = 6
+TimeExec = 100
+Workload = 7
+Tickets = 0
+Quantum = 0
+MFQS = queues, Algorithm, Moveup, Movedown
