@@ -11,6 +11,7 @@
  * Created on October 5, 2019, 12:07 PM
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
