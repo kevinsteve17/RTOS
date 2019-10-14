@@ -8,7 +8,7 @@
 #define NULL ((void*)0)
 
 
-struct itimerval time_val;
+typedef struct itimerval time_val;
 
 /*
  * Esta funcion permite asignar el intervalo de tiempo en milisegundos, para 

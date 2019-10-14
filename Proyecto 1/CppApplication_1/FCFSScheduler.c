@@ -89,10 +89,10 @@ void FindWaitingTime()
     
 }
 
-void RunFCFSScheduling(process_info* processinfo)
+void RunFCFSScheduling(processInfo* processinfo, int processCount)
 {
     // Create processes
-    for(int i=0;i<;i++)
+    for(int i=0;i<processCount;i++)
     {
         processStruct* process =  malloc(sizeof(processStruct));
         process->ID = i;

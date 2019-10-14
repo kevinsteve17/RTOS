@@ -4,6 +4,8 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>../FCFSScheduler.h</itemPath>
+      <itemPath>../Task.h</itemPath>
       <itemPath>Timer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -13,7 +15,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>../Scheduler.c</itemPath>
+      <itemPath>FCFSScheduler.c</itemPath>
+      <itemPath>PiCalculator.c</itemPath>
+      <itemPath>Scheduler.c</itemPath>
       <itemPath>Timer.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -27,10 +31,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>../FCFSScheduler.c</itemPath>
-    <itemPath>../FCFSScheduler.h</itemPath>
-    <itemPath>../PiCalculator.c</itemPath>
-    <itemPath>../Task.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -46,15 +46,15 @@
           <commandLine>-lm</commandLine>
         </linkerTool>
       </compileType>
-      <item path="../FCFSScheduler.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="../FCFSScheduler.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../PiCalculator.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../Scheduler.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="../Task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PiCalculator.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Scheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Timer.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -81,15 +81,15 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="../FCFSScheduler.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="../FCFSScheduler.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../PiCalculator.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../Scheduler.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="../Task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="PiCalculator.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Scheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Timer.c" ex="false" tool="0" flavor2="0">
       </item>

@@ -35,9 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/5c0/FCFSScheduler.o \
-	${OBJECTDIR}/_ext/5c0/PiCalculator.o \
-	${OBJECTDIR}/_ext/5c0/Scheduler.o \
+	${OBJECTDIR}/FCFSScheduler.o \
+	${OBJECTDIR}/PiCalculator.o \
+	${OBJECTDIR}/Scheduler.o \
 	${OBJECTDIR}/Timer.o
 
 
@@ -65,20 +65,20 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	gcc -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm
 
-${OBJECTDIR}/_ext/5c0/FCFSScheduler.o: ../FCFSScheduler.c
-	${MKDIR} -p ${OBJECTDIR}/_ext/5c0
+${OBJECTDIR}/FCFSScheduler.o: FCFSScheduler.c
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/5c0/FCFSScheduler.o ../FCFSScheduler.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FCFSScheduler.o FCFSScheduler.c
 
-${OBJECTDIR}/_ext/5c0/PiCalculator.o: ../PiCalculator.c
-	${MKDIR} -p ${OBJECTDIR}/_ext/5c0
+${OBJECTDIR}/PiCalculator.o: PiCalculator.c
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/5c0/PiCalculator.o ../PiCalculator.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PiCalculator.o PiCalculator.c
 
-${OBJECTDIR}/_ext/5c0/Scheduler.o: ../Scheduler.c
-	${MKDIR} -p ${OBJECTDIR}/_ext/5c0
+${OBJECTDIR}/Scheduler.o: Scheduler.c
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/5c0/Scheduler.o ../Scheduler.c
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Scheduler.o Scheduler.c
 
 ${OBJECTDIR}/Timer.o: Timer.c
 	${MKDIR} -p ${OBJECTDIR}
