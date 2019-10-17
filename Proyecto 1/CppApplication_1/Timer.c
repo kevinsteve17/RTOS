@@ -4,11 +4,17 @@
  * and open the template in the editor.
  */
 
+
+#include <signal.h>
+#include <sys/time.h>
 #include "Timer.h"
+
 #define NULL ((void*)0)
 
 
-typedef struct itimerval time_val;
+struct timeval timeout, timeAfter ;
+struct itimerval timeout2;
+
 
 /*
  * Esta funcion permite asignar el intervalo de tiempo en milisegundos, para 
@@ -18,15 +24,16 @@ typedef struct itimerval time_val;
 void set_ptTimer(int pWait_Time, void (*signhandler) (int)){
     int sec = pWait_Time / 1000;
     int usec = (pWait_Time % 1000) * 1000;
-/*
-    time_val.it_interval.tv_sec = 0;
-    time_val.it_interval.tv_usec = 0;
-    time_val.it_value.tv_sec = sec;
-    time_val.it_value.tv_usec = usec;
+    timeout2.it_interval.tv_sec = 0;
+    timeout2.it_interval.tv_usec = 0; 
+    timeout2.it_value.tv_sec = 0;
+    timeout2.it_value.tv_usec = 0;
+   
+    
     if (signhandler != NULL)
         signal(SIGALRM, signhandler);
-    setitimer(ITIMER_REAL, &time_val, 0);
-*/
+    setitimer(ITIMER_REAL, &timeout2, 0);
+
 }
 
 /*
@@ -41,7 +48,7 @@ void stop_pTimer(){
  * stop_pTimer, para detenerlo.  
  */
 int get_pTimer(){
-    //getitimer(ITIMER_REAL, &time_val);
+    getitimer(ITIMER_REAL, &timeout2);
     int tiempoRestante = 0; //time_val.it_value.tv_usec;
     stop_pTimer();
     return (tiempoRestante/1000);

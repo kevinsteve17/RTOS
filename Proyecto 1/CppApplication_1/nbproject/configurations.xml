@@ -4,9 +4,10 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../FCFSScheduler.h</itemPath>
-      <itemPath>../Task.h</itemPath>
+      <itemPath>FCFSScheduler.h</itemPath>
+      <itemPath>Task.h</itemPath>
       <itemPath>Timer.h</itemPath>
+      <itemPath>Utilities.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -46,19 +47,21 @@
           <commandLine>-lm</commandLine>
         </linkerTool>
       </compileType>
-      <item path="../FCFSScheduler.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Task.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="FCFSScheduler.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PiCalculator.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Scheduler.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="Task.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Timer.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utilities.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -81,19 +84,21 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="../FCFSScheduler.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Task.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="FCFSScheduler.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PiCalculator.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Scheduler.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="Task.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Timer.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="Timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utilities.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

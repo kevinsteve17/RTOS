@@ -17,6 +17,8 @@
 #include <math.h>
 #include "Task.h"
 #include "FCFSScheduler.h"
+#include "Utilities.h"
+#include "Timer.h"
 
 typedef struct SSettings Settings;
 
@@ -42,7 +44,7 @@ enum Mode
 // Settings struct 
 struct Settings
 {
-    int AlgorithmScheduling;
+    int SchedulingAlgorithm;
     int PMode;
     int ProcessCount;
     int TimeExec;
@@ -84,10 +86,23 @@ void ReadFile()
         tok = strtok(line, equal);
         for(int i=0; i<sizeof(tok); i++)
         {
-            if (strcmp(tok[i],"Algorithm"))
+            if (strcmp(tok[i],"#Algorithm"))
             {
                 
             }
+            else if(strcmp(tok[i],"#Mode"))
+            {
+                
+            }
+            else if(strcmp(tok[i],"#ProcessesCount"))
+            {
+                
+            }
+            else if(strcmp(tok[i],"#TimeExec"))
+            {
+                
+            }
+            
 
             
 
@@ -102,10 +117,20 @@ void ReadFile()
 
 }
 
+/*
 void CreateProcess(int processCount)
 {
+    printf("Creating processes");
 
 }
+*/
+
+void CreateProcess()
+{
+    printf("Creating processes");
+
+}
+
 
 /*
  * Main function
@@ -115,20 +140,26 @@ int main(int argc, char** argv)
     // Capture arguments
     // Select scheduler
     // Create processes
-
+    
+    set_ptTimer(2500, CreateProcess);
+    //CalculatePi(95000);
+    get_pTimer();
+    
     processStruct* clientTask1 =  malloc(sizeof(processStruct));
     processStruct* clientTask2 = malloc(sizeof(processStruct));
     processStruct* clientTask3 = malloc(sizeof(processStruct));
     
+
     clientTask1->ID = 1;
-    clientTask1->Process_State=0;
+ /*   clientTask1->Process_State=0;
     clientTask1->arguments = NULL;
     clientTask1->process_task = CalculatePi();
-
+*/
     clientTask2->ID = 2;
-    clientTask2->Process_State=0;
+/*    clientTask2->Process_State=0;
     clientTask2->arguments = NULL;
     clientTask2->process_task = CalculatePi();
+*/
     
 /*
     clientTask1->ID = 3;
@@ -140,13 +171,13 @@ int main(int argc, char** argv)
     //clientTask2->process_task = CalculatePi();
 
     InitFCFSSched();
-    AddQueueclient(clientTask1);
-    AddQueueclient(clientTask2);
+    Push(clientTask1);
+    Push(clientTask2);
     //AddQueueclient(clientTask3);
     QueueSize();
     PrintQueue();
     
-    RemoveQueueClient(1);
+    Pop();
     
     QueueSize();
     PrintQueue();

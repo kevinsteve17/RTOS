@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include "Utilities.h"
 
 double factorial(int n)
 {
@@ -20,23 +20,37 @@ double factorial(int n)
  * pi = 6 * Arcsin(1/2) => serie: 6 * SumInfinita (1/2)^2n+1  2n!/[4^n * n! * 2n+1]  
  * @return 
  */
-void CalculatePi()
+void CalculatePi(int workload)
 {
+    double realPi = 3.14159265359;
     double result = 0.0;
     int n = 0;
-    double x = 0; 
-    double fac1 = 0;
-    double fac2 = 0;
-    double factor = 0;
+    double factor1 = 0.0;
+    double factor2 = 1.0;
+    double aproxPI = 0.0;
     
-    for(n=0;n<50;n++)
+    
+    for(n=1;n<workload*WORKLOAD;n++)
     {
-      // x = 6.0 * pow(0.5, 2.0*n+1.0);
-      // fac1 = factorial(2.0*n);
-      // fac2 = pow(factorial(n),2);
-      // factor = fac1 / (pow(4,n) * fac2 * (2.0*n+1.0));
-      result += (factorial(2.0*n) / (pow(4,n) * pow(factorial(n),2) * (2.0*n+1.0)))*(6.0 * pow(0.5, 2.0*n+1.0));
+        factor1 = (1.0/(2.0*n-1.0));
+        
+        
+        for (int i = 1; i < n; i++) 
+        {
+            factor2 = factor2 * (((2.0*i)-1.0)/(2.0*i));
+        }
+        
+        aproxPI += 2*factor1 * factor2;
+        factor2 =1.0;
+        
+        if (realPi - aproxPI < 0.00001)
+        {
+            break;
+        }
+        system("clear"); 
+        printf("Serie de taylor de Arcsin para PI: %f \n", aproxPI);
+        
     }
     
-    printf("Serie de taylor de Arcsin para PI: %.63f \n", result);
+    //printf("Serie de taylor de Arcsin para PI: %.63f \n", aproxPI);
 }

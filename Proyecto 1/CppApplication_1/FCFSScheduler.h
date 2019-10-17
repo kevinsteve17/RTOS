@@ -38,8 +38,8 @@ struct FCFSClient
 };
 
 void InitFCFSSched();
-void AddQueueclient(processStruct* process);
-void RemoveQueueClient(int processID);
+void Push(processStruct* process);
+FCFSElement* Pop();
 void PrintQueue();
 void QueueSize();
 

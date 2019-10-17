@@ -17,21 +17,21 @@ void InitFCFSSched()
     ProcessQueue->QueueSize = 0;
 }
 
-void AddQueueclient(processStruct* process)
+void Push(processStruct* process)
 {
     FCFSElement* newProcess = malloc(sizeof(FCFSElement));
     newProcess->clientTask = process;
 
-    if (ProcessQueue->head != NULL)
+    if (ProcessQueue->tail != NULL)
     {
-        ProcessQueue->tail->next = newProcess;
-        ProcessQueue->tail = newProcess;
-        ProcessQueue->tail->next = NULL;
+        newProcess->next = ProcessQueue->head;
+        ProcessQueue->head = newProcess;
     }
     else
     {
-        ProcessQueue->head = newProcess;
         ProcessQueue->tail = newProcess;
+        ProcessQueue->head = newProcess;
+        ProcessQueue->tail->next = NULL;
         //ProcessQueue->head->next = NULL; 
     }
 
@@ -39,33 +39,21 @@ void AddQueueclient(processStruct* process)
     ProcessQueue->QueueSize += 1;
 }
 
-void RemoveQueueClient(int processID)
+FCFSElement* Pop()
 {
     FCFSElement* neededClient = ProcessQueue->head;
     FCFSElement* tempClient = ProcessQueue->head;
 
-    if (neededClient->clientTask->ID == processID)
+    while (neededClient != ProcessQueue->tail)
     {
-        tempClient = ProcessQueue->head->next;
-        ProcessQueue->head = tempClient;
-        ProcessQueue->QueueSize -= 1;
-        free(neededClient);
-        return;
-    }
-
-    while (neededClient->next != NULL)
-    {
-        if (neededClient->clientTask->ID == processID)
-        {
-            tempClient = neededClient->next;
-            free(neededClient);
-            ProcessQueue->QueueSize -= 1;
-            break;
-        }
-
         tempClient = neededClient;
         neededClient =  tempClient->next;
     }
+    
+    ProcessQueue->tail = tempClient;
+    ProcessQueue->QueueSize -= 1;
+    
+    return neededClient;
 }
 
 void QueueSize()
@@ -89,9 +77,30 @@ void FindWaitingTime()
     
 }
 
+void FindTurnAroundTime()
+{
+    
+}
+
+FCFSElement* FindNextArrivalTime()
+{
+    FCFSElement* client = ProcessQueue->head;
+    FCFSElement* nextClient;
+
+    while (client != NULL)
+    {
+        if (client->clientTask->Arrivaltime > ProcessQueue->head->clientTask->Arrivaltime) 
+        {
+            nextClient=client;
+        }
+        client = client->next;
+    }
+    return nextClient;
+}
+
 void RunFCFSScheduling(processInfo* processinfo, int processCount)
 {
-    // Create processes
+    // Create processes and push them into the queue
     for(int i=0;i<processCount;i++)
     {
         processStruct* process =  malloc(sizeof(processStruct));
@@ -99,10 +108,22 @@ void RunFCFSScheduling(processInfo* processinfo, int processCount)
         process->Arrivaltime = processinfo->ArrivalTime;
         process->BurstTime = processinfo->BurstTime;
         process->Process_State = CREATED;
-        AddQueueclient(process);
+        Push(process);
     }
     
-    // 
+    // Find the waiting time for each process
+    FindWaitingTime();
+    
+    // Find the turn around time
+    FindTurnAroundTime();
+    
+    // Init timer 
+    
+    // trigger timer event of the shortest arrival time
+    
+    // execute that process
+    
+    
     
     
     
