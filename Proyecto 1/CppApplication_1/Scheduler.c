@@ -23,9 +23,9 @@
 #include "Timer.h"
 
 // Global Variables
-int GuiWindowWidth = 500;
-int GuiWindowHeight = 500;
-int TotalProcessesNumber = 10;
+int GuiWindowWidth = 100;
+int GuiWindowHeight = 100;
+int TotalProcessesNumber = 5;
 
 // Main window and grid
 GtkWidget *window;
@@ -56,8 +56,11 @@ GtkWidget *frame_queue[4];
 GtkWidget *grid_queue[4];
 GtkWidget *frame_processborder[4][25];
 GtkWidget *grid_processboarder[4][25];
-GtkWidget *label_process[4][25];
 GtkWidget *progressbar_process[4][25];
+
+// GUI - Color and Font overrides
+PangoFontDescription *font_desc;
+GdkColor color;
 
 
 typedef struct SSettings Settings;
@@ -190,13 +193,10 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     sleep(1);
     // Start Scheduling
     //LotteryScheduling();
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,1,"0.1",5);
+    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,WAIT_QUEUE,1,"0.1",5);
+    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,DONE_QUEUE,5,"3.14",100);
+    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,2,"0.135",27);
     
-    sleep(1);
-    // context change process 1 and 5
-    MoveAndUpdateProcessBetweenQueues(CPU_QUEUE,WAIT_QUEUE,1,"0.35",15);
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,5,"0.135",7);
-       
     //----------------------------------------------
     // Contenido de MAIN antes de cambios de RIVERA
     //----------------------------------------------
@@ -301,14 +301,14 @@ static void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
                                               double progressPercentValue)
 {
     // Hide Process
-    gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber]);
+    gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
     
     // Update label and progress bar values
-    gtk_label_set_text(GTK_LABEL(label_process[toQueueNumber][processNumber]), textValue);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber]), progressPercentValue/100);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), textValue);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), progressPercentValue/100);
     
     // Reveal hidden control
-    gtk_widget_show(frame_processborder[toQueueNumber][processNumber]);
+    gtk_widget_show(frame_processborder[toQueueNumber][processNumber-1]);
     
     // Debug Message
     char message[100];
@@ -324,7 +324,7 @@ static void UpdateProcessDisplayedInfo(int queueNumber,
                                        double progressPercentValue)
 {
     // Update label and progress bar
-    gtk_label_set_text(GTK_LABEL(label_process[queueNumber][processNumber]), textValue);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), textValue);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), progressPercentValue/100);
     
     // Debug message
@@ -340,9 +340,9 @@ static void MoveProcessBetweenQueues(int fromQueueNumber,
                                      int processNumber)
 {
     // Hide Process
-    gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber]);
+    gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
     // Reveal hidden control
-    gtk_widget_show(frame_processborder[toQueueNumber][processNumber]);
+    gtk_widget_show(frame_processborder[toQueueNumber][processNumber-1]);
     
     // Debug message
     char message[100];
@@ -376,7 +376,7 @@ static void CreateProcessesQueue(GtkWidget *frame_queue[],
     gtk_widget_set_size_request(frame_queue[i], 80, 300);
 
     // Add Queue Frame to main grid
-    gtk_grid_attach(GTK_GRID(grid_main), frame_queue[i], i,1,1,1);
+    gtk_grid_attach(GTK_GRID(grid_main), frame_queue[i], i+1,0,1,2);
 
     // Create inner grid to hold the X processes in the queue
     grid_queue[i] = gtk_grid_new();
@@ -391,7 +391,6 @@ static void CreateProcessesQueue(GtkWidget *frame_queue[],
 // *****************************************************************************
 static void CreateProcessesInQueue(GtkWidget *frame_processborder[][25],
                                    GtkWidget *grid_processboarder[][25],
-                                   GtkWidget *label_process[][25],
                                    GtkWidget *progressbar_process[][25],
                                    int queueNumber)
 {      
@@ -401,7 +400,7 @@ static void CreateProcessesInQueue(GtkWidget *frame_processborder[][25],
     for (int i=0 ; i<TotalProcessesNumber ;i++)
     {
         // Strings are hard to deal with in C ...
-        snprintf(processName, 12, "P%d", i);
+        snprintf(processName, 12, "P%d", i+1);
         
         // Create Process Frame
         frame_processborder[queueNumber][i] = gtk_frame_new(processName);
@@ -417,23 +416,19 @@ static void CreateProcessesInQueue(GtkWidget *frame_processborder[][25],
         // Add Process Grid to Process Frame
         gtk_container_add (GTK_CONTAINER (frame_processborder[queueNumber][i]), grid_processboarder[queueNumber][i]);
 
-        // Add Label control to Grid
-        label_process[queueNumber][i] = gtk_label_new("N/A");             
-        
-        gtk_grid_attach(GTK_GRID(grid_processboarder[queueNumber][i]), label_process[queueNumber][i], 0,0,1,1);
-
         // Add Process Bar control to Grid
         progressbar_process[queueNumber][i] = gtk_progress_bar_new();
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][i]), 0);
+        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][i]), "N/A");
+        gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][i]), TRUE);
         gtk_grid_attach(GTK_GRID(grid_processboarder[queueNumber][i]), progressbar_process[queueNumber][i], 0,1,1,1);
         
         // (WARNINGS!) Modify the font size for the widgets 
-        //PangoFontDescription *font_desc = pango_font_description_from_string ("Sans 8");
+        //font_desc = pango_font_description_from_string ("Sans 6");
         //gtk_widget_override_font(frame_processborder[queueNumber][i], font_desc);
-        //gtk_widget_override_font(label_process[queueNumber][i], font_desc);
+        //gtk_widget_override_font(progressbar_process[queueNumber][i], font_desc);
         
         // (WARNINGS!) Modify the color for the widgets 
-        GdkColor color;
         //gdk_color_parse ("light blue", &color);
         //gtk_widget_modify_bg (GTK_WIDGET(grid_processboarder[queueNumber][i]), GTK_STATE_NORMAL, &color);
     }
@@ -472,7 +467,6 @@ static void CreateQueuesAndProcessesBoxes()
     {
       CreateProcessesInQueue(frame_processborder,
                              grid_processboarder,
-                             label_process,
                              progressbar_process,
                              i);
     }
@@ -484,10 +478,10 @@ static void CreateEventLogFrameAndControls()
 {
     // 1. Create a frame
     frame_eventlog = gtk_frame_new("Event Log");
-    gtk_widget_set_size_request(frame_eventlog, 300, 80);
+    gtk_widget_set_size_request(frame_eventlog, 300, 10);
 
     // 2. Add the frame to the main grid
-    gtk_grid_attach(GTK_GRID(grid_main), frame_eventlog, 1,0,3,1);
+    gtk_grid_attach(GTK_GRID(grid_main), frame_eventlog, 0,1,1,1);
 
     // 3. Create scroll window control
     scrolled_eventlog = gtk_scrolled_window_new (NULL, NULL);
@@ -501,7 +495,7 @@ static void CreateEventLogFrameAndControls()
     gtk_container_add (GTK_CONTAINER (scrolled_eventlog), textview_eventlog);
 
     // 5. Configure text buffer
-    // Obtaining the buffer associated with the widget. */
+    // Obtaining the buffer associated with the widget. 
     buffer_eventlog = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview_eventlog));
     // Set the default buffer text.
     gtk_text_buffer_set_text (buffer_eventlog, "Project 1 - The Scheduler\n", -1);
