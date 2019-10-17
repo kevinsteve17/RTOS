@@ -42,7 +42,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=`pkg-config --cflags --libs gtk+-3.0` 
 
 # CC Compiler Flags
 CCFLAGS=
@@ -63,7 +63,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	gcc -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm
+	gcc -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm `pkg-config --libs gtk+-3.0`
 
 ${OBJECTDIR}/FCFSScheduler.o: FCFSScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
