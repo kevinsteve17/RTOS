@@ -2,13 +2,13 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */
+ */ 
 
 /* 
  * File:   Lottery_Scheduler.h
- * Author: kevin
+ * Author: FPK
  *
- * Created on October 6, 2019, 4:22 PM
+ * Created on October 16, 2019
  */
 
 #ifndef LOTTERY_SCHEDULER_H
@@ -16,45 +16,57 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <Task.h>
+#include "Task.h"
+#include "Utilities.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Structures
-
 typedef struct Lottery_queue lotteryQueue;
 typedef struct Lottery_client lotteryClient;
 
-// Client tickets
-int lotteryTickets;
+// tickets and assigned process, -1 means not assigned
+// index (ticket number) -> |0 |1 |2 |3 |4 |5 |6 |7 |
+// assigned procces      -> |60|60|60|60|04|04|17|-1|
+int ticketAssignations[MAX_TICKETS];
 
+// raffled tickets
+int tickets[MAX_TICKETS];
+
+// used as raffle control
+int raffleCounter;
 
 struct Lottery_queue 
 {
     lotteryClient* head;
     lotteryClient* tail;
     int QueueSize;
-}
+};
 
 struct Lottery_client 
 {
     processStruct* clientTask;
     lotteryClient* next;
     int clientTickets;
-}
+};
 
-void LotterySchedInit();
+/*void LotterySchedInit();
 void LotterySchedEnd();
 void AddLotteryClient();
 void LotterySwitchContext();
 void SetLotteryTickets();
 void NextLotteryClient();
 void RemoveLotteryClient();
-lotteryClient GetLotteryClient();
+lotteryClient GetLotteryClient();*/
 
-
+void InitLotteryTicketsPool(int *ticketPool, int poolSize);
+void AssignTicketsToProcess(int *ticketPool, int poolSize, int procID, int procPriority);
+void InitTicketRaffle(int *tickets, int ticketPoolSize);
+void PrintLotteryPool(int *ticketPool, int poolSize);
+int TicketRaffle(int *ticketPool, int *tickets);
+void DebugLotteryUtils();
 
 
 #ifdef __cplusplus

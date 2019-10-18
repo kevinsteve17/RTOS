@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/FCFSScheduler.o \
+	${OBJECTDIR}/Lottery_Scheduler.o \
 	${OBJECTDIR}/PiCalculator.o \
 	${OBJECTDIR}/Scheduler.o \
 	${OBJECTDIR}/Timer.o
@@ -63,12 +64,17 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	gcc -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm `pkg-config --libs gtk+-3.0`
+	gcc -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/cppapplication_1 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm -lrt `pkg-config --libs gtk+-3.0`
 
 ${OBJECTDIR}/FCFSScheduler.o: FCFSScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FCFSScheduler.o FCFSScheduler.c
+
+${OBJECTDIR}/Lottery_Scheduler.o: Lottery_Scheduler.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lottery_Scheduler.o Lottery_Scheduler.c
 
 ${OBJECTDIR}/PiCalculator.o: PiCalculator.c
 	${MKDIR} -p ${OBJECTDIR}

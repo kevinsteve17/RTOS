@@ -20,6 +20,8 @@ extern "C" {
     
 #define WORKLOAD 50
 #define MINPROCESSES 5
+#define MAX_TICKETS 200
+#define TOTAL_TICKETS 50
 
 
 
