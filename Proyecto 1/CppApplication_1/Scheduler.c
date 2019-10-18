@@ -28,6 +28,7 @@
 int GuiWindowWidth = 100;
 int GuiWindowHeight = 100;
 int TotalProcessesNumber = 5;
+int CurrentRunningProcess = 0;
 
 // Main window and grid
 GtkWidget *window;
@@ -142,7 +143,7 @@ void ReadFile(Settings* ssettings)
     const int ProcessesCount = 4;
     
     char lastHeader=malloc(sizeof(char));
-    char* line, fileName[256];
+    char line[128], fileName[256];
     const char equal[3] = "\n";
     FILE* settings;
 
@@ -245,27 +246,23 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     
     // Read configuration file
     PrintDebugMessageInDisplay ("Reading config file ...");
-    //ReadConfigurationFile();
-    
-    sleep(1);
-    // Update configuration controls in GUI
-    ModifyDisplayedConfigurationValues("Lottery", "114", "Preemptive", "1045");
+    ModifyDisplayedConfigurationValues(SchedSettings->SchedulingAlgorithm, 
+                                       SchedSettings->Quantum, 
+                                       SchedSettings->PMode, 
+                                       SchedSettings->Tickets);
 
-    sleep(1);
     // Configure Soft timer handler
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
     
-    sleep(1);
-    // Start Scheduling
-    //LotteryScheduling();
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,WAIT_QUEUE,1,"0.1",5);
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,DONE_QUEUE,5,"3.14",100);
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,2,"0.135",27);
     
     //----------------------------------------------
     // Contenido de MAIN antes de cambios de RIVERA
     //----------------------------------------------
+    
+    int processNumber = 1;   
+    CalculatePi(1, 10);
+    
     
     // Capture arguments
     // Select scheduler
@@ -344,17 +341,40 @@ void PrintDebugMessageInDisplay(char debugMessage[])
 
 // *****************************************************************************
 // *****************************************************************************
-void ModifyDisplayedConfigurationValues(char algorithm_string[],
-                                       char quantum_string[],
-                                       char preemptive_string[],
-                                       char totaltickets_string[])
+void ModifyDisplayedConfigurationValues(int algorithm,
+                                       int quantum,
+                                       int preemptive,
+                                       int totaltickets)
 {
-    // Update labels
-    gtk_label_set_text(GTK_LABEL(label_algorithm_value), algorithm_string);
-    gtk_label_set_text(GTK_LABEL(label_quantum_value), quantum_string);  
-    gtk_label_set_text(GTK_LABEL(label_preemtive_value), preemptive_string);  
-    gtk_label_set_text(GTK_LABEL(label_totaltickets_value), totaltickets_string);  
+    char str[10];
     
+    // Update Algorithm and tickets count if applicable
+    if (algorithm == 0)
+    {
+        gtk_label_set_text(GTK_LABEL(label_algorithm_value), "Lottery");
+        
+        sprintf(str, "%d", totaltickets);
+        gtk_label_set_text(GTK_LABEL(label_totaltickets_value), str); 
+    }
+    else
+    {
+        gtk_label_set_text(GTK_LABEL(label_algorithm_value), "FCFS");
+    }
+    
+    // Update preemptive mode
+    if (preemptive == 0)
+    {
+        gtk_label_set_text(GTK_LABEL(label_preemtive_value), "Non-Preemptive");  
+    }
+    else
+    {
+        gtk_label_set_text(GTK_LABEL(label_preemtive_value), "Preemptive"); 
+    }
+    
+    // Update Quantum
+    sprintf(str, "%d", quantum);
+    gtk_label_set_text(GTK_LABEL(label_quantum_value), str);  
+
     // Debug message
     PrintDebugMessageInDisplay("Updating config panel ...");
 }
@@ -364,14 +384,16 @@ void ModifyDisplayedConfigurationValues(char algorithm_string[],
 void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
                                        int toQueueNumber,
                                        int processNumber,
-                                       char textValue[],
+                                       double piValue,
                                        double progressPercentValue)
 {
     // Hide Process
     gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
     
     // Update label and progress bar values
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), textValue);
+    char str[64];
+    sprintf(str, "%f", piValue);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), str);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), progressPercentValue/100);
     
     // Reveal hidden control
@@ -387,17 +409,20 @@ void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
 // *****************************************************************************
 void UpdateProcessDisplayedInfo(int queueNumber,
                                 int processNumber,
-                                char textValue[],
+                                double piValue,
                                 double progressPercentValue)
 {
+    char str[5];
+    sprintf(str, "%.3f", piValue);
     // Update label and progress bar
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), textValue);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), progressPercentValue/100);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber-1]), str);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber-1]), progressPercentValue/100);
     
-    // Debug message
-    char message[100];
-    snprintf(message, 100, "Updating P%d. Progress = %d%%", processNumber, (int)progressPercentValue);
-    PrintDebugMessageInDisplay(message);
+    // Force controls update
+    while(gtk_events_pending())
+    {
+      gtk_main_iteration();
+    }
 }
 
 // *****************************************************************************
@@ -412,7 +437,7 @@ void MoveProcessBetweenQueues(int fromQueueNumber,
     gtk_widget_show(frame_processborder[toQueueNumber][processNumber-1]);
     
     // Debug message
-    char message[100];
+    char message[27];
     snprintf(message, 100, "Moving P%d from queue %d to %d", processNumber, fromQueueNumber, toQueueNumber);
     PrintDebugMessageInDisplay(message);
 }
@@ -491,13 +516,13 @@ static void CreateProcessesInQueue(GtkWidget *frame_processborder[][25],
         gtk_grid_attach(GTK_GRID(grid_processboarder[queueNumber][i]), progressbar_process[queueNumber][i], 0,1,1,1);
         
         // (WARNINGS!) Modify the font size for the widgets 
-        //font_desc = pango_font_description_from_string ("Sans 6");
-        //gtk_widget_override_font(frame_processborder[queueNumber][i], font_desc);
-        //gtk_widget_override_font(progressbar_process[queueNumber][i], font_desc);
+        font_desc = pango_font_description_from_string ("Sans 6");
+        gtk_widget_override_font(frame_processborder[queueNumber][i], font_desc);
+        gtk_widget_override_font(progressbar_process[queueNumber][i], font_desc);
         
         // (WARNINGS!) Modify the color for the widgets 
-        //gdk_color_parse ("light blue", &color);
-        //gtk_widget_modify_bg (GTK_WIDGET(grid_processboarder[queueNumber][i]), GTK_STATE_NORMAL, &color);
+        gdk_color_parse ("light blue", &color);
+        gtk_widget_modify_bg (GTK_WIDGET(grid_processboarder[queueNumber][i]), GTK_STATE_NORMAL, &color);
     }
 }
 
@@ -508,25 +533,25 @@ static void CreateQueuesAndProcessesBoxes()
     // Ready Queue for new processes
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "Ready",
+                         "Ready (0)",
                          READY_QUEUE);
 
     // Waiting Queue for blocked processes
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "Waiting",
+                         "Waiting (1)",
                          WAIT_QUEUE);
 
     // Done Queue for Finished processes
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "Done",
+                         "Done (2)",
                          DONE_QUEUE);
 
     // CPU Queue for running process
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "CPU",
+                         "CPU (3)",
                          CPU_QUEUE);
  
     // Create X processes per Queue (we will later on hide them)
@@ -673,24 +698,7 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
-    /*
-    SchedSettings = malloc(sizeof(Settings));
-    ReadFile(SchedSettings);
-    
-    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
-    printf("Preemtive: %d\n",SchedSettings->PMode);
-    printf("Priority: %s",SchedSettings->Priority);
-    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
-    printf("Quantum: %d\n",SchedSettings->Quantum);
-    printf("Tickets: %d\n",SchedSettings->Tickets);
-    printf("Workload: %s",SchedSettings->WorkLoad);
-    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);*/
-    
-    //CreateProcesses(SchedSettings);
-    
-/*
-    //DebugLotteryUtils();
-
+/*   
     GtkApplication *app;
     int status;
 
@@ -707,8 +715,25 @@ int main(int argc, char** argv)
     g_object_unref (app);
     return status;
  */
+    
+    SchedSettings = malloc(sizeof(Settings));
+    ReadFile(SchedSettings);
+    TotalProcessesNumber = SchedSettings->ProcessCount;
+    
+    // Debug print - show read configuration
+    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %d\n",SchedSettings->PMode);
+    printf("Priority: %s",SchedSettings->Priority);
+    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
+    printf("Quantum: %d\n",SchedSettings->Quantum);
+    printf("Tickets: %d\n",SchedSettings->Tickets);
+    printf("Workload: %s",SchedSettings->WorkLoad);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+    
+    CreateProcesses(SchedSettings);
 
-    DebugLotteryScheduler_01();
+    //CreateProcess();
+    //DebugLotteryScheduler_01();
 
     return 0;
 }
