@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/FCFSScheduler.o \
+	${OBJECTDIR}/Lottery_Scheduler.o \
 	${OBJECTDIR}/PiCalculator.o \
 	${OBJECTDIR}/Scheduler.o \
 	${OBJECTDIR}/Timer.o
@@ -69,6 +70,11 @@ ${OBJECTDIR}/FCFSScheduler.o: FCFSScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FCFSScheduler.o FCFSScheduler.c
+
+${OBJECTDIR}/Lottery_Scheduler.o: Lottery_Scheduler.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Lottery_Scheduler.o Lottery_Scheduler.c
 
 ${OBJECTDIR}/PiCalculator.o: PiCalculator.c
 	${MKDIR} -p ${OBJECTDIR}

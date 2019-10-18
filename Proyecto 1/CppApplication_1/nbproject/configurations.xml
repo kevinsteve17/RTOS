@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>FCFSScheduler.h</itemPath>
+      <itemPath>Lottery_Scheduler.h</itemPath>
       <itemPath>Task.h</itemPath>
       <itemPath>Timer.h</itemPath>
       <itemPath>Utilities.h</itemPath>
@@ -18,6 +19,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>FCFSScheduler.c</itemPath>
+      <itemPath>Lottery_Scheduler.c</itemPath>
       <itemPath>PiCalculator.c</itemPath>
       <itemPath>Scheduler.c</itemPath>
       <itemPath>Timer.c</itemPath>
@@ -54,6 +56,10 @@
       <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="FCFSScheduler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lottery_Scheduler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Lottery_Scheduler.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PiCalculator.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -93,6 +99,10 @@
       <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="FCFSScheduler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lottery_Scheduler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Lottery_Scheduler.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PiCalculator.c" ex="false" tool="0" flavor2="0">
       </item>

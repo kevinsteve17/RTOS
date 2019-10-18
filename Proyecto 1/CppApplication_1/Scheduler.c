@@ -21,6 +21,7 @@
 #include "FCFSScheduler.h"
 #include "Utilities.h"
 #include "Timer.h"
+#include "Lottery_Scheduler.h"
 
 // Global Variables
 int GuiWindowWidth = 100;
@@ -604,8 +605,10 @@ static void StartGUI (GtkApplication *app,
 /*
  * Main function
  */
-int main(int argc, char** argv) 
+int main(int argc, char** argv)  
 {
+    //DebugLotteryUtils();
+
     GtkApplication *app;
     int status;
 
