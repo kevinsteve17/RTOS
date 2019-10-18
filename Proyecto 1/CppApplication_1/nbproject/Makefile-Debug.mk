@@ -43,7 +43,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=`pkg-config --cflags --libs gtk+-3.0` 
+CFLAGS=`pkg-config --cflags --libs gtk+-3.0` -w 
 
 # CC Compiler Flags
 CCFLAGS=
