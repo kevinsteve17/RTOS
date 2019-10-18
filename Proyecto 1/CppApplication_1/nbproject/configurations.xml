@@ -46,7 +46,7 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <commandLine>`pkg-config --cflags --libs gtk+-3.0`</commandLine>
+          <commandLine>`pkg-config --cflags --libs gtk+-3.0` -w</commandLine>
         </cTool>
         <linkerTool>
           <commandlineTool>gcc</commandlineTool>

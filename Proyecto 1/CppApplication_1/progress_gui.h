@@ -19,10 +19,10 @@ extern "C" {
 #endif
 
 // Global Constants
-const int READY_QUEUE = 0;
-const int WAIT_QUEUE = 1;
-const int DONE_QUEUE = 2;
-const int CPU_QUEUE = 3;
+#define READY_QUEUE 0
+#define WAIT_QUEUE 1
+#define DONE_QUEUE 2
+#define CPU_QUEUE 3
     
 /*
  * Function: PrintDebugMessageInDisplay
@@ -48,7 +48,7 @@ void ModifyDisplayedConfigurationValues(int algorithm,     // Lottery/FCFS
 void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,          // See Constants values
                                        int toQueueNumber,            // See Constants values
                                        int processNumber,            // integer value P1 (= 1)
-                                       char textValue[],             // Accumulated value from Taylor series
+                                       double piValue,               // Accumulated value from Taylor series
                                        double progressPercentValue); // double from 0 to 100
 
 /*
@@ -57,7 +57,7 @@ void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,          // See Cons
  */
 void UpdateProcessDisplayedInfo(int queueNumber,              // See Constants values
                                 int processNumber,            // integer value P1 (= 1)
-                                char textValue[],             // Accumulated value from Taylor series
+                                double piValue,               // Accumulated value from Taylor series
                                 double progressPercentValue); // double from 0 to 100
 
 /*

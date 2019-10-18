@@ -242,16 +242,14 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
     
-    sleep(1);
-    // Start Scheduling
-    //LotteryScheduling();
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,WAIT_QUEUE,1,"0.1",5);
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,DONE_QUEUE,5,"3.14",100);
-    MoveAndUpdateProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,2,"0.135",27);
     
     //----------------------------------------------
     // Contenido de MAIN antes de cambios de RIVERA
     //----------------------------------------------
+    
+    int processNumber = 1;   
+    CalculatePi(1, 10);
+    
     
     // Capture arguments
     // Select scheduler
@@ -373,14 +371,16 @@ void ModifyDisplayedConfigurationValues(int algorithm,
 void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
                                        int toQueueNumber,
                                        int processNumber,
-                                       char textValue[],
+                                       double piValue,
                                        double progressPercentValue)
 {
     // Hide Process
     gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
     
     // Update label and progress bar values
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), textValue);
+    char str[64];
+    sprintf(str, "%f", piValue);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), str);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), progressPercentValue/100);
     
     // Reveal hidden control
@@ -396,17 +396,20 @@ void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
 // *****************************************************************************
 void UpdateProcessDisplayedInfo(int queueNumber,
                                 int processNumber,
-                                char textValue[],
+                                double piValue,
                                 double progressPercentValue)
 {
+    char str[5];
+    sprintf(str, "%.3f", piValue);
     // Update label and progress bar
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), textValue);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), progressPercentValue/100);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber-1]), str);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber-1]), progressPercentValue/100);
     
-    // Debug message
-    char message[100];
-    snprintf(message, 100, "Updating P%d. Progress = %d%%", processNumber, (int)progressPercentValue);
-    PrintDebugMessageInDisplay(message);
+    // Force controls update
+    while(gtk_events_pending())
+    {
+      gtk_main_iteration();
+    }
 }
 
 // *****************************************************************************
@@ -421,7 +424,7 @@ void MoveProcessBetweenQueues(int fromQueueNumber,
     gtk_widget_show(frame_processborder[toQueueNumber][processNumber-1]);
     
     // Debug message
-    char message[100];
+    char message[27];
     snprintf(message, 100, "Moving P%d from queue %d to %d", processNumber, fromQueueNumber, toQueueNumber);
     PrintDebugMessageInDisplay(message);
 }
@@ -701,9 +704,10 @@ int main(int argc, char** argv)
     
     CreateFCFSProcesses(SchedSettings);
 
+    /*
     //DebugLotteryUtils();
 
-    /*
+    
     GtkApplication *app;
     int status;
 
@@ -720,6 +724,7 @@ int main(int argc, char** argv)
     g_object_unref (app);
 
     return status;
+    
     */
     
     return 0;
