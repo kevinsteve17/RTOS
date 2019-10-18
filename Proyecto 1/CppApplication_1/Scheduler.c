@@ -158,9 +158,6 @@ void ReadFile(Settings* ssettings)
 
     while((fgets(line, 1000, settings))!= NULL)
     {
-        //printf("%s", line);
-        //printf("%d\n", (int)strlen(line));
-        
         if (line[0] != '#' && isspace(line[0]) == 0) 
         {
             char lineInfo[(int)strlen(line)];
@@ -224,16 +221,6 @@ void ReadFile(Settings* ssettings)
     }
     fclose(settings);
 }
-
-/*
-void CreateProcess(int processCount)
-{
-    printf("Creating processes");
-
-}
-*/
-
-
 
 // *****************************************************************************
 // *****************************************************************************
