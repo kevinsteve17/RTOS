@@ -1,20 +1,20 @@
-#Algorithm
-FCFS
+#Algorithm [0 = Lottery, 1=FCFS]
+1
 
-#Preemtive
-no
+#Preemtive [0=Non Preemtive, 1=Preemtive]
+0
 
 #Priority
-1, 2, 3
-
-#ProcessesCount
-6
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
 
 #ArrivalTime
-100
+100,50,10,15,20,35,40,45,55,60,65,70,75,80,85,90,95,105,110,120,125,130,135,140,145
+
+#ProcessesCount
+25
 
 #Workload
-7, 8, 9
+100,800,9,10,20,35,40,60,65,70,75,80,85,90,105,110,115,120,125,130,135,140,145,150,160
 
 #Tickets
 200
