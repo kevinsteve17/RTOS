@@ -171,7 +171,8 @@ void CreateProcess(int processCount)
 
 void CreateProcess()
 {
-    printf("Creating processes");
+    //printf("Creating processes");
+    PrintDebugMessageInDisplay("Creating processes");
 
 }
 
@@ -192,6 +193,11 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     ModifyDisplayedConfigurationValues("Lottery", "114", "Preemptive", "1045");
 
     sleep(1);
+    // Configure Soft timer handler
+    PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
+    SetQuantumSoftTimerHandler();
+    
+    sleep(1);
     // Start Scheduling
     //LotteryScheduling();
     MoveAndUpdateProcessBetweenQueues(READY_QUEUE,WAIT_QUEUE,1,"0.1",5);
@@ -206,9 +212,10 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     // Select scheduler
     // Create processes
     
-    set_ptTimer(2500, CreateProcess);
-    //CalculatePi(95000);
-    get_pTimer();
+    SetProcessSoftTimerHandler(1, CreateProcess);
+    StartProcessSoftTimer(1, 2000000000);
+
+
     
     processStruct* clientTask1 =  malloc(sizeof(processStruct));
     processStruct* clientTask2 = malloc(sizeof(processStruct));
@@ -251,7 +258,7 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
 
 // *****************************************************************************
 // *****************************************************************************
-static void PrintDebugMessageInDisplay(char debugMessage[])
+void PrintDebugMessageInDisplay(char debugMessage[])
 {
   // Local variables
   char changeOfLine[] = "\n";
@@ -278,10 +285,10 @@ static void PrintDebugMessageInDisplay(char debugMessage[])
 
 // *****************************************************************************
 // *****************************************************************************
-static void ModifyDisplayedConfigurationValues(char algorithm_string[],
-                                               char quantum_string[],
-                                               char preemptive_string[],
-                                               char totaltickets_string[])
+void ModifyDisplayedConfigurationValues(char algorithm_string[],
+                                       char quantum_string[],
+                                       char preemptive_string[],
+                                       char totaltickets_string[])
 {
     // Update labels
     gtk_label_set_text(GTK_LABEL(label_algorithm_value), algorithm_string);
@@ -295,11 +302,11 @@ static void ModifyDisplayedConfigurationValues(char algorithm_string[],
 
 // *****************************************************************************
 // *****************************************************************************
-static void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
-                                              int toQueueNumber,
-                                              int processNumber,
-                                              char textValue[],
-                                              double progressPercentValue)
+void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
+                                       int toQueueNumber,
+                                       int processNumber,
+                                       char textValue[],
+                                       double progressPercentValue)
 {
     // Hide Process
     gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
@@ -319,10 +326,10 @@ static void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
 
 // *****************************************************************************
 // *****************************************************************************
-static void UpdateProcessDisplayedInfo(int queueNumber,
-                                       int processNumber,
-                                       char textValue[],
-                                       double progressPercentValue)
+void UpdateProcessDisplayedInfo(int queueNumber,
+                                int processNumber,
+                                char textValue[],
+                                double progressPercentValue)
 {
     // Update label and progress bar
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber]), textValue);
@@ -336,9 +343,9 @@ static void UpdateProcessDisplayedInfo(int queueNumber,
 
 // *****************************************************************************
 // *****************************************************************************
-static void MoveProcessBetweenQueues(int fromQueueNumber,
-                                     int toQueueNumber,
-                                     int processNumber)
+void MoveProcessBetweenQueues(int fromQueueNumber,
+                              int toQueueNumber,
+                              int processNumber)
 {
     // Hide Process
     gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);

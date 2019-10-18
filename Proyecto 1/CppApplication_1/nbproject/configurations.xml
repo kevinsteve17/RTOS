@@ -50,7 +50,7 @@
         </cTool>
         <linkerTool>
           <commandlineTool>gcc</commandlineTool>
-          <commandLine>-lm `pkg-config --libs gtk+-3.0`</commandLine>
+          <commandLine>-lm -lrt `pkg-config --libs gtk+-3.0`</commandLine>
         </linkerTool>
       </compileType>
       <item path="FCFSScheduler.c" ex="false" tool="0" flavor2="0">

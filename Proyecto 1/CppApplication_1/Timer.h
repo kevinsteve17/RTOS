@@ -18,22 +18,16 @@
 extern "C" {
 #endif
 
+// Quantum
+void SetQuantumSoftTimerHandler();
+int IsQuantumOver();
+void StopQuantumSoftTimer();
+void StartQuantumSoftTimer(int freq_nanosecs);
 
-/*
-    * Esta funcion permite asignar el intervalo de tiempo en milisegundos, para 
-    * enviar una señal. 
-    * signhandler es para indicar la finalizacion de una señal.
-    */
-    void set_ptTimer(int pWait_Time, void (*signhandler) (int));
-   /*
-    * Esta funcion permite detener el ptimer antes de mandar la señal
-    */
-    void stop_pTimer();
-   /*
-    * Retorna cuanto tiempo ha transcurrido y llama a la función
-    * stop_pTimer, para detenerlo.  
-    */
-    int get_pTimer();
+// Process
+void SetProcessSoftTimerHandler(int processNumber ,void (*processHandlerFunction)());
+void StopProcessSoftTimer(int processNumber);
+void StartProcessSoftTimer(int processNumber,int freq_nanosecs);
 
 #ifdef __cplusplus
 }
