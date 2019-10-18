@@ -67,44 +67,40 @@ GdkColor color;
 
 typedef struct SSettings Settings;
 
-enum Algorithm
-{
-    Lottery,
-    FCFS,
-    SJF,
-    RR,
-    PS,
-    PSRR,
-    MQF,
-    MFQS
-};
-
-// Preemtive Mode Enum
-enum Mode
-{
-    Preemtive,
-    NonPreemtive
-};
-
 // Settings struct 
 struct SSettings
 {
-    char* SchedulingAlgorithm;
-    char* PMode;
-    char* ProcessCount;
+    int SchedulingAlgorithm;
+    int PMode;
+    int ProcessCount;
     char* ArrivalTime;
     char* WorkLoad;
-    char* Tickets;
-    char* Quantum;
+    int Tickets;
+    int Quantum;
     char* Priority;
 };
 
 
 Settings* SchedSettings; 
 
-void ConstructSettings(char* lineTokenized)
+void CreateProcesses(Settings* ssettings)
 {
-
+    //printf("Creating processes");
+    //PrintDebugMessageInDisplay("Creating processes");
+/*
+    int processCount = atoi(ssettings->ProcessCount);
+    int arrivalTimes[processCount];
+    
+    int i, j;
+    for (i = 0, j=0; i < ssettings->ArrivalTime; i++)
+    {
+        if (ssettings->ArrivalTime[i] != ',' && isspace(ssettings->ArrivalTime[i])==0) 
+        {
+            arrivalTimes[j] = atoi(ssettings->ArrivalTime[i]);
+            j++;
+        }
+    }
+*/
 
 
 }
@@ -126,9 +122,6 @@ void ReadFile(Settings* ssettings)
     char* line, fileName[256];
     const char equal[3] = "\n";
     FILE* settings;
-    
-
-     // fileName = "SchedulerSettings.txt";
 
     settings = fopen("SchedulerSettings", "r");
 
@@ -140,7 +133,7 @@ void ReadFile(Settings* ssettings)
 
     int lineCount = 0;
 
-    while((fgets(line, 300, settings))!= NULL)
+    while((fgets(line, 1000, settings))!= NULL)
     {
         //printf("%s", line);
         //printf("%d\n", (int)strlen(line));
@@ -151,16 +144,21 @@ void ReadFile(Settings* ssettings)
             
             if (lineCount == Algortihm) 
             {
+                
                 strcpy(lineInfo, line);
-                ssettings->SchedulingAlgorithm = malloc((strlen(lineInfo)+1)*sizeof(char*));
-                memcpy(ssettings->SchedulingAlgorithm, lineInfo, strlen(lineInfo)+1);
+                int lineInfoInt = atoi(lineInfo);
+                ssettings->SchedulingAlgorithm = malloc(sizeof(int));
+                ssettings->SchedulingAlgorithm = lineInfoInt;
+                //memcpy(ssettings->SchedulingAlgorithm, lineInfoInt, 1);
             }
             else if (lineCount == Mode)
             {
                 //char mode[(int)strlen(line)];
                 strcpy(lineInfo, line);
-                ssettings->PMode = malloc((strlen(lineInfo)+1)*sizeof(char*));
-                memcpy(ssettings->PMode, lineInfo, strlen(lineInfo)+1);
+                int lineInfoInt = atoi(lineInfo);
+                ssettings->PMode = malloc(sizeof(int));
+                ssettings->PMode = lineInfoInt;
+                //memcpy(ssettings->PMode, lineInfoInt, strlen(lineInfoInt)+1);
             }
             else if (lineCount == Priority)
             {
@@ -180,8 +178,10 @@ void ReadFile(Settings* ssettings)
             {
                 //char ProcessC[(int)strlen(line)];
                 strcpy(lineInfo, line);
-                ssettings->ProcessCount = malloc((strlen(lineInfo)+1)*sizeof(char*));
-                memcpy(ssettings->ProcessCount, lineInfo, strlen(lineInfo)+1);
+                int lineInfoInt = atoi(lineInfo);
+                ssettings->ProcessCount = malloc(sizeof(int));
+                ssettings->ProcessCount = lineInfoInt;
+                //memcpy(ssettings->ProcessCount, lineInfoInt, strlen(lineInfoInt)+1);
             }
             else if (lineCount == Workload)
             {
@@ -194,20 +194,23 @@ void ReadFile(Settings* ssettings)
             {
                 //char ticks[(int)strlen(line)];
                 strcpy(lineInfo, line);
-                ssettings->Tickets = malloc((strlen(lineInfo)+1)*sizeof(char*));
-                memcpy(ssettings->Tickets, lineInfo, strlen(lineInfo)+1);
+                int lineInfoInt = atoi(lineInfo);
+                ssettings->Tickets = malloc(sizeof(int));
+                ssettings->Tickets = lineInfoInt;
+                //memcpy(ssettings->Tickets, lineInfo, strlen(lineInfo)+1);
             }
             else if (lineCount == Quantum)
             {
                 //char quant[(int)strlen(line)];
                 strcpy(lineInfo, line);
-                ssettings->Quantum = malloc((strlen(lineInfo)+1)*sizeof(char*));
-                memcpy(ssettings->Quantum, lineInfo, strlen(lineInfo)+1);
+                int lineInfoInt = atoi(lineInfo);
+                ssettings->Quantum = malloc(sizeof(int));
+                ssettings->Quantum = lineInfoInt;
+                //memcpy(ssettings->Quantum, lineInfo, strlen(lineInfo)+1);
             }
             lineCount++;
         }
     }
-    
     fclose(settings);
 }
 
@@ -219,12 +222,7 @@ void CreateProcess(int processCount)
 }
 */
 
-void CreateProcess()
-{
-    //printf("Creating processes");
-    PrintDebugMessageInDisplay("Creating processes");
 
-}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -262,8 +260,8 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     // Select scheduler
     // Create processes
     
-    SetProcessSoftTimerHandler(1, CreateProcess);
-    StartProcessSoftTimer(1, 2000000000);
+    //SetProcessSoftTimerHandler(1, CreateProcess);
+    //StartProcessSoftTimer(1, 2000000000);
 
 
     
@@ -664,27 +662,29 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
-<<<<<<< HEAD
+
     SchedSettings = malloc(sizeof(Settings));
     ReadFile(SchedSettings);
     
-    printf("Algorithm: %s",SchedSettings->SchedulingAlgorithm);
-    printf("Preemtive: %s",SchedSettings->PMode);
+    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %d\n",SchedSettings->PMode);
     printf("Priority: %s",SchedSettings->Priority);
-    printf("ProcessCount: %s",SchedSettings->ProcessCount);
-    printf("Quantum: %s\n",SchedSettings->Quantum);
-    printf("Tickets: %s",SchedSettings->Tickets);
+    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
+    printf("Quantum: %d\n",SchedSettings->Quantum);
+    printf("Tickets: %d\n",SchedSettings->Tickets);
     printf("Workload: %s",SchedSettings->WorkLoad);
     printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+    
+    //CreateProcesses(SchedSettings);
+    
   
     
     
 
 /*
-=======
+
     //DebugLotteryUtils();
 
->>>>>>> 9e0086043c40143f88e562b33eea04deace411c0
     GtkApplication *app;
     int status;
 
