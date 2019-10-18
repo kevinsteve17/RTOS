@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <gtk/gtk.h>
+#include <ctype.h>
 #include "progress_gui.h"
 #include "Task.h"
 #include "FCFSScheduler.h"
@@ -85,16 +86,16 @@ enum Mode
 };
 
 // Settings struct 
-struct Settings
+struct SSettings
 {
-    int SchedulingAlgorithm;
-    int PMode;
-    int ProcessCount;
-    int TimeExec;
-    int WorkLoad;
-    int Tickets;
-    int Quantum;
-    int MQFSQueues;
+    char* SchedulingAlgorithm;
+    char* PMode;
+    char* ProcessCount;
+    char* ArrivalTime;
+    char* WorkLoad;
+    char* Tickets;
+    char* Quantum;
+    char* Priority;
 };
 
 
@@ -107,16 +108,28 @@ void ConstructSettings(char* lineTokenized)
 
 }
 
-void ReadFile()
+
+
+void ReadFile(Settings* ssettings)
 {
-    char* tok;
-    char line, fileName[256];
-    const char equal[2] = "=";
+    const int Algortihm = 0;
+    const int Mode = 1;
+    const int Priority = 2;
+    const int ArrivalTime = 3;
+    const int Tickets = 6;
+    const int Workload = 5;
+    const int Quantum = 7;
+    const int ProcessesCount = 4;
+    
+    char lastHeader=malloc(sizeof(char));
+    char* line, fileName[256];
+    const char equal[3] = "\n";
     FILE* settings;
+    
 
      // fileName = "SchedulerSettings.txt";
 
-    settings = fopen(fileName, "r");
+    settings = fopen("SchedulerSettings", "r");
 
     if (settings ==  NULL)
     {
@@ -124,40 +137,77 @@ void ReadFile()
         exit(EXIT_FAILURE);
     }
 
-    while((line = fgetc(settings))!= EOF)
+    int lineCount = 0;
+
+    while((fgets(line, 300, settings))!= NULL)
     {
-        tok = strtok(line, equal);
-        for(int i=0; i<sizeof(tok); i++)
+        //printf("%s", line);
+        //printf("%d\n", (int)strlen(line));
+        
+        if (line[0] != '#' && isspace(line[0]) == 0) 
         {
-            if (strcmp(tok[i],"#Algorithm"))
-            {
-                
-            }
-            else if(strcmp(tok[i],"#Mode"))
-            {
-                
-            }
-            else if(strcmp(tok[i],"#ProcessesCount"))
-            {
-                
-            }
-            else if(strcmp(tok[i],"#TimeExec"))
-            {
-                
-            }
+            char lineInfo[(int)strlen(line)];
             
-
-            
-
+            if (lineCount == Algortihm) 
+            {
+                strcpy(lineInfo, line);
+                ssettings->SchedulingAlgorithm = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->SchedulingAlgorithm, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == Mode)
+            {
+                //char mode[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->PMode = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->PMode, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == Priority)
+            {
+                //char prior[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->Priority = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->Priority, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == ArrivalTime)
+            {
+                //char arrivet[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->ArrivalTime = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->ArrivalTime, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == ProcessesCount)
+            {
+                //char ProcessC[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->ProcessCount = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->ProcessCount, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == Workload)
+            {
+                //char workl[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->WorkLoad = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->WorkLoad, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == Tickets)
+            {
+                //char ticks[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->Tickets = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->Tickets, lineInfo, strlen(lineInfo)+1);
+            }
+            else if (lineCount == Quantum)
+            {
+                //char quant[(int)strlen(line)];
+                strcpy(lineInfo, line);
+                ssettings->Quantum = malloc((strlen(lineInfo)+1)*sizeof(char*));
+                memcpy(ssettings->Quantum, lineInfo, strlen(lineInfo)+1);
+            }
+            lineCount++;
         }
-
     }
-
+    
     fclose(settings);
-
-
-
-
 }
 
 /*
@@ -606,6 +656,22 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv) 
 {
+    SchedSettings = malloc(sizeof(Settings));
+    ReadFile(SchedSettings);
+    
+    printf("Algorithm: %s",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %s",SchedSettings->PMode);
+    printf("Priority: %s",SchedSettings->Priority);
+    printf("ProcessCount: %s",SchedSettings->ProcessCount);
+    printf("Quantum: %s\n",SchedSettings->Quantum);
+    printf("Tickets: %s",SchedSettings->Tickets);
+    printf("Workload: %s",SchedSettings->WorkLoad);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+  
+    
+    
+
+/*
     GtkApplication *app;
     int status;
 
@@ -621,6 +687,11 @@ int main(int argc, char** argv)
     // CleanUp
     g_object_unref (app);
 
+    
+    
+
     return status;
+ */
+    return 0;
 }
 

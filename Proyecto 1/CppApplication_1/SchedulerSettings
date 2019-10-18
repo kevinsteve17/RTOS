@@ -1,0 +1,23 @@
+#Algorithm
+FCFS
+
+#Preemtive
+no
+
+#Priority
+1, 2, 3
+
+#ProcessesCount
+6
+
+#ArrivalTime
+100
+
+#Workload
+7, 8, 9
+
+#Tickets
+200
+
+#Quantum
+100
