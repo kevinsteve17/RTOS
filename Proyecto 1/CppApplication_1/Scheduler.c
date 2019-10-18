@@ -87,17 +87,40 @@ void CreateProcesses(Settings* ssettings)
 {
     //printf("Creating processes");
     //PrintDebugMessageInDisplay("Creating processes");
-/*
-    int processCount = atoi(ssettings->ProcessCount);
-    int arrivalTimes[processCount];
+    int arrivalTimes[ssettings->ProcessCount];
+    char* temp = ssettings->ArrivalTime;
+    char* token = strtok(temp, ",");
     
-    int i, j;
-    for (i = 0, j=0; i < ssettings->ArrivalTime; i++)
+    int j= 0;
+    while(token != NULL)
     {
-        if (ssettings->ArrivalTime[i] != ',' && isspace(ssettings->ArrivalTime[i])==0) 
+        arrivalTimes[j] = token;
+        token = strtok(NULL, ",");
+        j++;
+    }
+    
+    int i;
+    for (i = 0; i < 25; i++) {
+        printf("%d\n", arrivalTimes[i]);
+    }
+
+    
+/*
+    char num[4]="    ";
+    int i, j;
+    for (i = 0, j=0; i < strlen(ssettings->ArrivalTime); i++)
+    {
+        if (ssettings->ArrivalTime[i] != ',' ) 
         {
-            arrivalTimes[j] = atoi(ssettings->ArrivalTime[i]);
-            j++;
+            strcat(num,ssettings->ArrivalTime[i]);
+        }
+        else
+        {
+            if (isspace(ssettings->ArrivalTime[i])==0) 
+            {
+                arrivalTimes[j] = atoi(num);
+                strcpy(num, " ");
+            }
         }
     }
 */
@@ -144,12 +167,10 @@ void ReadFile(Settings* ssettings)
             
             if (lineCount == Algortihm) 
             {
-                
                 strcpy(lineInfo, line);
                 int lineInfoInt = atoi(lineInfo);
                 ssettings->SchedulingAlgorithm = malloc(sizeof(int));
                 ssettings->SchedulingAlgorithm = lineInfoInt;
-                //memcpy(ssettings->SchedulingAlgorithm, lineInfoInt, 1);
             }
             else if (lineCount == Mode)
             {
@@ -158,55 +179,45 @@ void ReadFile(Settings* ssettings)
                 int lineInfoInt = atoi(lineInfo);
                 ssettings->PMode = malloc(sizeof(int));
                 ssettings->PMode = lineInfoInt;
-                //memcpy(ssettings->PMode, lineInfoInt, strlen(lineInfoInt)+1);
             }
             else if (lineCount == Priority)
             {
-                //char prior[(int)strlen(line)];
                 strcpy(lineInfo, line);
                 ssettings->Priority = malloc((strlen(lineInfo)+1)*sizeof(char*));
                 memcpy(ssettings->Priority, lineInfo, strlen(lineInfo)+1);
             }
             else if (lineCount == ArrivalTime)
             {
-                //char arrivet[(int)strlen(line)];
                 strcpy(lineInfo, line);
                 ssettings->ArrivalTime = malloc((strlen(lineInfo)+1)*sizeof(char*));
                 memcpy(ssettings->ArrivalTime, lineInfo, strlen(lineInfo)+1);
             }
             else if (lineCount == ProcessesCount)
             {
-                //char ProcessC[(int)strlen(line)];
                 strcpy(lineInfo, line);
                 int lineInfoInt = atoi(lineInfo);
                 ssettings->ProcessCount = malloc(sizeof(int));
                 ssettings->ProcessCount = lineInfoInt;
-                //memcpy(ssettings->ProcessCount, lineInfoInt, strlen(lineInfoInt)+1);
             }
             else if (lineCount == Workload)
             {
-                //char workl[(int)strlen(line)];
                 strcpy(lineInfo, line);
                 ssettings->WorkLoad = malloc((strlen(lineInfo)+1)*sizeof(char*));
                 memcpy(ssettings->WorkLoad, lineInfo, strlen(lineInfo)+1);
             }
             else if (lineCount == Tickets)
             {
-                //char ticks[(int)strlen(line)];
                 strcpy(lineInfo, line);
                 int lineInfoInt = atoi(lineInfo);
                 ssettings->Tickets = malloc(sizeof(int));
                 ssettings->Tickets = lineInfoInt;
-                //memcpy(ssettings->Tickets, lineInfo, strlen(lineInfo)+1);
             }
             else if (lineCount == Quantum)
             {
-                //char quant[(int)strlen(line)];
                 strcpy(lineInfo, line);
                 int lineInfoInt = atoi(lineInfo);
                 ssettings->Quantum = malloc(sizeof(int));
                 ssettings->Quantum = lineInfoInt;
-                //memcpy(ssettings->Quantum, lineInfo, strlen(lineInfo)+1);
             }
             lineCount++;
         }
