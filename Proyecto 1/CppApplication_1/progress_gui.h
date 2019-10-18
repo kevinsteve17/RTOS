@@ -35,10 +35,10 @@ void PrintDebugMessageInDisplay(char debugMessage[]);    // String
  * Summary: Function to modify the labels that display the current 
  *          configuration read from the .txt config file   
  */
-void ModifyDisplayedConfigurationValues(char algorithm_string[],     // Lottery/FCFS
-                                       char quantum_string[],       // "34"
-                                       char preemptive_string[],    // Preemptive/NonPreemptive
-                                       char totaltickets_string[]); // "122"
+void ModifyDisplayedConfigurationValues(int algorithm,     // Lottery/FCFS
+                                       int quantum,       // "34"
+                                       int preemptive,    // Preemptive/NonPreemptive
+                                       int totaltickets); // "122"
 
 /*
  * Function: MoveAndUpdateProcessBetweenQueues

@@ -142,7 +142,7 @@ void ReadFile(Settings* ssettings)
     const int ProcessesCount = 4;
     
     char lastHeader=malloc(sizeof(char));
-    char* line, fileName[256];
+    char line[128], fileName[256];
     const char equal[3] = "\n";
     FILE* settings;
 
@@ -232,13 +232,11 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     
     // Read configuration file
     PrintDebugMessageInDisplay ("Reading config file ...");
-    //ReadConfigurationFile();
-    
-    sleep(1);
-    // Update configuration controls in GUI
-    ModifyDisplayedConfigurationValues("Lottery", "114", "Preemptive", "1045");
+    ModifyDisplayedConfigurationValues(SchedSettings->SchedulingAlgorithm, 
+                                       SchedSettings->Quantum, 
+                                       SchedSettings->PMode, 
+                                       SchedSettings->Tickets);
 
-    sleep(1);
     // Configure Soft timer handler
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
@@ -331,17 +329,40 @@ void PrintDebugMessageInDisplay(char debugMessage[])
 
 // *****************************************************************************
 // *****************************************************************************
-void ModifyDisplayedConfigurationValues(char algorithm_string[],
-                                       char quantum_string[],
-                                       char preemptive_string[],
-                                       char totaltickets_string[])
+void ModifyDisplayedConfigurationValues(int algorithm,
+                                       int quantum,
+                                       int preemptive,
+                                       int totaltickets)
 {
-    // Update labels
-    gtk_label_set_text(GTK_LABEL(label_algorithm_value), algorithm_string);
-    gtk_label_set_text(GTK_LABEL(label_quantum_value), quantum_string);  
-    gtk_label_set_text(GTK_LABEL(label_preemtive_value), preemptive_string);  
-    gtk_label_set_text(GTK_LABEL(label_totaltickets_value), totaltickets_string);  
+    char str[10];
     
+    // Update Algorithm and tickets count if applicable
+    if (algorithm == 0)
+    {
+        gtk_label_set_text(GTK_LABEL(label_algorithm_value), "Lottery");
+        
+        sprintf(str, "%d", totaltickets);
+        gtk_label_set_text(GTK_LABEL(label_totaltickets_value), str); 
+    }
+    else
+    {
+        gtk_label_set_text(GTK_LABEL(label_algorithm_value), "FCFS");
+    }
+    
+    // Update preemptive mode
+    if (preemptive == 0)
+    {
+        gtk_label_set_text(GTK_LABEL(label_preemtive_value), "Non-Preemptive");  
+    }
+    else
+    {
+        gtk_label_set_text(GTK_LABEL(label_preemtive_value), "Preemptive"); 
+    }
+    
+    // Update Quantum
+    sprintf(str, "%d", quantum);
+    gtk_label_set_text(GTK_LABEL(label_quantum_value), str);  
+
     // Debug message
     PrintDebugMessageInDisplay("Updating config panel ...");
 }
@@ -478,13 +499,13 @@ static void CreateProcessesInQueue(GtkWidget *frame_processborder[][25],
         gtk_grid_attach(GTK_GRID(grid_processboarder[queueNumber][i]), progressbar_process[queueNumber][i], 0,1,1,1);
         
         // (WARNINGS!) Modify the font size for the widgets 
-        //font_desc = pango_font_description_from_string ("Sans 6");
-        //gtk_widget_override_font(frame_processborder[queueNumber][i], font_desc);
-        //gtk_widget_override_font(progressbar_process[queueNumber][i], font_desc);
+        font_desc = pango_font_description_from_string ("Sans 6");
+        gtk_widget_override_font(frame_processborder[queueNumber][i], font_desc);
+        gtk_widget_override_font(progressbar_process[queueNumber][i], font_desc);
         
         // (WARNINGS!) Modify the color for the widgets 
-        //gdk_color_parse ("light blue", &color);
-        //gtk_widget_modify_bg (GTK_WIDGET(grid_processboarder[queueNumber][i]), GTK_STATE_NORMAL, &color);
+        gdk_color_parse ("light blue", &color);
+        gtk_widget_modify_bg (GTK_WIDGET(grid_processboarder[queueNumber][i]), GTK_STATE_NORMAL, &color);
     }
 }
 
@@ -495,25 +516,25 @@ static void CreateQueuesAndProcessesBoxes()
     // Ready Queue for new processes
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "Ready",
+                         "Ready (0)",
                          READY_QUEUE);
 
     // Waiting Queue for blocked processes
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "Waiting",
+                         "Waiting (1)",
                          WAIT_QUEUE);
 
     // Done Queue for Finished processes
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "Done",
+                         "Done (2)",
                          DONE_QUEUE);
 
     // CPU Queue for running process
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "CPU",
+                         "CPU (3)",
                          CPU_QUEUE);
  
     // Create X processes per Queue (we will later on hide them)
@@ -660,10 +681,12 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
-
+    // Read settings file
     SchedSettings = malloc(sizeof(Settings));
     ReadFile(SchedSettings);
+    TotalProcessesNumber = SchedSettings->ProcessCount;
     
+    // Debug print - show read configuration
     printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
     printf("Preemtive: %d\n",SchedSettings->PMode);
     printf("Priority: %s",SchedSettings->Priority);
@@ -672,17 +695,10 @@ int main(int argc, char** argv)
     printf("Tickets: %d\n",SchedSettings->Tickets);
     printf("Workload: %s",SchedSettings->WorkLoad);
     printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
-    
-    //CreateProcesses(SchedSettings);
-    
-  
-    
-    
-
-/*
 
     //DebugLotteryUtils();
 
+    /*
     GtkApplication *app;
     int status;
 
@@ -698,11 +714,9 @@ int main(int argc, char** argv)
     // CleanUp
     g_object_unref (app);
 
-    
-    
-
     return status;
- */
+    */
+    
     return 0;
 }
 
