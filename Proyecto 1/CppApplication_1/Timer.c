@@ -9,17 +9,24 @@
 
 
 // Global Variables
-timer_t timerid;
-struct sigevent sev;
-struct itimerspec its;
-long long freq_nanosecs;
-struct sigaction sa;
+
+// Quantum Variables
+timer_t quantum_timerid;
+struct sigevent quantum_sev;
+struct itimerspec quantum_its;
+struct sigaction quantum_sa;
 int QuantumFlag = 0;
 
+// Process Variables
+timer_t process_timerid[25];
+struct sigevent process_sev[25];
+struct itimerspec process_its[25];
+struct sigaction process_sa[25];
+
 
 // ****************************************************************************
 // ****************************************************************************
-void SoftTimerHandler()
+void QuantumSoftTimerHandler()
 {
     /* Note: calling printf() from a signal handler is not safe
              (and should not be done in production programs), since
@@ -47,46 +54,84 @@ int IsQuantumOver()
    }
 }
 
-
 // ****************************************************************************
 // ****************************************************************************
-void StopSoftTimer()
+void StopProcessSoftTimer(int processNumber)
 {
-    timer_delete(timerid);
+    timer_delete(process_timerid[processNumber-1]);
 }
 
+// ****************************************************************************
+// ****************************************************************************
+void StopQuantumSoftTimer()
+{
+    timer_delete(quantum_timerid);
+}
 
 // ****************************************************************************
 // ****************************************************************************
-void StartSoftTimer(int freq_nanosecs)
+void StartProcessSoftTimer(int processNumber,int freq_nanosecs)
+{  
+    /* Create the timer */
+
+    process_sev[processNumber-1].sigev_notify = SIGEV_SIGNAL;
+    process_sev[processNumber-1].sigev_signo = SIG;
+    process_sev[processNumber-1].sigev_value.sival_ptr = &process_timerid[processNumber-1];
+    timer_create(CLOCKID, &process_sev[processNumber-1], &process_timerid[processNumber-1]);
+
+    /* Start the timer */
+
+    process_its[processNumber-1].it_value.tv_sec = freq_nanosecs / 1000000000;
+    process_its[processNumber-1].it_value.tv_nsec = freq_nanosecs % 1000000000;
+    process_its[processNumber-1].it_interval.tv_sec = process_its[processNumber-1].it_value.tv_sec;
+    process_its[processNumber-1].it_interval.tv_nsec = process_its[processNumber-1].it_value.tv_nsec;
+
+    timer_settime(process_timerid[processNumber-1], 0, &process_its[processNumber-1], NULL);
+}
+
+// ****************************************************************************
+// ****************************************************************************
+void StartQuantumSoftTimer(int freq_nanosecs)
 {
     QuantumFlag = 0;
     
     /* Create the timer */
 
-    sev.sigev_notify = SIGEV_SIGNAL;
-    sev.sigev_signo = SIG;
-    sev.sigev_value.sival_ptr = &timerid;
-    timer_create(CLOCKID, &sev, &timerid);
+    quantum_sev.sigev_notify = SIGEV_SIGNAL;
+    quantum_sev.sigev_signo = SIG;
+    quantum_sev.sigev_value.sival_ptr = &quantum_timerid;
+    timer_create(CLOCKID, &quantum_sev, &quantum_timerid);
 
     /* Start the timer */
 
-    its.it_value.tv_sec = freq_nanosecs / 1000000000;
-    its.it_value.tv_nsec = freq_nanosecs % 1000000000;
-    its.it_interval.tv_sec = its.it_value.tv_sec;
-    its.it_interval.tv_nsec = its.it_value.tv_nsec;
+    quantum_its.it_value.tv_sec = freq_nanosecs / 1000000000;
+    quantum_its.it_value.tv_nsec = freq_nanosecs % 1000000000;
+    quantum_its.it_interval.tv_sec = quantum_its.it_value.tv_sec;
+    quantum_its.it_interval.tv_nsec = quantum_its.it_value.tv_nsec;
 
-    timer_settime(timerid, 0, &its, NULL);
+    timer_settime(quantum_timerid, 0, &quantum_its, NULL);
 }
 
 // ****************************************************************************
 // ****************************************************************************
-void SetSoftTimerHandler()
+void SetProcessSoftTimerHandler(int processNumber ,void (*processHandlerFunction)())
 {
     /* Establish handler for timer signal */
 
-    sa.sa_flags = SA_SIGINFO;
-    sa.sa_sigaction = SoftTimerHandler;
-    sigemptyset(&sa.sa_mask);
-    sigaction(SIG, &sa, NULL);
+    process_sa[processNumber-1].sa_flags = SA_SIGINFO;
+    process_sa[processNumber-1].sa_sigaction = processHandlerFunction;
+    sigemptyset(&process_sa[processNumber-1].sa_mask);
+    sigaction(SIG, &process_sa[processNumber-1], NULL);
+}
+
+// ****************************************************************************
+// ****************************************************************************
+void SetQuantumSoftTimerHandler()
+{
+    /* Establish handler for timer signal */
+
+    quantum_sa.sa_flags = SA_SIGINFO;
+    quantum_sa.sa_sigaction = QuantumSoftTimerHandler;
+    sigemptyset(&quantum_sa.sa_mask);
+    sigaction(SIG, &quantum_sa, NULL);
 }

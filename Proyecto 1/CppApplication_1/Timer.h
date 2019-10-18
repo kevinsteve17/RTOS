@@ -18,10 +18,16 @@
 extern "C" {
 #endif
 
-void SetSoftTimerHandler();
+// Quantum
+void SetQuantumSoftTimerHandler();
 int IsQuantumOver();
-void StopSoftTimer();
-void StartSoftTimer(int freq_nanosecs);
+void StopQuantumSoftTimer();
+void StartQuantumSoftTimer(int freq_nanosecs);
+
+// Process
+void SetProcessSoftTimerHandler(int processNumber ,void (*processHandlerFunction)());
+void StopProcessSoftTimer(int processNumber);
+void StartProcessSoftTimer(int processNumber,int freq_nanosecs);
 
 #ifdef __cplusplus
 }

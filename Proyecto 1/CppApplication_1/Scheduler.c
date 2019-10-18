@@ -170,7 +170,8 @@ void CreateProcess(int processCount)
 
 void CreateProcess()
 {
-    printf("Creating processes");
+    //printf("Creating processes");
+    PrintDebugMessageInDisplay("Creating processes");
 
 }
 
@@ -192,8 +193,8 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
 
     sleep(1);
     // Configure Soft timer handler
-    PrintDebugMessageInDisplay ("Configuring Soft Timer ...");
-    SetSoftTimerHandler();
+    PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
+    SetQuantumSoftTimerHandler();
     
     sleep(1);
     // Start Scheduling
@@ -210,7 +211,8 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     // Select scheduler
     // Create processes
     
-    
+    SetProcessSoftTimerHandler(1, CreateProcess);
+    StartProcessSoftTimer(1, 2000000000);
 
 
     
