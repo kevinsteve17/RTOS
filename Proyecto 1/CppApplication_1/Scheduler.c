@@ -87,17 +87,40 @@ void CreateProcesses(Settings* ssettings)
 {
     //printf("Creating processes");
     //PrintDebugMessageInDisplay("Creating processes");
-/*
-    int processCount = atoi(ssettings->ProcessCount);
-    int arrivalTimes[processCount];
+    int arrivalTimes[ssettings->ProcessCount];
+    char* temp = ssettings->ArrivalTime;
+    char* token = strtok(temp, ",");
     
-    int i, j;
-    for (i = 0, j=0; i < ssettings->ArrivalTime; i++)
+    int j= 0;
+    while(token != NULL)
     {
-        if (ssettings->ArrivalTime[i] != ',' && isspace(ssettings->ArrivalTime[i])==0) 
+        arrivalTimes[j] = token;
+        token = strtok(NULL, ",");
+        j++;
+    }
+    
+    int i;
+    for (i = 0; i < 25; i++) {
+        printf("%d\n", arrivalTimes[i]);
+    }
+
+    
+/*
+    char num[4]="    ";
+    int i, j;
+    for (i = 0, j=0; i < strlen(ssettings->ArrivalTime); i++)
+    {
+        if (ssettings->ArrivalTime[i] != ',' ) 
         {
-            arrivalTimes[j] = atoi(ssettings->ArrivalTime[i]);
-            j++;
+            strcat(num,ssettings->ArrivalTime[i]);
+        }
+        else
+        {
+            if (isspace(ssettings->ArrivalTime[i])==0) 
+            {
+                arrivalTimes[j] = atoi(num);
+                strcpy(num, " ");
+            }
         }
     }
 */
