@@ -128,7 +128,7 @@ void InitTicketRaffle(int *tickets, int poolSize)
 /*
  * Lottery. Returns raffled ticked
  */
-int Lottery(int *ticketPool, int *tickets)
+int Lottery_(int *ticketPool, int *tickets)
 {
     if (raffleCounter<TOTAL_TICKETS)
     {
@@ -171,7 +171,7 @@ void DebugLotteryUtils()
     PrintLotteryPool(tickets, TOTAL_TICKETS);
 
     for (int i = 0; i < TOTAL_TICKETS; ++i) {
-        int proccesToexec = TicketRaffle(ticketAssignations, tickets);
+        int proccesToexec = Lottery_(ticketAssignations, tickets);
         printf("--> Process to Execute: %i \n", proccesToexec);
     }
 }
