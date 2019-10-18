@@ -673,7 +673,7 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
-
+    /*
     SchedSettings = malloc(sizeof(Settings));
     ReadFile(SchedSettings);
     
@@ -684,16 +684,11 @@ int main(int argc, char** argv)
     printf("Quantum: %d\n",SchedSettings->Quantum);
     printf("Tickets: %d\n",SchedSettings->Tickets);
     printf("Workload: %s",SchedSettings->WorkLoad);
-    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);*/
     
     //CreateProcesses(SchedSettings);
     
-  
-    
-    
-
 /*
-
     //DebugLotteryUtils();
 
     GtkApplication *app;
@@ -710,12 +705,11 @@ int main(int argc, char** argv)
 
     // CleanUp
     g_object_unref (app);
-
-    
-    
-
     return status;
  */
+
+    DebugLotteryScheduler_01();
+
     return 0;
 }
 

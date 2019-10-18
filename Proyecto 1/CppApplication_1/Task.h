@@ -40,7 +40,7 @@ struct process_struct
 {
     int ID;
     int Priority;
-    int Tickets[MAX_TICKETS];
+    //int Tickets[MAX_TICKETS];
     int Quantum; 
     int Process_State;
     int Arrivaltime;

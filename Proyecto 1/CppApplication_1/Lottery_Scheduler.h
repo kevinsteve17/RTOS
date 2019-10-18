@@ -61,16 +61,24 @@ lotteryClient GetLotteryClient();*/
 // Lottery scheduler
 void InitLotteryScheduler();
 void AddProcessClient(processStruct* process);
+void RemoveLotteryClient();
+void AssignLotteryTickets();
+void Schedule_NonPreemptive();
+void DeleteProcessClient(int id);
+lotteryClient* SelectProcessFromLotteryQueue(int processID);
 
 // Lotery Utils
 void InitLotteryTicketsPool(int *ticketPool, int poolSize);
 void AssignTicketsToProcess(int *ticketPool, int poolSize, int procID, int procPriority);
+void FreeTicketsForFinishedProcess(int *ticketPool, int poolSize, int porcessID);
 void InitTicketRaffle(int *tickets, int ticketPoolSize);
 int Lottery_(int *ticketPool, int *tickets);
 
 // Debug
 void PrintLotteryPool(int *ticketPool, int poolSize);
 void DebugLotteryUtils();
+void PrintLotteryQueue();
+void DebugLotteryScheduler_01();
 
 #ifdef __cplusplus
 }

@@ -47,7 +47,7 @@ void CalculatePi(int workload)
         {
             break;
         }
-        system("clear"); 
+        // system("clear"); 
         printf("Serie de taylor de Arcsin para PI: %f \n", aproxPI);
         
     }
