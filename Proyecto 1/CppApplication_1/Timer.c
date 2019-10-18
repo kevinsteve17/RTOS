@@ -1,55 +1,92 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <signal.h>
-#include <sys/time.h>
-#include "Timer.h"
+#include <time.h>
 
-#define NULL ((void*)0)
-
-
-struct timeval timeout, timeAfter ;
-struct itimerval timeout2;
+#define CLOCKID CLOCK_REALTIME
+#define SIG SIGRTMIN
 
 
-/*
- * Esta funcion permite asignar el intervalo de tiempo en milisegundos, para 
- * enviar una señal. 
- * signhandler es para indicar la finalizacion de una señal.
- */
-void set_ptTimer(int pWait_Time, void (*signhandler) (int)){
-    int sec = pWait_Time / 1000;
-    int usec = (pWait_Time % 1000) * 1000;
-    timeout2.it_interval.tv_sec = 0;
-    timeout2.it_interval.tv_usec = 0; 
-    timeout2.it_value.tv_sec = 0;
-    timeout2.it_value.tv_usec = 0;
-   
+// Global Variables
+timer_t timerid;
+struct sigevent sev;
+struct itimerspec its;
+long long freq_nanosecs;
+struct sigaction sa;
+int QuantumFlag = 0;
+
+
+// ****************************************************************************
+// ****************************************************************************
+void SoftTimerHandler()
+{
+    /* Note: calling printf() from a signal handler is not safe
+             (and should not be done in production programs), since
+             printf() is not async-signal-safe; see signal-safety(7).
+             Nevertheless, we use printf() here as a simple way of
+             showing that the handler was called. */
     
-    if (signhandler != NULL)
-        signal(SIGALRM, signhandler);
-    setitimer(ITIMER_REAL, &timeout2, 0);
-
+    QuantumFlag = 1;
 }
 
-/*
- * Esta funcion permite detener el ptimer antes de mandar la señal
- */
-void stop_pTimer(){
-     set_ptTimer(0, NULL);
+
+// ****************************************************************************
+// ****************************************************************************
+int IsQuantumOver()
+{
+   if (QuantumFlag == 1)
+   {
+       // Clear QuantumFlag after reading it
+       QuantumFlag = 0;
+       return 1;
+   }
+   else
+   {
+       return 0;
+   }
 }
 
-/*
- * Retorna cuanto tiempo ha transcurrido y llama a la función
- * stop_pTimer, para detenerlo.  
- */
-int get_pTimer(){
-    getitimer(ITIMER_REAL, &timeout2);
-    int tiempoRestante = 0; //time_val.it_value.tv_usec;
-    stop_pTimer();
-    return (tiempoRestante/1000);
+
+// ****************************************************************************
+// ****************************************************************************
+void StopSoftTimer()
+{
+    timer_delete(timerid);
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+void StartSoftTimer(int freq_nanosecs)
+{
+    QuantumFlag = 0;
+    
+    /* Create the timer */
+
+    sev.sigev_notify = SIGEV_SIGNAL;
+    sev.sigev_signo = SIG;
+    sev.sigev_value.sival_ptr = &timerid;
+    timer_create(CLOCKID, &sev, &timerid);
+
+    /* Start the timer */
+
+    its.it_value.tv_sec = freq_nanosecs / 1000000000;
+    its.it_value.tv_nsec = freq_nanosecs % 1000000000;
+    its.it_interval.tv_sec = its.it_value.tv_sec;
+    its.it_interval.tv_nsec = its.it_value.tv_nsec;
+
+    timer_settime(timerid, 0, &its, NULL);
+}
+
+// ****************************************************************************
+// ****************************************************************************
+void SetSoftTimerHandler()
+{
+    /* Establish handler for timer signal */
+
+    sa.sa_flags = SA_SIGINFO;
+    sa.sa_sigaction = SoftTimerHandler;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIG, &sa, NULL);
 }

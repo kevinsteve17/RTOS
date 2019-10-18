@@ -28,46 +28,46 @@ const int CPU_QUEUE = 3;
  * Function: PrintDebugMessageInDisplay
  * Summary: Function to print debug messages in the GUI scrolling window   
  */
-static void PrintDebugMessageInDisplay(char debugMessage[]);    // String
+void PrintDebugMessageInDisplay(char debugMessage[]);    // String
 
 /*
  * Function: ModifyDisplayedConfigurationValues
  * Summary: Function to modify the labels that display the current 
  *          configuration read from the .txt config file   
  */
-static void ModifyDisplayedConfigurationValues(char algorithm_string[],     // Lottery/FCFS
-                                               char quantum_string[],       // "34"
-                                               char preemptive_string[],    // Preemptive/NonPreemptive
-                                               char totaltickets_string[]); // "122"
+void ModifyDisplayedConfigurationValues(char algorithm_string[],     // Lottery/FCFS
+                                       char quantum_string[],       // "34"
+                                       char preemptive_string[],    // Preemptive/NonPreemptive
+                                       char totaltickets_string[]); // "122"
 
 /*
  * Function: MoveAndUpdateProcessBetweenQueues
  * Summary: Function to move process "boxes" in the GUI between
  *          queues. Also updates values of interest.
  */
-static void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,          // See Constants values
-                                              int toQueueNumber,            // See Constants values
-                                              int processNumber,            // integer value P1 (= 1)
-                                              char textValue[],             // Accumulated value from Taylor series
-                                              double progressPercentValue); // double from 0 to 100
+void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,          // See Constants values
+                                       int toQueueNumber,            // See Constants values
+                                       int processNumber,            // integer value P1 (= 1)
+                                       char textValue[],             // Accumulated value from Taylor series
+                                       double progressPercentValue); // double from 0 to 100
 
 /*
  * Function: UpdateProcessDisplayedInfo
  * Summary: Function to update label and progress bar values
  */
-static void UpdateProcessDisplayedInfo(int queueNumber,              // See Constants values
-                                       int processNumber,            // integer value P1 (= 1)
-                                       char textValue[],             // Accumulated value from Taylor series
-                                       double progressPercentValue); // double from 0 to 100
+void UpdateProcessDisplayedInfo(int queueNumber,              // See Constants values
+                                int processNumber,            // integer value P1 (= 1)
+                                char textValue[],             // Accumulated value from Taylor series
+                                double progressPercentValue); // double from 0 to 100
 
 /*
  * Function: MoveProcessBetweenQueues
  * Summary: Function to move process "boxes" in the GUI between
  *          queues.
  */
-static void MoveProcessBetweenQueues(int fromQueueNumber, // See Constants values
-                                     int toQueueNumber,   // See Constants values
-                                     int processNumber);  // integer value P1 (= 1)
+void MoveProcessBetweenQueues(int fromQueueNumber, // See Constants values
+                              int toQueueNumber,   // See Constants values
+                              int processNumber);  // integer value P1 (= 1)
 
 #ifdef __cplusplus
 }

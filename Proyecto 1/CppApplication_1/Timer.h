@@ -18,22 +18,10 @@
 extern "C" {
 #endif
 
-
-/*
-    * Esta funcion permite asignar el intervalo de tiempo en milisegundos, para 
-    * enviar una señal. 
-    * signhandler es para indicar la finalizacion de una señal.
-    */
-    void set_ptTimer(int pWait_Time, void (*signhandler) (int));
-   /*
-    * Esta funcion permite detener el ptimer antes de mandar la señal
-    */
-    void stop_pTimer();
-   /*
-    * Retorna cuanto tiempo ha transcurrido y llama a la función
-    * stop_pTimer, para detenerlo.  
-    */
-    int get_pTimer();
+void SetSoftTimerHandler();
+int IsQuantumOver();
+void StopSoftTimer();
+void StartSoftTimer(int freq_nanosecs);
 
 #ifdef __cplusplus
 }
