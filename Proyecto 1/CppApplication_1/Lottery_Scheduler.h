@@ -52,22 +52,25 @@ struct Lottery_client
     int clientTickets;
 };
 
-/*void LotterySchedInit();
-void LotterySchedEnd();
-void AddLotteryClient();
+/*void LotterySchedEnd();
 void LotterySwitchContext();
 void SetLotteryTickets();
-void NextLotteryClient();
 void RemoveLotteryClient();
 lotteryClient GetLotteryClient();*/
 
+// Lottery scheduler
+void InitLotteryScheduler();
+void AddProcessClient(processStruct* process);
+
+// Lotery Utils
 void InitLotteryTicketsPool(int *ticketPool, int poolSize);
 void AssignTicketsToProcess(int *ticketPool, int poolSize, int procID, int procPriority);
 void InitTicketRaffle(int *tickets, int ticketPoolSize);
-void PrintLotteryPool(int *ticketPool, int poolSize);
-int TicketRaffle(int *ticketPool, int *tickets);
-void DebugLotteryUtils();
+int Lottery_(int *ticketPool, int *tickets);
 
+// Debug
+void PrintLotteryPool(int *ticketPool, int poolSize);
+void DebugLotteryUtils();
 
 #ifdef __cplusplus
 }

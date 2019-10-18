@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <setjmp.h>
+#include "Utilities.h"
 
 typedef struct process_struct processStruct;
 typedef struct process_info processInfo;
@@ -37,13 +38,16 @@ struct process_info
 
 struct process_struct
 {
-    int ID; 
+    int ID;
+    int Priority;
+    int Tickets[MAX_TICKETS];
+    int Quantum; 
     int Process_State;
     int Arrivaltime;
     int BurstTime;
     void (*process_task)(void*);
     void *arguments;
-    jmp_buf environment;
+    sigjmp_buf environment;
 };
 
 #endif	/* TASK_H */

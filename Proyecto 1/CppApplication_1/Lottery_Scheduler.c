@@ -1,3 +1,16 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */ 
+
+/* 
+ * File:   Lottery_Scheduler.h
+ * Author: FPK
+ *
+ * Created on October 16, 2019
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -8,7 +21,43 @@ lotteryQueue* LotteryQueue;
 lotteryClient* LotteryClient;
 
 /*
- * Inits lottery tickets as -1
+ * Inits lottery queue
+ */
+void InitLotteryScheduler()
+{
+    // initialize the Queue
+    LotteryQueue = malloc(sizeof(lotteryQueue));
+    LotteryQueue->head =  NULL;
+    LotteryQueue->tail = NULL;
+    LotteryQueue->QueueSize = 0;
+}
+
+/*
+ * Adds process to client's queue
+ */
+void AddProcessClient(processStruct* process)
+{
+    lotteryClient* newProcess = malloc(sizeof(lotteryClient));
+    newProcess->clientTask = process;
+
+    if (LotteryQueue->tail != NULL)
+    {
+        newProcess->next = LotteryQueue->head;
+        LotteryQueue->head = newProcess;
+    }
+    else
+    {
+        LotteryQueue->tail = newProcess;
+        LotteryQueue->head = newProcess;
+        LotteryQueue->tail->next = NULL;
+    }
+
+    // Update counter
+    LotteryQueue->QueueSize += 1;
+}
+
+/*
+ * Inits lottery tickets as unassigned (-1)
  */
 void InitLotteryTicketsPool(int *ticketPool, int poolSize)
 {
@@ -77,9 +126,9 @@ void InitTicketRaffle(int *tickets, int poolSize)
 }
 
 /*
- * Gets raffled ticked
+ * Lottery. Returns raffled ticked
  */
-int TicketRaffle(int *ticketPool, int *tickets)
+int Lottery(int *ticketPool, int *tickets)
 {
     if (raffleCounter<TOTAL_TICKETS)
     {
