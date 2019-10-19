@@ -258,12 +258,14 @@ void Schedule_NonPreemptive()
     {
         PrintLotteryQueue();
         winnigProcess = Lottery_(ticketAssignations, tickets);
-        CurrentRunningProcess = winnigProcess;
         client = SelectProcessFromLotteryQueue(winnigProcess);
-        //MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess);
+        
+        // Notify GUI and move winning process to CPU
+        CurrentRunningProcess = winnigProcess+1;
+        MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess+1);
+        
         client->clientTask->process_task = CalculatePi(client->clientTask->BurstTime);
-        DeleteProcessClient(winnigProcess);
-        //MoveProcessBetweenQueues(CPU_QUEUE, DONE_QUEUE, winnigProcess);        
+        DeleteProcessClient(winnigProcess);       
     }
 
     printf("No more processes on queue \n");

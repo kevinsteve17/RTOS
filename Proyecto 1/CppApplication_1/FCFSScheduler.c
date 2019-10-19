@@ -9,6 +9,7 @@
 #include "progress_gui.h"
 
 FCFSQueue* ProcessQueue;
+extern int CurrentRunningProcess;
 
 void InitFCFSSched()
 {
@@ -152,7 +153,11 @@ void RunFCFSScheduling(int processArrivT[],int processWorkload[], int processCou
     {
         memcpy(executingProcess, Pop(), sizeof(FCFSElement*));
         printf("Executing Process: %d\n", executingProcess->clientTask->ID);
+        
+        // Notify GUI and move winning process to CPU
+        CurrentRunningProcess = executingProcess->clientTask->ID;
         MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,executingProcess->clientTask->ID);
+        
         executingProcess->clientTask->process_task = CalculatePi(executingProcess->clientTask->BurstTime);
         printf("Process Workload: %d\n", executingProcess->clientTask->BurstTime);
     }

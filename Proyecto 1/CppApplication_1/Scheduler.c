@@ -306,19 +306,27 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
     
+    // ----------------
+    // Start scheduling
+    // ----------------
     if (SchedSettings->SchedulingAlgorithm == 1) 
     {
-        // FCFS
+        // First-Come First-Served
         CreateFCFSProcesses(SchedSettings);
     }
     else
     {
-        // Lottery
+        if (SchedSettings->PMode == 0)
+        {
+            // Non-Preemptive Lottery 
+            StartLotteryScheduling(SchedSettings);
+        }
+        else
+        {
+            // Preemptive Lottery 
+            //StartPreemptiveLotteryScheduling(SchedSettings);
+        }   
     }
-
-    
-
-    
 }
 
 // *****************************************************************************
@@ -712,7 +720,19 @@ int main(int argc, char** argv)
     ReadFile(SchedSettings);
     TotalProcessesNumber = SchedSettings->ProcessCount;
     
- /* GtkApplication *app;
+#ifdef DEBUG
+    // Debug print - show read configuration
+    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %d\n",SchedSettings->PMode);
+    printf("Priority: %s",SchedSettings->Priority);
+    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
+    printf("Quantum: %d\n",SchedSettings->Quantum);
+    printf("Tickets: %d\n",SchedSettings->Tickets);
+    printf("Workload: %s",SchedSettings->WorkLoad);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+#endif
+    
+  GtkApplication *app;
     int status;
 
     // Constructor
@@ -726,31 +746,7 @@ int main(int argc, char** argv)
 
     // CleanUp
     g_object_unref (app);
-    return status;
- */
     
-    
-#ifdef DEBUG
-    // Debug print - show read configuration
-    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
-    printf("Preemtive: %d\n",SchedSettings->PMode);
-    printf("Priority: %s",SchedSettings->Priority);
-    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
-    printf("Quantum: %d\n",SchedSettings->Quantum);
-    printf("Tickets: %d\n",SchedSettings->Tickets);
-    printf("Workload: %s",SchedSettings->WorkLoad);
-    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
-#endif
-
-    if (SchedSettings->PMode == 0)
-    {
-        StartLotteryScheduling(SchedSettings);
-    }
-    else if (SchedSettings->PMode == 1)
-    {
-        CreateFCFSProcesses(SchedSettings);
-    }
-
-    return 0;
+    return status; 
 }
 

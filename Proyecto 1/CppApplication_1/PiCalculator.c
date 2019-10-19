@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Utilities.h"
+#include "progress_gui.h"
+
+extern int CurrentRunningProcess;
 
 double factorial(int n)
 {
@@ -28,8 +31,7 @@ void CalculatePi(int workload)
     double factor1 = 0.0;
     double factor2 = 1.0;
     double aproxPI = 0.0;
-    
-    
+        
     for(n=1;n<workload*WORKLOAD;n++)
     {
         factor1 = (1.0/(2.0*n-1.0));
@@ -47,10 +49,18 @@ void CalculatePi(int workload)
         {
             break;
         }
-        system("clear"); 
-        printf("Arcsin Taylor Aprox PI: %f at iteration: %d\n", aproxPI, n);
+               
+        // Notify the display and update the processes progress bar
+        UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, (n*100)/(workload*WORKLOAD));
         
+        // Debug Print - Show accumulated PI value
+        //system("clear"); 
+        //printf("Serie de taylor de Arcsin para PI: %f \n", aproxPI);
     }
     
+    // Process Complete.
+    MoveProcessBetweenQueues(CPU_QUEUE, DONE_QUEUE, CurrentRunningProcess);
+    
+    // Debug Print - Show accumulated PI value
     //printf("Serie de taylor de Arcsin para PI: %.63f \n", aproxPI);
 }
