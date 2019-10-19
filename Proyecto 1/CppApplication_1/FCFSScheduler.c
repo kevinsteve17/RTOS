@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 #include <stdlib.h>
+#include <string.h>
 #include "FCFSScheduler.h"
 
 FCFSQueue* ProcessQueue;
@@ -49,8 +50,9 @@ FCFSElement* Pop()
         tempClient = neededClient;
         neededClient =  tempClient->next;
     }
-    
+    tempClient->next=NULL;
     ProcessQueue->tail = tempClient;
+    
     ProcessQueue->QueueSize -= 1;
     
     return neededClient;
@@ -82,64 +84,48 @@ void FindTurnAroundTime()
     
 }
 
-int* FindNextArrivalTime(int processCount, int processArrivT[])
+void FindNextArrivalTime(int processCount, processStruct* processArrivT[])
 {
-    int processesByArrivTime[processCount];
-    
-    int i, j, k;
-    for (i = 0, k=0; i < processCount; ++i)
+    int i, j;
+    processStruct* k;
+    for (i = 0; i < processCount; ++i)
     {
         int j;
         for (j=i+1; j < processCount; ++j) 
         {
-            if (processArrivT[i] > processArrivT[j])
+            if (processArrivT[i]->Arrivaltime > processArrivT[j]->Arrivaltime)
             {
                 k = processArrivT[i];
                 processArrivT[i] = processArrivT[j];
                 processArrivT[j] = k;
             }
         }
+        processArrivT[i]->Process_State = WAITING;
     }
     
-    
+#ifdef DEBUG
     int n;
     for (n = 0; n < processCount; n++) {
-        printf("Process: %d Arrival Time: %d\n",n,processArrivT[n]);
+        printf("Process: %d Arrival Time: %d\n",n,processArrivT[n]->Arrivaltime);
     }
+#endif
 
-/*
-    FCFSElement* client = ProcessQueue->head;
-    FCFSElement* nextClient;
-
-    while (client != NULL)
-    {
-        if (client->clientTask->Arrivaltime > ProcessQueue->head->clientTask->Arrivaltime) 
-        {
-            nextClient=client;
-        }
-        client = client->next;
-    }
-*/
-    return processesByArrivTime;
 }
 
 void RunFCFSScheduling(int processArrivT[],int processWorkload[], int processCount)
 {
-    int* processesByArrivTime;
+    processStruct* processList[processCount];
     
-    processesByArrivTime = FindNextArrivalTime(processCount,processArrivT);
     
     // Create processes and push them into the queue
     for(int i=0;i<processCount;i++)
     {
-/*
         processStruct* process =  malloc(sizeof(processStruct));
         process->ID = i;
-        process->Arrivaltime = processinfo->ArrivalTime;
-        process->BurstTime = processinfo->BurstTime;
+        process->Arrivaltime = processArrivT[i];
+        process->BurstTime = processWorkload[i];
         process->Process_State = CREATED;
-        Push(process);
-*/
+        processList[i] = process;
     }
     
     // Find the waiting time for each process
@@ -148,14 +134,24 @@ void RunFCFSScheduling(int processArrivT[],int processWorkload[], int processCou
     // Find the turn around time
     FindTurnAroundTime();
     
-    // Init timer 
-    
-    // trigger timer event of the shortest arrival time
+    FindNextArrivalTime(processCount, processList);
     
     // execute that process
+    InitFCFSSched();
+    for(int i=0;i<processCount;i++)
+    {
+        processList[i]->Process_State = READY;
+        Push(processList[i]);
+    }
     
+    FCFSElement* executingProcess;
     
-    
-    
-    
+    int i;
+    for (i = 0; i < processCount; i++) 
+    {
+        memcpy(executingProcess, Pop(), sizeof(FCFSElement*));
+        printf("Executing Process: %d\n", executingProcess->clientTask->ID);
+        executingProcess->clientTask->process_task = CalculatePi(executingProcess->clientTask->BurstTime);
+        printf("Process Workload: %d\n", executingProcess->clientTask->BurstTime);
+    }
 }
