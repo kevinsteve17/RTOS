@@ -24,11 +24,14 @@
 #include "Timer.h"
 #include "Lottery_Scheduler.h"
 
+#define DEBUG
+
 // Global Variables
 int GuiWindowWidth = 100;
 int GuiWindowHeight = 100;
 int TotalProcessesNumber = 5;
 int CurrentRunningProcess = 0;
+int MaxTickets = 0;
 
 // Main window and grid
 GtkWidget *window;
@@ -66,7 +69,7 @@ PangoFontDescription *font_desc;
 GdkColor color;
 
 
-typedef struct SSettings Settings;
+/*typedef struct SSettings Settings;
 
 // Settings struct 
 struct SSettings
@@ -79,10 +82,68 @@ struct SSettings
     int Tickets;
     int Quantum;
     char* Priority;
-};
+};*/
 
 
 Settings* SchedSettings; 
+
+/*
+ * Starts Lottery Scheduling
+ */
+void StartLotteryScheduling(Settings* settings)
+{
+    printf("--> Process to Execute: %i \n",settings->ProcessCount);
+    int priorities[settings->ProcessCount];
+    MaxTickets = settings->Tickets;
+
+    char* temp = settings->Priority;
+    char* token = strtok(temp, ",");
+    int j= 0;
+
+    while(token != NULL)
+    {
+        priorities[j] = atoi(token);
+        token = strtok(NULL, ",");
+        j++;
+    }
+
+    // init lottery scheduler
+    InitLotteryScheduler();
+
+    // Process creation
+    for(int i=0;i<settings->ProcessCount;i++)
+    {
+        processStruct* process = malloc(sizeof(processStruct));
+        process->ID = i;
+        process->Priority = priorities[i];
+        process->
+        AddProcessClient(process);
+    }
+
+    // init lottery tickets pool
+    InitLotteryTicketsPool(ticketAssignations, settings->Tickets);
+
+#ifdef DEBUG
+    PrintLotteryPool(ticketAssignations, settings->Tickets);
+#endif
+
+    // assign tickets to process
+    AssignLotteryTickets(settings->Tickets);
+
+#ifdef DEBUG
+    PrintLotteryPool(ticketAssignations, settings->Tickets);
+#endif
+
+    // init Lottery
+    InitTicketRaffle(tickets, settings->Tickets);
+
+#ifdef DEBUG
+    PrintLotteryPool(tickets, settings->Tickets);
+#endif
+
+    //start scheduler
+    Schedule_NonPreemptive();    
+}
 
 void CreateFCFSProcesses(Settings* ssettings)
 {
@@ -124,13 +185,7 @@ void CreateFCFSProcesses(Settings* ssettings)
 #endif
     
     RunFCFSScheduling(arrivalTimes, workload, ssettings->ProcessCount);
-
-
-
-
 }
-
-
 
 void ReadFile(Settings* ssettings)
 {
@@ -686,33 +741,7 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
-<<<<<<< HEAD
-/*   
-=======
-    // Read settings file
-    SchedSettings = malloc(sizeof(Settings));
-    ReadFile(SchedSettings);
-    TotalProcessesNumber = SchedSettings->ProcessCount;
-    
-#ifdef DEBUG
-    // Debug print - show read configuration
-    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
-    printf("Preemtive: %d\n",SchedSettings->PMode);
-    printf("Priority: %s",SchedSettings->Priority);
-    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
-    printf("Quantum: %d\n",SchedSettings->Quantum);
-    printf("Tickets: %d\n",SchedSettings->Tickets);
-    printf("Workload: %s",SchedSettings->WorkLoad);
-    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
-#endif
-    
-    CreateFCFSProcesses(SchedSettings);
-
-    /*
-    //DebugLotteryUtils();
-
-    
->>>>>>> 36b10a11be794c3ec857c29442f5f541379ef7fc
+/* 
     GtkApplication *app;
     int status;
 
@@ -734,6 +763,7 @@ int main(int argc, char** argv)
     ReadFile(SchedSettings);
     TotalProcessesNumber = SchedSettings->ProcessCount;
     
+#ifdef DEBUG
     // Debug print - show read configuration
     printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
     printf("Preemtive: %d\n",SchedSettings->PMode);
@@ -743,11 +773,10 @@ int main(int argc, char** argv)
     printf("Tickets: %d\n",SchedSettings->Tickets);
     printf("Workload: %s",SchedSettings->WorkLoad);
     printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
-    
-    CreateProcesses(SchedSettings);
+#endif
 
-    //CreateProcess();
-    //DebugLotteryScheduler_01();
+    //CreateFCFSProcesses(SchedSettings);
+    StartLotteryScheduling(SchedSettings);
 
     return 0;
 }
