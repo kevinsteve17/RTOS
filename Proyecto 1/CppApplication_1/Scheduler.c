@@ -107,6 +107,18 @@ void StartLotteryScheduling(Settings* settings)
         j++;
     }
 
+    int workload[settings->ProcessCount];
+    char* tempWrkload = settings->WorkLoad;
+    char* tokenWL = strtok(tempWrkload, ",");
+    
+    int k=0;
+    while(tokenWL != NULL)
+    {
+        workload[k] = atoi(tokenWL);
+        tokenWL = strtok(NULL, ",");
+        k++;
+    }
+
     // init lottery scheduler
     InitLotteryScheduler();
 
@@ -116,7 +128,7 @@ void StartLotteryScheduling(Settings* settings)
         processStruct* process = malloc(sizeof(processStruct));
         process->ID = i;
         process->Priority = priorities[i];
-        process->
+        process->BurstTime = workload[i];
         AddProcessClient(process);
     }
 
@@ -172,7 +184,6 @@ void CreateFCFSProcesses(Settings* ssettings)
         k++;
     }
     
-
 #ifdef DEBUG
     int i;
     for (i = 0; i < 25; i++) {
@@ -287,7 +298,28 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     // Start of Scheduling Program .... un ejemplo de como actualizar el GUI
     // ---------------------------
     
+    // Read settings file
+    SchedSettings = malloc(sizeof(Settings));
+    ReadFile(SchedSettings);
+    TotalProcessesNumber = SchedSettings->ProcessCount;
+    
+#ifdef DEBUG
+    // Debug print - show read configuration
+    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %d\n",SchedSettings->PMode);
+    printf("Priority: %s",SchedSettings->Priority);
+    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
+    printf("Quantum: %d\n",SchedSettings->Quantum);
+    printf("Tickets: %d\n",SchedSettings->Tickets);
+    printf("Workload: %s",SchedSettings->WorkLoad);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+#endif
+    
+    CreateFCFSProcesses(SchedSettings);
+    
+    
     // Read configuration file
+/*
     PrintDebugMessageInDisplay ("Reading config file ...");
     ModifyDisplayedConfigurationValues(SchedSettings->SchedulingAlgorithm, 
                                        SchedSettings->Quantum, 
@@ -297,61 +329,7 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     // Configure Soft timer handler
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
-    
-    
-    //----------------------------------------------
-    // Contenido de MAIN antes de cambios de RIVERA
-    //----------------------------------------------
-    
-    int processNumber = 1;   
-    CalculatePi(1, 10);
-    
-    
-    // Capture arguments
-    // Select scheduler
-    // Create processes
-    
-    //SetProcessSoftTimerHandler(1, CreateProcess);
-    //StartProcessSoftTimer(1, 2000000000);
-
-
-    
-    processStruct* clientTask1 =  malloc(sizeof(processStruct));
-    processStruct* clientTask2 = malloc(sizeof(processStruct));
-    processStruct* clientTask3 = malloc(sizeof(processStruct));
-    
-
-    clientTask1->ID = 1;
- /*   clientTask1->Process_State=0;
-    clientTask1->arguments = NULL;
-    clientTask1->process_task = CalculatePi();
 */
-    clientTask2->ID = 2;
-/*    clientTask2->Process_State=0;
-    clientTask2->arguments = NULL;
-    clientTask2->process_task = CalculatePi();
-*/
-    
-/*
-    clientTask1->ID = 3;
-    clientTask1->Process_State=0;
-    clientTask1->arguments = NULL;
-    clientTask1->process_task = CalculatePi();
-*/
-
-    //clientTask2->process_task = CalculatePi();
-
-    InitFCFSSched();
-    Push(clientTask1);
-    Push(clientTask2);
-    //AddQueueclient(clientTask3);
-    QueueSize();
-    PrintQueue();
-    
-    Pop();
-    
-    QueueSize();
-    PrintQueue();
     
 }
 
@@ -741,7 +719,7 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
-/* 
+/*    
     GtkApplication *app;
     int status;
 
@@ -759,9 +737,6 @@ int main(int argc, char** argv)
     return status;
  */
     
-    SchedSettings = malloc(sizeof(Settings));
-    ReadFile(SchedSettings);
-    TotalProcessesNumber = SchedSettings->ProcessCount;
     
 #ifdef DEBUG
     // Debug print - show read configuration
@@ -775,8 +750,14 @@ int main(int argc, char** argv)
     printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
 #endif
 
-    //CreateFCFSProcesses(SchedSettings);
-    StartLotteryScheduling(SchedSettings);
+    if (SchedSettings->PMode == 0)
+    {
+        StartLotteryScheduling(SchedSettings);
+    }
+    else if (SchedSettings->PMode == 1)
+    {
+        CreateFCFSProcesses(SchedSettings);
+    }
 
     return 0;
 }

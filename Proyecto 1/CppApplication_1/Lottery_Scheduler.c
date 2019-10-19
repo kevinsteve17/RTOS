@@ -16,9 +16,15 @@
 #include <math.h>
 #include <stdbool.h>
 #include "Lottery_Scheduler.h"
+#include "progress_gui.h"
+
+#define DEBUG
 
 lotteryQueue* LotteryQueue;
 lotteryClient* LotteryClient;
+
+extern int CurrentRunningProcess;
+extern int MaxTickets;
 
 /*
  * Inits lottery queue
@@ -70,7 +76,7 @@ void DeleteProcessClient(int id)
         LotteryQueue->head = target->next;   // Changed head 
         free(target);               // free old head
         LotteryQueue->QueueSize--;
-        FreeTicketsForFinishedProcess(ticketAssignations, TOTAL_TICKETS, id); 
+        FreeTicketsForFinishedProcess(ticketAssignations, MaxTickets, id); 
         return; 
     } 
 
@@ -92,7 +98,7 @@ void DeleteProcessClient(int id)
     prev->next = target->next; 
   
     LotteryQueue->QueueSize--;
-    FreeTicketsForFinishedProcess(ticketAssignations, TOTAL_TICKETS, id); 
+    FreeTicketsForFinishedProcess(ticketAssignations, MaxTickets, id); 
 
     free(target);  // Free memory 
 } 
@@ -127,13 +133,13 @@ void FreeTicketsForFinishedProcess(int *ticketPool, int poolSize, int porcessID)
 /*
  * Iterates over queued process to Assign lottery tickets based on its priority
  */
-void AssignLotteryTickets()
+void AssignLotteryTickets(int totalTickets)
 {
     lotteryClient* client = LotteryQueue->head;
 
     while (client != NULL)
     {
-        AssignTicketsToProcess(ticketAssignations, TOTAL_TICKETS, client->clientTask->ID, client->clientTask->Priority);
+        AssignTicketsToProcess(ticketAssignations, totalTickets, client->clientTask->ID, client->clientTask->Priority);
         client = client->next;
     }
 }
@@ -200,7 +206,7 @@ void InitTicketRaffle(int *tickets, int poolSize)
  */
 int Lottery_(int *ticketPool, int *tickets)
 {
-    while (raffleCounter<TOTAL_TICKETS)
+    while (raffleCounter<MaxTickets)
     {
         int ticketToReturnIndx = tickets[raffleCounter];
         raffleCounter++;       
@@ -247,19 +253,24 @@ void Schedule_NonPreemptive()
     printf("Staring Lottery Scheduler: \n");
     int winnigProcess;
     lotteryClient* client;
-    
+    printf("QueueSize: %i \n", LotteryQueue->QueueSize);
     while (LotteryQueue->QueueSize > 0)
     {
         PrintLotteryQueue();
         winnigProcess = Lottery_(ticketAssignations, tickets);
+        CurrentRunningProcess = winnigProcess;
         client = SelectProcessFromLotteryQueue(winnigProcess);
-        client->clientTask->process_task = CalculatePi(2);
-        DeleteProcessClient(winnigProcess);        
+        //MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess);
+        client->clientTask->process_task = CalculatePi(client->clientTask->BurstTime);
+        DeleteProcessClient(winnigProcess);
+        //MoveProcessBetweenQueues(CPU_QUEUE, DONE_QUEUE, winnigProcess);        
     }
 
     printf("No more processes on queue \n");
     printf("Good bye! \n");
 }
+
+
 
 /*
  * Debug utility, prints ticket pool
@@ -317,7 +328,7 @@ void PrintLotteryQueue()
 void DebugLotteryScheduler_01()
 {
     // process creation
-    processStruct* clientTask1 =  malloc(sizeof(processStruct));
+    processStruct* clientTask1 = malloc(sizeof(processStruct));
     processStruct* clientTask2 = malloc(sizeof(processStruct));
     processStruct* clientTask3 = malloc(sizeof(processStruct));
 
@@ -345,7 +356,7 @@ void DebugLotteryScheduler_01()
     PrintLotteryPool(ticketAssignations, TOTAL_TICKETS);
 
     // assign tickets to process
-    AssignLotteryTickets();
+    AssignLotteryTickets(TOTAL_TICKETS);
     PrintLotteryPool(ticketAssignations, TOTAL_TICKETS);
 
     // init Lottery

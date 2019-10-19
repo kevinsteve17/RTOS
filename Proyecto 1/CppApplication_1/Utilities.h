@@ -20,10 +20,23 @@ extern "C" {
     
 #define WORKLOAD 50
 #define MINPROCESSES 5
-#define MAX_TICKETS 200
+#define MAX_TICKETS 500
 #define TOTAL_TICKETS 50
 
+typedef struct SSettings Settings;
 
+// Settings struct 
+struct SSettings
+{
+    int SchedulingAlgorithm;
+    int PMode;
+    int ProcessCount;
+    char* ArrivalTime;
+    char* WorkLoad;
+    int Tickets;
+    int Quantum;
+    char* Priority;
+};
 
 
 #ifdef __cplusplus
