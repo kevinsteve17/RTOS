@@ -13,6 +13,13 @@ extern int processHasSavedContext;
 extern int processCompletedExecution;
 float CurrentRunningProcressProgress;
 
+// Context Save
+int saved_itt[25];
+double saved_aproxPI[25];
+int saved_factor1[25];
+double saved_factor2[25];
+
+
 double factorial(int n)
 {
   int c;
@@ -32,16 +39,24 @@ double factorial(int n)
 void CalculatePi(int workload)
 {
     double realPi = 3.14159;
-    double result = 0.0;
-    int n = 0;
     double factor1 = 0.0;
     double factor2 = 1.0;
+    int itt = 1;
     double aproxPI = 0.0;
     
-    for(n=1;n<workload*WORKLOAD;n++)
+    if (processHasSavedContext == true)
     {
-        factor1 = (1.0/(2.0*n-1.0));
-        
+        // Load it!
+        itt = saved_itt[CurrentRunningProcess];
+        aproxPI = saved_aproxPI[CurrentRunningProcess];
+        factor1 = saved_factor1[CurrentRunningProcess];
+        factor2 = saved_factor2[CurrentRunningProcess];
+    }
+
+    
+    for(int n=itt;n<workload*WORKLOAD;n++)
+    {
+        factor1 = (1.0/(2.0*n-1.0));      
         
         for (int i = 1; i < n; i++) 
         {
@@ -56,33 +71,38 @@ void CalculatePi(int workload)
             break;
         }
         
-        if (n%WORKLOAD == 0) {
-            // Calculate process var value
-            CurrentRunningProcressProgress = (n*100)/(workload*WORKLOAD);
 
-            // Notify the display and update the processes progress bar
-            UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, CurrentRunningProcressProgress);
+        // Calculate process var value
+        CurrentRunningProcressProgress = (n*100)/(workload*WORKLOAD);
 
-            // Verify is Quantum is over and take actions
-            if (IsQuantumOver() == 1)
-            {
-                PrintDebugMessageInDisplay("Time.");
+        // Notify the display and update the processes progress bar
+        UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, CurrentRunningProcressProgress);
 
-                // Stop the clock while we switch context
-                StopQuantumSoftTimer();
+        // Verify is Quantum is over and take actions
+        if (IsQuantumOver() == 1)
+        {
+            PrintDebugMessageInDisplay("Time.");
 
-                // Process Complete.
-                HideProcessInCPU(CurrentRunningProcess);           
+            // Stop the clock while we switch context
+            StopQuantumSoftTimer();
 
-                // Context Switch
-                processHasSavedContext = true;
-                //ContextSwitch( params? );
+            // Process Complete.
+            HideProcessInCPU(CurrentRunningProcess);           
 
-                // Break out to be able to call CalculatePi again with a new process
-                return;
-            }
+            // Context Switch
+            processHasSavedContext = true;
 
+            // Save context
+            saved_itt[CurrentRunningProcess] = n;
+            saved_aproxPI[CurrentRunningProcess] = aproxPI;
+            saved_factor1[CurrentRunningProcess] = factor1; 
+            saved_factor2[CurrentRunningProcess] = factor2;
+
+            // Break out to be able to call CalculatePi again with a new process
+            return;
         }
+
+        
         
         
         // Debug Print - Show accumulated PI value

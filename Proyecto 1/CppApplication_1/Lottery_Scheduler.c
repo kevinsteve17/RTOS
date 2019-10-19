@@ -305,23 +305,7 @@ void Schedule_Preemptive()
         CurrentRunningProcess = winnigProcess+1;
         // Notify GUI and move winning process to CPU
         MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess+1);
-        
-        // Continue running saved processes
-        if (processHasSavedContext == true)
-        {   
-            // Clear the flag
-            processHasSavedContext = false;
-            
-            // Restore Context
-            //LoadSavedContext();
-        }
-        // Start running new processes
-        else
-        {            
-            // Clear the flag
-            processHasSavedContext = false;
-        }
-        
+                
         // Start Quantum Timer
         StartQuantumSoftTimer(QuantumInMilli*100000000);
    
