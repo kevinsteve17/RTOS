@@ -20,9 +20,7 @@ extern "C" {
 
 // Global Constants
 #define READY_QUEUE 0
-#define WAIT_QUEUE 1
-#define DONE_QUEUE 2
-#define CPU_QUEUE 3
+#define CPU_QUEUE 1
     
 /*
  * Function: PrintDebugMessageInDisplay
@@ -40,16 +38,6 @@ void ModifyDisplayedConfigurationValues(int algorithm,     // Lottery/FCFS
                                        int preemptive,    // Preemptive/NonPreemptive
                                        int totaltickets); // "122"
 
-/*
- * Function: MoveAndUpdateProcessBetweenQueues
- * Summary: Function to move process "boxes" in the GUI between
- *          queues. Also updates values of interest.
- */
-void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,          // See Constants values
-                                       int toQueueNumber,            // See Constants values
-                                       int processNumber,            // integer value P1 (= 1)
-                                       double piValue,               // Accumulated value from Taylor series
-                                       double progressPercentValue); // double from 0 to 100
 
 /*
  * Function: UpdateProcessDisplayedInfo
@@ -68,6 +56,8 @@ void UpdateProcessDisplayedInfo(int queueNumber,              // See Constants v
 void MoveProcessBetweenQueues(int fromQueueNumber, // See Constants values
                               int toQueueNumber,   // See Constants values
                               int processNumber);  // integer value P1 (= 1)
+
+void HideProcessInCPU (int processNumber);
 
 #ifdef __cplusplus
 }

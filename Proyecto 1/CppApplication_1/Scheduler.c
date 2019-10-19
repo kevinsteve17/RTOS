@@ -59,11 +59,11 @@ GtkWidget *scrolled_eventlog;
 GtkTextMark *mark;
 
 // Queue - controls
-GtkWidget *frame_queue[4];
-GtkWidget *grid_queue[4];
-GtkWidget *frame_processborder[4][25];
-GtkWidget *grid_processboarder[4][25];
-GtkWidget *progressbar_process[4][25];
+GtkWidget *frame_queue[2];
+GtkWidget *grid_queue[2];
+GtkWidget *frame_processborder[2][25];
+GtkWidget *grid_processboarder[2][25];
+GtkWidget *progressbar_process[2][25];
 
 // GUI - Color and Font overrides
 PangoFontDescription *font_desc;
@@ -168,8 +168,6 @@ void StartLotteryScheduling(Settings* settings)
 
 void CreateFCFSProcesses(Settings* ssettings)
 {
-    //printf("Creating processes");
-    //PrintDebugMessageInDisplay("Creating processes");
     int arrivalTimes[ssettings->ProcessCount];
     char* tempArrivT = ssettings->ArrivalTime;
     char* tokenAT = strtok(tempArrivT, ",");
@@ -398,31 +396,6 @@ void ModifyDisplayedConfigurationValues(int algorithm,
     PrintDebugMessageInDisplay("Updating config panel ...");
 }
 
-// *****************************************************************************
-// *****************************************************************************
-void MoveAndUpdateProcessBetweenQueues(int fromQueueNumber,
-                                       int toQueueNumber,
-                                       int processNumber,
-                                       double piValue,
-                                       double progressPercentValue)
-{
-    // Hide Process
-    gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
-    
-    // Update label and progress bar values
-    char str[64];
-    sprintf(str, "%f", piValue);
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), str);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), progressPercentValue/100);
-    
-    // Reveal hidden control
-    gtk_widget_show(frame_processborder[toQueueNumber][processNumber-1]);
-    
-    // Debug Message
-    char message[100];
-    snprintf(message, 100, "Moving P%d from queue %d to %d. Progress = %d%%", processNumber, fromQueueNumber, toQueueNumber, (int)progressPercentValue);
-    PrintDebugMessageInDisplay(message);
-}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -434,8 +407,10 @@ void UpdateProcessDisplayedInfo(int queueNumber,
     char str[5];
     sprintf(str, "%.3f", piValue);
     // Update label and progress bar
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber-1]), str);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[queueNumber][processNumber-1]), progressPercentValue/100);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[0][processNumber-1]), str);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[0][processNumber-1]), progressPercentValue/100);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[1][processNumber-1]), str);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[1][processNumber-1]), progressPercentValue/100);
     
     // Force controls update
     while(gtk_events_pending())
@@ -449,35 +424,30 @@ void UpdateProcessDisplayedInfo(int queueNumber,
 void MoveProcessBetweenQueues(int fromQueueNumber,
                               int toQueueNumber,
                               int processNumber)
-{
-    // Read the values from CPU queue (they should always be the latest)
-    // and update the queue the tasks are moving to
-    
-    // Update label and progress bar
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), 
-                                               gtk_progress_bar_get_text(GTK_PROGRESS_BAR(progressbar_process[CPU_QUEUE][processNumber-1])));
-    
-    if (toQueueNumber != DONE_QUEUE)
-    {
-        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), 
-                                      gtk_progress_bar_get_fraction(GTK_PROGRESS_BAR(progressbar_process[CPU_QUEUE][processNumber-1])));
-    }
-    else
-    {
-        // 100% progress bar
-        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), 100);
-    }
-    
-    // Hide Process
-    gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
-    // Reveal hidden control
+{    
+    // Show Process in CPU
     gtk_widget_show(frame_processborder[toQueueNumber][processNumber-1]);
     
     // Debug message
-    char message[27];
-    snprintf(message, 100, "Moving P%d from queue %d to %d", processNumber, fromQueueNumber, toQueueNumber);
+    char message[40];
+    snprintf(message, 100, "Moving P%d from Ready to CPU", processNumber);
     PrintDebugMessageInDisplay(message);
 }
+
+
+// *****************************************************************************
+// *****************************************************************************
+void HideProcessInCPU (int processNumber)
+{    
+    // Hide Process
+    gtk_widget_hide(frame_processborder[1][processNumber-1]);
+    
+    // Debug message
+    char message[40];
+    snprintf(message, 100, "Moving P%d from CPU to Ready", processNumber);
+    PrintDebugMessageInDisplay(message);
+}
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -573,26 +543,14 @@ static void CreateQueuesAndProcessesBoxes()
                          "Ready (0)",
                          READY_QUEUE);
 
-    // Waiting Queue for blocked processes
-    CreateProcessesQueue(frame_queue,
-                         grid_queue,
-                         "Waiting (1)",
-                         WAIT_QUEUE);
-
-    // Done Queue for Finished processes
-    CreateProcessesQueue(frame_queue,
-                         grid_queue,
-                         "Done (2)",
-                         DONE_QUEUE);
-
     // CPU Queue for running process
     CreateProcessesQueue(frame_queue,
                          grid_queue,
-                         "CPU (3)",
+                         "CPU (1)",
                          CPU_QUEUE);
  
     // Create X processes per Queue (we will later on hide them)
-    for (int i=0; i<4; i++)
+    for (int i=0; i<2; i++)
     {
       CreateProcessesInQueue(frame_processborder,
                              grid_processboarder,
@@ -722,8 +680,6 @@ static void StartGUI (GtkApplication *app,
     // 5. Finally, show all controls
     gtk_widget_show_all (window);
     // 6. Hide processes in wait, done and cpu queues until they are scheduled 
-    HideProcessesInQueue(WAIT_QUEUE);
-    HideProcessesInQueue(DONE_QUEUE);
     HideProcessesInQueue(CPU_QUEUE);
 
     // 7. Debug display initialization complete
