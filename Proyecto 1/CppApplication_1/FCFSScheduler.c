@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "FCFSScheduler.h"
+#include "progress_gui.h"
 
 FCFSQueue* ProcessQueue;
 
@@ -151,6 +152,7 @@ void RunFCFSScheduling(int processArrivT[],int processWorkload[], int processCou
     {
         memcpy(executingProcess, Pop(), sizeof(FCFSElement*));
         printf("Executing Process: %d\n", executingProcess->clientTask->ID);
+        MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE,executingProcess->clientTask->ID);
         executingProcess->clientTask->process_task = CalculatePi(executingProcess->clientTask->BurstTime);
         printf("Process Workload: %d\n", executingProcess->clientTask->BurstTime);
     }

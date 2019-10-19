@@ -222,32 +222,8 @@ void ReadFile(Settings* ssettings)
 // *****************************************************************************
 static void DoScheduling(GtkWidget *button_start, gpointer data) 
 {
-    // ---------------------------
-    // Start of Scheduling Program .... un ejemplo de como actualizar el GUI
-    // ---------------------------
-    
-    // Read settings file
-    SchedSettings = malloc(sizeof(Settings));
-    ReadFile(SchedSettings);
-    TotalProcessesNumber = SchedSettings->ProcessCount;
-    
-#ifdef DEBUG
-    // Debug print - show read configuration
-    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
-    printf("Preemtive: %d\n",SchedSettings->PMode);
-    printf("Priority: %s",SchedSettings->Priority);
-    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
-    printf("Quantum: %d\n",SchedSettings->Quantum);
-    printf("Tickets: %d\n",SchedSettings->Tickets);
-    printf("Workload: %s",SchedSettings->WorkLoad);
-    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
-#endif
-    
-    CreateFCFSProcesses(SchedSettings);
-    
-    
+  
     // Read configuration file
-/*
     PrintDebugMessageInDisplay ("Reading config file ...");
     ModifyDisplayedConfigurationValues(SchedSettings->SchedulingAlgorithm, 
                                        SchedSettings->Quantum, 
@@ -257,7 +233,19 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     // Configure Soft timer handler
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
-*/
+    
+    if (SchedSettings->SchedulingAlgorithm == 1) 
+    {
+        // FCFS
+        CreateFCFSProcesses(SchedSettings);
+    }
+    else
+    {
+        // Lottery
+    }
+
+    
+
     
 }
 
@@ -648,6 +636,23 @@ static void StartGUI (GtkApplication *app,
 int main(int argc, char** argv)  
 {
     //DebugLotteryUtils();
+    
+    // Read settings file
+    SchedSettings = malloc(sizeof(Settings));
+    ReadFile(SchedSettings);
+    TotalProcessesNumber = SchedSettings->ProcessCount;
+    
+#ifdef DEBUG
+    // Debug print - show read configuration
+    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %d\n",SchedSettings->PMode);
+    printf("Priority: %s",SchedSettings->Priority);
+    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
+    printf("Quantum: %d\n",SchedSettings->Quantum);
+    printf("Tickets: %d\n",SchedSettings->Tickets);
+    printf("Workload: %s",SchedSettings->WorkLoad);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+#endif
     
     GtkApplication *app;
     int status;
