@@ -363,14 +363,14 @@ void ModifyDisplayedConfigurationValues(int algorithm,
                                        int preemptive,
                                        int totaltickets)
 {
-    char str[10];
+    char str[50];
     
     // Update Algorithm and tickets count if applicable
     if (algorithm == 0)
     {
         gtk_label_set_text(GTK_LABEL(label_algorithm_value), "Lottery");
         
-        sprintf(str, "%d", totaltickets);
+        snprintf(str, 50, "%d", totaltickets);
         gtk_label_set_text(GTK_LABEL(label_totaltickets_value), str); 
     }
     else
@@ -389,7 +389,8 @@ void ModifyDisplayedConfigurationValues(int algorithm,
     }
     
     // Update Quantum
-    sprintf(str, "%d", quantum);
+    // Convert double to string 
+    snprintf(str, 50, "%d", quantum);
     gtk_label_set_text(GTK_LABEL(label_quantum_value), str);  
 
     // Debug message
@@ -404,13 +405,18 @@ void UpdateProcessDisplayedInfo(int queueNumber,
                                 double piValue,
                                 double progressPercentValue)
 {
-    char str[5];
-    sprintf(str, "%.3f", piValue);
+    // Convert double to string 
+    char output[50];
+    snprintf(output, 50, "%f", piValue);
+   
+    // Calculate process bar value
+    double progress = progressPercentValue/100;
+
     // Update label and progress bar
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[0][processNumber-1]), str);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[0][processNumber-1]), progressPercentValue/100);
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[1][processNumber-1]), str);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[1][processNumber-1]), progressPercentValue/100);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[0][processNumber-1]), output);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[0][processNumber-1]), progress);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[1][processNumber-1]), output);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[1][processNumber-1]), progress);
     
     // Force controls update
     while(gtk_events_pending())
