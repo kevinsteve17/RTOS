@@ -30,7 +30,7 @@ double factorial(int n)
  */
 void CalculatePi(int workload)
 {
-    double realPi = 3.14159265359;
+    double realPi = 3.14159;
     double result = 0.0;
     int n = 0;
     double factor1 = 0.0;
