@@ -11,6 +11,7 @@ extern int CurrentRunningProcess;
 extern int QuantumInMilli;
 extern int processHasSavedContext;
 extern int processCompletedExecution;
+float CurrentRunningProcressProgress;
 
 double factorial(int n)
 {
@@ -54,9 +55,12 @@ void CalculatePi(int workload)
         {
             break;
         }
-               
+        
+        // Calculate process var value
+        CurrentRunningProcressProgress = (n*100)/(workload*WORKLOAD);
+                
         // Notify the display and update the processes progress bar
-        UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, (n*100)/(workload*WORKLOAD));
+        UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, CurrentRunningProcressProgress);
         
         // Verify is Quantum is over and take actions
         if (IsQuantumOver() == 1)
@@ -67,7 +71,7 @@ void CalculatePi(int workload)
             StopQuantumSoftTimer();
             
             // Process Complete.
-            MoveProcessBetweenQueues(CPU_QUEUE, WAIT_QUEUE, CurrentRunningProcess);            
+            HideProcessInCPU(CurrentRunningProcess);           
             
             // Context Switch
             processHasSavedContext = true;
@@ -83,7 +87,8 @@ void CalculatePi(int workload)
     }
        
     // Process Complete.
-    MoveProcessBetweenQueues(CPU_QUEUE, DONE_QUEUE, CurrentRunningProcess);
+    UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, 100);
+    HideProcessInCPU(CurrentRunningProcess);
     processCompletedExecution = true;
        
     // Debug Print - Show accumulated PI value

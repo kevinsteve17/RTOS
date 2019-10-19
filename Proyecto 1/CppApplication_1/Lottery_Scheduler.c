@@ -296,13 +296,12 @@ void Schedule_Preemptive()
         winnigProcess = Lottery_(ticketAssignations, tickets);
         client = SelectProcessFromLotteryQueue(winnigProcess);
         CurrentRunningProcess = winnigProcess+1;
+        // Notify GUI and move winning process to CPU
+        MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess+1);
         
         // Continue running saved processes
         if (processHasSavedContext == true)
-        {           
-            // Notify GUI and move winning process to CPU
-            MoveProcessBetweenQueues(WAIT_QUEUE,CPU_QUEUE, winnigProcess+1);
-            
+        {   
             // Clear the flag
             processHasSavedContext = false;
             
@@ -311,10 +310,7 @@ void Schedule_Preemptive()
         }
         // Start running new processes
         else
-        {
-            // Notify GUI and move winning process to CPU
-            MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess+1);
-            
+        {            
             // Clear the flag
             processHasSavedContext = false;
         }
