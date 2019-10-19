@@ -697,6 +697,10 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {    
+/*
+    CalculatePi(1000);
+    return 0;
+*/
     // Read settings file
     SchedSettings = malloc(sizeof(Settings));
     ReadFile(SchedSettings);

@@ -31,7 +31,7 @@ double factorial(int n)
  */
 void CalculatePi(int workload)
 {
-    double realPi = 3.14159265359;
+    double realPi = 3.14159;
     double result = 0.0;
     int n = 0;
     double factor1 = 0.0;
@@ -56,30 +56,34 @@ void CalculatePi(int workload)
             break;
         }
         
-        // Calculate process var value
-        CurrentRunningProcressProgress = (n*100)/(workload*WORKLOAD);
-                
-        // Notify the display and update the processes progress bar
-        UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, CurrentRunningProcressProgress);
+        if (n%WORKLOAD == 0) {
+            // Calculate process var value
+            CurrentRunningProcressProgress = (n*100)/(workload*WORKLOAD);
+
+            // Notify the display and update the processes progress bar
+            UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, CurrentRunningProcressProgress);
+
+            // Verify is Quantum is over and take actions
+            if (IsQuantumOver() == 1)
+            {
+                PrintDebugMessageInDisplay("Time.");
+
+                // Stop the clock while we switch context
+                StopQuantumSoftTimer();
+
+                // Process Complete.
+                HideProcessInCPU(CurrentRunningProcess);           
+
+                // Context Switch
+                processHasSavedContext = true;
+                //ContextSwitch( params? );
+
+                // Break out to be able to call CalculatePi again with a new process
+                return;
+            }
+
+        }
         
-        // Verify is Quantum is over and take actions
-        if (IsQuantumOver() == 1)
-        {
-            PrintDebugMessageInDisplay("Time.");
-            
-            // Stop the clock while we switch context
-            StopQuantumSoftTimer();
-            
-            // Process Complete.
-            HideProcessInCPU(CurrentRunningProcess);           
-            
-            // Context Switch
-            processHasSavedContext = true;
-            //ContextSwitch( params? );
-            
-            // Break out to be able to call CalculatePi again with a new process
-            return;
-        }        
         
         // Debug Print - Show accumulated PI value
         //system("clear"); 
