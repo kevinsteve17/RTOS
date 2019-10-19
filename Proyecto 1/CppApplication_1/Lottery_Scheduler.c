@@ -212,13 +212,19 @@ int Lottery_(int *ticketPool, int *tickets)
 {
     while (raffleCounter<MaxTickets)
     {
+        printf ("raffleCounter= %d\n", raffleCounter);
+        if(raffleCounter == (MaxTickets-1))
+        {
+            raffleCounter = 0;
+        }
+                
         int ticketToReturnIndx = tickets[raffleCounter];
         raffleCounter++;       
         int ticketToReturn = ticketPool[ticketToReturnIndx];
         
         if (ticketToReturn != -1)
         {
-            ticketPool[ticketToReturnIndx] = -1;
+            //ticketPool[ticketToReturnIndx] = -1;
             printf("WinningTicket: %i \n",ticketToReturn);
             return ticketToReturn;
         }
@@ -286,6 +292,7 @@ void Schedule_Preemptive()
     int winnigProcess;
     lotteryClient* client;
     printf("QueueSize: %i \n", LotteryQueue->QueueSize);
+    StartQuantumSoftTimer(QuantumInMilli*100000000);
     while (LotteryQueue->QueueSize > 0)
     {
         // Clear execution complete flag
@@ -294,6 +301,9 @@ void Schedule_Preemptive()
         // Play Lottery
         PrintLotteryQueue();
         winnigProcess = Lottery_(ticketAssignations, tickets);
+        
+        printf("---------------------- Winner? %d\n", winnigProcess);
+        
         client = SelectProcessFromLotteryQueue(winnigProcess);
         CurrentRunningProcess = winnigProcess+1;
         // Notify GUI and move winning process to CPU
@@ -316,7 +326,7 @@ void Schedule_Preemptive()
         }
         
         // Start Quantum Timer
-        StartQuantumSoftTimer(QuantumInMilli*100000000);
+        //StartQuantumSoftTimer(QuantumInMilli*100000000);
    
         client->clientTask->process_task = CalculatePi(client->clientTask->BurstTime);
         
