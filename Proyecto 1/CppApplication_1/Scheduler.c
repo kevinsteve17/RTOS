@@ -448,6 +448,24 @@ void MoveProcessBetweenQueues(int fromQueueNumber,
                               int toQueueNumber,
                               int processNumber)
 {
+    // Read the values from CPU queue (they should always be the latest)
+    // and update the queue the tasks are moving to
+    
+    // Update label and progress bar
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), 
+                                               gtk_progress_bar_get_text(GTK_PROGRESS_BAR(progressbar_process[CPU_QUEUE][processNumber-1])));
+    
+    if (toQueueNumber != DONE_QUEUE)
+    {
+        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), 
+                                      gtk_progress_bar_get_fraction(GTK_PROGRESS_BAR(progressbar_process[CPU_QUEUE][processNumber-1])));
+    }
+    else
+    {
+        // 100% progress bar
+        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progressbar_process[toQueueNumber][processNumber-1]), 100);
+    }
+    
     // Hide Process
     gtk_widget_hide(frame_processborder[fromQueueNumber][processNumber-1]);
     // Reveal hidden control
