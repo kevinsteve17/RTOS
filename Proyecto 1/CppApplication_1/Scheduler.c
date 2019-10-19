@@ -31,6 +31,7 @@ int GuiWindowWidth = 100;
 int GuiWindowHeight = 100;
 int TotalProcessesNumber = 5;
 int CurrentRunningProcess = 0;
+int QuantumInMilli = 0;
 int MaxTickets = 0;
 
 // Main window and grid
@@ -91,7 +92,7 @@ Settings* SchedSettings;
  * Starts Lottery Scheduling
  */
 void StartLotteryScheduling(Settings* settings)
-{
+{   
     printf("--> Process to Execute: %i \n",settings->ProcessCount);
     int priorities[settings->ProcessCount];
     MaxTickets = settings->Tickets;
@@ -153,8 +154,16 @@ void StartLotteryScheduling(Settings* settings)
     PrintLotteryPool(tickets, settings->Tickets);
 #endif
 
-    //start scheduler
-    Schedule_NonPreemptive();    
+    if (settings->PMode == 0)
+    {
+        //start scheduler
+        Schedule_NonPreemptive();
+    }
+    else
+    {
+        //start scheduler
+        Schedule_Preemptive();
+    }
 }
 
 void CreateFCFSProcesses(Settings* ssettings)
@@ -302,9 +311,10 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
                                        SchedSettings->PMode, 
                                        SchedSettings->Tickets);
 
-    // Configure Soft timer handler
+    // Configure Quantum Soft timer
     PrintDebugMessageInDisplay ("Configuring quantum soft timer handler...");
     SetQuantumSoftTimerHandler();
+    QuantumInMilli = SchedSettings->Quantum;
     
     // ----------------
     // Start scheduling
@@ -316,16 +326,8 @@ static void DoScheduling(GtkWidget *button_start, gpointer data)
     }
     else
     {
-        if (SchedSettings->PMode == 0)
-        {
-            // Non-Preemptive Lottery 
-            StartLotteryScheduling(SchedSettings);
-        }
-        else
-        {
-            // Preemptive Lottery 
-            //StartPreemptiveLotteryScheduling(SchedSettings);
-        }   
+        // Lottery
+        StartLotteryScheduling(SchedSettings);
     }
 }
 
@@ -749,8 +751,8 @@ int main(int argc, char** argv)
     printf("Workload: %s",SchedSettings->WorkLoad);
     printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
 #endif
-    
-  GtkApplication *app;
+
+    GtkApplication *app;
     int status;
 
     // Constructor
@@ -764,7 +766,7 @@ int main(int argc, char** argv)
 
     // CleanUp
     g_object_unref (app);
-    
-    return status; 
+   
+    return status;
 }
 

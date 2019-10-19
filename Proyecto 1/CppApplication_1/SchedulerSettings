@@ -1,5 +1,5 @@
 #Algorithm [0 = Lottery, 1=FCFS]
-1
+0
 
 #Preemtive [0=Non Preemtive, 1=Preemtive]
 0
@@ -19,5 +19,5 @@
 #Tickets
 200
 
-#Quantum
-100
+#Quantum [ms]
+1050

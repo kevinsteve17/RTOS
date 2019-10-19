@@ -64,6 +64,7 @@ void AddProcessClient(processStruct* process);
 void RemoveLotteryClient();
 void AssignLotteryTickets(int totalTickets);
 void Schedule_NonPreemptive();
+void Schedule_Preemptive();
 void DeleteProcessClient(int id);
 lotteryClient* SelectProcessFromLotteryQueue(int processID);
 

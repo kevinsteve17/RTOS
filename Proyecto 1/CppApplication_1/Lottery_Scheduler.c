@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include "Lottery_Scheduler.h"
 #include "progress_gui.h"
+#include "Timer.h"
 
 #define DEBUG
 
@@ -24,7 +25,10 @@ lotteryQueue* LotteryQueue;
 lotteryClient* LotteryClient;
 
 extern int CurrentRunningProcess;
+extern int QuantumInMilli;
 extern int MaxTickets;
+int processHasSavedContext = false;
+int processCompletedExecution = false;
 
 /*
  * Inits lottery queue
@@ -272,6 +276,64 @@ void Schedule_NonPreemptive()
     printf("Good bye! \n");
 }
 
+
+/*
+ * Performs Lottery Scheduling on queued tasks
+ */
+void Schedule_Preemptive()
+{    
+    printf("Staring Lottery Scheduler: \n");
+    int winnigProcess;
+    lotteryClient* client;
+    printf("QueueSize: %i \n", LotteryQueue->QueueSize);
+    while (LotteryQueue->QueueSize > 0)
+    {
+        // Clear execution complete flag
+        processCompletedExecution = false;
+        
+        // Play Lottery
+        PrintLotteryQueue();
+        winnigProcess = Lottery_(ticketAssignations, tickets);
+        client = SelectProcessFromLotteryQueue(winnigProcess);
+        CurrentRunningProcess = winnigProcess+1;
+        
+        // Continue running saved processes
+        if (processHasSavedContext == true)
+        {           
+            // Notify GUI and move winning process to CPU
+            MoveProcessBetweenQueues(WAIT_QUEUE,CPU_QUEUE, winnigProcess+1);
+            
+            // Clear the flag
+            processHasSavedContext = false;
+            
+            // Restore Context
+            //LoadSavedContext();
+        }
+        // Start running new processes
+        else
+        {
+            // Notify GUI and move winning process to CPU
+            MoveProcessBetweenQueues(READY_QUEUE,CPU_QUEUE, winnigProcess+1);
+            
+            // Clear the flag
+            processHasSavedContext = false;
+        }
+        
+        // Start Quantum Timer
+        StartQuantumSoftTimer(QuantumInMilli*100000000);
+   
+        client->clientTask->process_task = CalculatePi(client->clientTask->BurstTime);
+        
+        // Delete Process only if execution was completed
+        if (processCompletedExecution == true)
+        {
+            DeleteProcessClient(winnigProcess);       
+        }
+    }
+
+    printf("No more processes on queue \n");
+    printf("Good bye! \n");
+}
 
 
 /*

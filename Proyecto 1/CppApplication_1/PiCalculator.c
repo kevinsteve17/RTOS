@@ -2,10 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 #include "Utilities.h"
 #include "progress_gui.h"
+#include "Timer.h"
 
 extern int CurrentRunningProcess;
+extern int QuantumInMilli;
+extern int processHasSavedContext;
+extern int processCompletedExecution;
 
 double factorial(int n)
 {
@@ -31,7 +36,7 @@ void CalculatePi(int workload)
     double factor1 = 0.0;
     double factor2 = 1.0;
     double aproxPI = 0.0;
-        
+    
     for(n=1;n<workload*WORKLOAD;n++)
     {
         factor1 = (1.0/(2.0*n-1.0));
@@ -53,14 +58,34 @@ void CalculatePi(int workload)
         // Notify the display and update the processes progress bar
         UpdateProcessDisplayedInfo(CPU_QUEUE, CurrentRunningProcess, aproxPI, (n*100)/(workload*WORKLOAD));
         
+        // Verify is Quantum is over and take actions
+        if (IsQuantumOver() == 1)
+        {
+            PrintDebugMessageInDisplay("Time.");
+            
+            // Stop the clock while we switch context
+            StopQuantumSoftTimer();
+            
+            // Process Complete.
+            MoveProcessBetweenQueues(CPU_QUEUE, WAIT_QUEUE, CurrentRunningProcess);            
+            
+            // Context Switch
+            processHasSavedContext = true;
+            //ContextSwitch( params? );
+            
+            // Break out to be able to call CalculatePi again with a new process
+            return;
+        }        
+        
         // Debug Print - Show accumulated PI value
         //system("clear"); 
         //printf("Serie de taylor de Arcsin para PI: %f \n", aproxPI);
     }
-    
+       
     // Process Complete.
     MoveProcessBetweenQueues(CPU_QUEUE, DONE_QUEUE, CurrentRunningProcess);
-    
+    processCompletedExecution = true;
+       
     // Debug Print - Show accumulated PI value
     //printf("Serie de taylor de Arcsin para PI: %.63f \n", aproxPI);
 }
