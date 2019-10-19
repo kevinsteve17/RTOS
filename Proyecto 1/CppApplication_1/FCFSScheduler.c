@@ -95,7 +95,7 @@ void FindNextArrivalTime(int processCount, processStruct* processArrivT[])
         int j;
         for (j=i+1; j < processCount; ++j) 
         {
-            if (processArrivT[i]->Arrivaltime > processArrivT[j]->Arrivaltime)
+            if (processArrivT[i]->Arrivaltime >= processArrivT[j]->Arrivaltime)
             {
                 k = processArrivT[i];
                 processArrivT[i] = processArrivT[j];
@@ -123,7 +123,7 @@ void RunFCFSScheduling(int processArrivT[],int processWorkload[], int processCou
     for(int i=0;i<processCount;i++)
     {
         processStruct* process =  malloc(sizeof(processStruct));
-        process->ID = i;
+        process->ID = i+1;
         process->Arrivaltime = processArrivT[i];
         process->BurstTime = processWorkload[i];
         process->Process_State = CREATED;
