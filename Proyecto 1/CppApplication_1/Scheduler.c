@@ -84,47 +84,48 @@ struct SSettings
 
 Settings* SchedSettings; 
 
-void CreateProcesses(Settings* ssettings)
+void CreateFCFSProcesses(Settings* ssettings)
 {
     //printf("Creating processes");
     //PrintDebugMessageInDisplay("Creating processes");
     int arrivalTimes[ssettings->ProcessCount];
-    char* temp = ssettings->ArrivalTime;
-    char* token = strtok(temp, ",");
-    
+    char* tempArrivT = ssettings->ArrivalTime;
+    char* tokenAT = strtok(tempArrivT, ",");
     int j= 0;
-    while(token != NULL)
+    while(tokenAT != NULL)
     {
-        arrivalTimes[j] = token;
-        token = strtok(NULL, ",");
+        arrivalTimes[j] = atoi(tokenAT);
+        tokenAT = strtok(NULL, ",");
         j++;
     }
     
+    int workload[ssettings->ProcessCount];
+    char* tempWrkload = ssettings->WorkLoad;
+    char* tokenWL = strtok(tempWrkload, ",");
+    
+    int k=0;
+    while(tokenWL != NULL)
+    {
+        workload[k] = atoi(tokenWL);
+        tokenWL = strtok(NULL, ",");
+        k++;
+    }
+    
+
+#ifdef DEBUG
     int i;
     for (i = 0; i < 25; i++) {
-        printf("%d\n", arrivalTimes[i]);
+        printf("Process: %d Arrival Time: %d\n",i,arrivalTimes[i]);
     }
-
     
-/*
-    char num[4]="    ";
-    int i, j;
-    for (i = 0, j=0; i < strlen(ssettings->ArrivalTime); i++)
-    {
-        if (ssettings->ArrivalTime[i] != ',' ) 
-        {
-            strcat(num,ssettings->ArrivalTime[i]);
-        }
-        else
-        {
-            if (isspace(ssettings->ArrivalTime[i])==0) 
-            {
-                arrivalTimes[j] = atoi(num);
-                strcpy(num, " ");
-            }
-        }
+    for (i = 0; i < 25; i++) {
+        printf("Process: %d, WorkLoad: %d\n",i, workload[i]);
     }
-*/
+#endif
+    
+    RunFCFSScheduling(arrivalTimes, workload, ssettings->ProcessCount);
+
+
 
 
 }
@@ -143,7 +144,7 @@ void ReadFile(Settings* ssettings)
     const int ProcessesCount = 4;
     
     char lastHeader=malloc(sizeof(char));
-    char line[128], fileName[256];
+    char line[512], fileName[256];
     const char equal[3] = "\n";
     FILE* settings;
 
@@ -157,11 +158,8 @@ void ReadFile(Settings* ssettings)
 
     int lineCount = 0;
 
-    while((fgets(line, 1000, settings))!= NULL)
+    while((fgets(line, 512, settings))!= NULL)
     {
-        //printf("%s", line);
-        //printf("%d\n", (int)strlen(line));
-        
         if (line[0] != '#' && isspace(line[0]) == 0) 
         {
             char lineInfo[(int)strlen(line)];
@@ -225,16 +223,6 @@ void ReadFile(Settings* ssettings)
     }
     fclose(settings);
 }
-
-/*
-void CreateProcess(int processCount)
-{
-    printf("Creating processes");
-
-}
-*/
-
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -698,7 +686,33 @@ static void StartGUI (GtkApplication *app,
  */
 int main(int argc, char** argv)  
 {
+<<<<<<< HEAD
 /*   
+=======
+    // Read settings file
+    SchedSettings = malloc(sizeof(Settings));
+    ReadFile(SchedSettings);
+    TotalProcessesNumber = SchedSettings->ProcessCount;
+    
+#ifdef DEBUG
+    // Debug print - show read configuration
+    printf("Algorithm: %d\n",SchedSettings->SchedulingAlgorithm);
+    printf("Preemtive: %d\n",SchedSettings->PMode);
+    printf("Priority: %s",SchedSettings->Priority);
+    printf("ProcessCount: %d\n",SchedSettings->ProcessCount);
+    printf("Quantum: %d\n",SchedSettings->Quantum);
+    printf("Tickets: %d\n",SchedSettings->Tickets);
+    printf("Workload: %s",SchedSettings->WorkLoad);
+    printf("ArrivalTime: %s",SchedSettings->ArrivalTime);
+#endif
+    
+    CreateFCFSProcesses(SchedSettings);
+
+    /*
+    //DebugLotteryUtils();
+
+    
+>>>>>>> 36b10a11be794c3ec857c29442f5f541379ef7fc
     GtkApplication *app;
     int status;
 
