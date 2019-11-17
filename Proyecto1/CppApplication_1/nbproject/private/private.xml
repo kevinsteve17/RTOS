@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <data xmlns="http://www.netbeans.org/ns/make-project-private/1">
+        <activeConfTypeElem>1</activeConfTypeElem>
+        <activeConfIndexElem>0</activeConfIndexElem>
+    </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/Timer.c</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/Lottery_Scheduler.c</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/Task.h</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/Utilities.h</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/PiCalculator.c</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/Scheduler.c</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/FCFSScheduler.c</file>
+            <file>file:/home/kevin/Documents/Projects/RTOS/Proyecto%201/CppApplication_1/Timer.h</file>
+        </group>
+    </open-files>
+</project-private>
