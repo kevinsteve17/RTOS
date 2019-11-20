@@ -22,16 +22,16 @@ extern "C" {
     
     typedef struct RateMonotTask RMTask;
     
-    struct RMTask
+    struct RateMonotTask
     {
         Task TaskInfo;
-        int CPU_Utilization;
-        int SchedTest;
+        double CPU_Utilization;
+        double SchedTest;
     };
     
     
-    void CalculateCPU_Utilization();
-    void CalculateSchedTest();
+    void CalculateCPU_Utilization(Task* tasks, int taskCount);
+    void CalculateSchedTest(int tasksCount);
     void RunSchedTest();
     
 

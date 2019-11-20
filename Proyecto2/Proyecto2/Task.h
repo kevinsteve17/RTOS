@@ -21,7 +21,7 @@ extern "C" {
     
     typedef struct SchedTask Task;
     
-    struct Task
+    struct SchedTask
     {
         int Id;
         int ComputationTime;

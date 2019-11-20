@@ -13,12 +13,30 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "Task.h"
+#include "TexFileGenerator.h"
+
+
+
+void executeScheduler(int tasksID, int execTime, int deadline, int period)
+{
+    Task newTask;
+    
+    newTask.Id = tasksID;
+    newTask.ComputationTime = execTime;
+    newTask.Period = period;
+    newTask.Deadline = deadline;
+    
+    
+}
+
 
 /*
  * 
  */
 int main(int argc, char** argv) {
-
+    
+    GenerateTexFile();
     return (EXIT_SUCCESS);
 }
 

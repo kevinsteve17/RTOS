@@ -1,0 +1,37 @@
+\documentclass[aspectratio=43, xcolor=table]{beamer}
+\usepackage[english]{babel}
+\usepackage[table,xcdraw]{xcolor}
+\input{preamble}
+\title{RTOS Schedulability}
+\subtitle{Proyecto 2}
+\author[F. Paris, E. Rivera, K. Viquez]{Fernando Paris, Esteban Rivera, Kevin Viquez}
+\institute[ITCR]{
+    Maestria en Sistemas Empotrados%
+    \%
+    Instituto Tenologico de Costa Rica%
+}\date{Diciembre 07, 2019}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Summary}
+\tableofcontents
+\end{frame}
+
+\section{Algorithms}
+
+\frame{\sectionpage}
+
+\begin{frame}{Schedulability Test Table}
+\begin{table}[]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\cellcolor{red} &                          &                          &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline                         & \cellcolor{green} &                          &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline                         &                          & \cellcolor{blue} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline
+                         &                          &                          &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline
+\end{tabular}
+\end{table}
+\end{frame}
+
+\end{document}

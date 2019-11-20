@@ -20,7 +20,7 @@ extern "C" {
     
     typedef struct SimulationResultStruct RTResults;
     
-    struct RTResults 
+    struct SimulationResultStruct 
     {
         int* SchedulingSequence;
         int* CPU_Utiliztion_per_Task;

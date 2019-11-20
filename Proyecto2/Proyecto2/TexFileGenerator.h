@@ -25,23 +25,23 @@ extern "C" {
     
     typedef struct CoverPageStruct CoverPage;
     typedef struct AlgorithmsStruct Algorithms;
-    typedef struct TexDocumentation TexDoc;
+    typedef struct TexDocumentation TextDoc;
     
     
-    struct CoverPage
+    struct CoverPageStruct
     {
         char* Title;
         char* Authors;
         char* Course;
     };
     
-    struct Algorithms
+    struct AlgorithmsStruct
     {
         char* Name;
         RTResults* AlgthmResult;
     };
     
-    struct TextDoc
+    struct TexDocumentation
     {
         CoverPage TitlePage;
         Algorithms Algs; 
