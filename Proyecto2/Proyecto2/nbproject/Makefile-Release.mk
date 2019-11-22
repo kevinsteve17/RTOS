@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/EarliestDeadlineFirstScheduler.o \
 	${OBJECTDIR}/RateMonotonicScheduler.o \
 	${OBJECTDIR}/TexFileGenerator.o \
 	${OBJECTDIR}/main.o
@@ -63,6 +64,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto2: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto2 ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/EarliestDeadlineFirstScheduler.o: EarliestDeadlineFirstScheduler.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EarliestDeadlineFirstScheduler.o EarliestDeadlineFirstScheduler.c
 
 ${OBJECTDIR}/RateMonotonicScheduler.o: RateMonotonicScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
