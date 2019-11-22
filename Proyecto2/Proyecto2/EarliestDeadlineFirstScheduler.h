@@ -6,9 +6,9 @@
 
 /* 
  * File:   EarliestDeadlineFirstScheduler.h
- * Author: kevin
+ * Author: FPK
  *
- * Created on November 18, 2019, 9:42 PM
+ * Created on November 21, 2019, 11:02 PM
  */
 
 #ifndef EARLIESTDEADLINEFIRSTSCHEDULER_H
@@ -22,19 +22,16 @@ extern "C" {
     
     typedef struct EarliestDeadlineFirstTask EDFTask;
     
-    struct EDFTask
+    struct EarliestDeadlineFirstTask
     {
         Task TaskInfo;
         int CPU_Utilization;
         int SchedTest;
     };
     
-    
-    void CalculateCPU_Utilization();
-    void CalculateSchedTest();
-    void RunSchedTest();
-
-
+    void CalculateEdfSchedTest(Task* task, int tasksCount);
+    bool RunEdfSchedTest();
+    void PerformEdfSched(Task* task, int tasksCount);
 
 
 #ifdef __cplusplus
