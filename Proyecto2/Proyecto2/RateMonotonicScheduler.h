@@ -20,15 +20,16 @@ extern "C" {
     
 #include "Task.h"
     
-    typedef struct RateMonotTask RMTask;
+    typedef struct RateMonotonicSched RMScheduler;
     
-    struct RateMonotTask
+    struct RateMonotonicSched
     {
-        Task TaskInfo;
-        double CPU_Utilization;
-        double SchedTest;
+        Task task;
+        int currentDeadline;
+        int nextDeadline;
+        int deadlineMet;
+        int scaleFactor;
     };
-    
     
     void CalculateCPU_Utilization(Task* tasks, int taskCount);
     void CalculateSchedTest(int tasksCount);

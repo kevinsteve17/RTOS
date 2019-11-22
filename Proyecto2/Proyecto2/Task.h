@@ -20,6 +20,7 @@ extern "C" {
 
     
     typedef struct SchedTask Task;
+    typedef struct SchedulingResult SchedResult;
     
     struct SchedTask
     {
@@ -27,6 +28,14 @@ extern "C" {
         int ComputationTime;
         int Deadline;
         int Period;
+    };
+    
+    struct SchedulingResult
+    {
+        double CPU_Utilization;
+        double SchedTest;
+        Task TaskInfo[];
+
     };
 
 
