@@ -19,19 +19,11 @@ extern "C" {
 #endif
 #include "Task.h"
     
-    typedef struct LeastLAxityFirstTask LLFTask;
-    
-    struct LLFTask
-    {
-        Task TaskInfo;
-        int CPU_Utilization;
-        int SchedTest;
-    };
-    
-    
-    void CalculateCPU_Utilization();
-    void CalculateSchedTest();
-    void RunSchedTest();
+    void LLF_PopulateDummyTasks();
+    int  LLF_CalculateLeastCommonMultiple();
+    int  LLF_CalculateTaskLaxity();
+    int  LLF_TaskWithLeastLaxity();
+    void LLF_RunSchedTest();
 
 
 

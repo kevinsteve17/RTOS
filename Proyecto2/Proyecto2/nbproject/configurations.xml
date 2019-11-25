@@ -20,6 +20,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>EarliestDeadlineFirstScheduler.c</itemPath>
+      <itemPath>LeastLaxityFirstScheduler.c</itemPath>
       <itemPath>RateMonotonicScheduler.c</itemPath>
       <itemPath>TexFileGenerator.c</itemPath>
       <itemPath>main.c</itemPath>
@@ -52,6 +53,8 @@
       <item path="EarliestDeadlineFirstScheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="EarliestDeadlineFirstScheduler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LeastLaxityFirstScheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="LeastLaxityFirstScheduler.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -95,6 +98,8 @@
       <item path="EarliestDeadlineFirstScheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="EarliestDeadlineFirstScheduler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LeastLaxityFirstScheduler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="LeastLaxityFirstScheduler.h" ex="false" tool="3" flavor2="0">
       </item>
