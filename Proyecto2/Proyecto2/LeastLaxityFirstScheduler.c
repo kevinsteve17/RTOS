@@ -98,7 +98,7 @@ void LLF_RunSchedTest()
             if (tasksComputation[task] > tasksDeadline[task])
             {
                 // Force the main loop to end
-                printf("\n *Bombastic! - Task %d missed its deadline*\n", task+1);
+                printf("\n *Bombastic! - Task %d can't make its deadline*\n", task+1);
                 time = timeLimit;
             }
 
