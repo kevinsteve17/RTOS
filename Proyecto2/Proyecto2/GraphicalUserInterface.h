@@ -33,6 +33,8 @@ void CreateAlgorithmsFrameAndControls();
 void CreateResultsFrameAndControls();
 // Create add/delete/start buttons
 void CreateButtonControls();
+// Create task spreadsheet
+void CreateTaskSpreadsheet();
 
 // ----------------------
 // DISPLAY EVENT HANDLERS
