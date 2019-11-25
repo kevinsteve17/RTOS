@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/EarliestDeadlineFirstScheduler.o \
+	${OBJECTDIR}/GraphicalUserInterface.o \
 	${OBJECTDIR}/LeastLaxityFirstScheduler.o \
 	${OBJECTDIR}/RateMonotonicScheduler.o \
 	${OBJECTDIR}/TexFileGenerator.o \
@@ -70,6 +71,11 @@ ${OBJECTDIR}/EarliestDeadlineFirstScheduler.o: EarliestDeadlineFirstScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EarliestDeadlineFirstScheduler.o EarliestDeadlineFirstScheduler.c
+
+${OBJECTDIR}/GraphicalUserInterface.o: GraphicalUserInterface.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GraphicalUserInterface.o GraphicalUserInterface.c
 
 ${OBJECTDIR}/LeastLaxityFirstScheduler.o: LeastLaxityFirstScheduler.c
 	${MKDIR} -p ${OBJECTDIR}

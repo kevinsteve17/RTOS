@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/EarliestDeadlineFirstScheduler.o \
+	${OBJECTDIR}/GraphicalUserInterface.o \
 	${OBJECTDIR}/LeastLaxityFirstScheduler.o \
 	${OBJECTDIR}/RateMonotonicScheduler.o \
 	${OBJECTDIR}/TexFileGenerator.o \
@@ -43,7 +44,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=`pkg-config --cflags --libs gtk+-3.0` 
 
 # CC Compiler Flags
 CCFLAGS=
@@ -64,12 +65,17 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto2: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto2 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/proyecto2 ${OBJECTFILES} ${LDLIBSOPTIONS} -lm `pkg-config --libs gtk+-3.0`
 
 ${OBJECTDIR}/EarliestDeadlineFirstScheduler.o: EarliestDeadlineFirstScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EarliestDeadlineFirstScheduler.o EarliestDeadlineFirstScheduler.c
+
+${OBJECTDIR}/GraphicalUserInterface.o: GraphicalUserInterface.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GraphicalUserInterface.o GraphicalUserInterface.c
 
 ${OBJECTDIR}/LeastLaxityFirstScheduler.o: LeastLaxityFirstScheduler.c
 	${MKDIR} -p ${OBJECTDIR}
