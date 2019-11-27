@@ -17,22 +17,44 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
-    #include "Task.h"
-    
-    typedef struct EarliestDeadlineFirstTask EDFTask;
-    
-    struct EarliestDeadlineFirstTask
-    {
-        Task TaskInfo;
-        int CPU_Utilization;
-        int SchedTest;
-    };
-    
-    void CalculateEdfSchedTest(Task* task, int tasksCount);
-    bool RunEdfSchedTest();
-    void PerformEdfSched(Task* task, int tasksCount);
 
+#include <stdbool.h>    
+#include "Task.h"
+
+// Structures
+typedef struct ready_queue readyQueue;
+typedef struct task_client taskClient;
+typedef struct SchedulingResult EDFTask;
+
+struct ready_queue 
+{
+    taskClient* head;
+    taskClient* tail;
+    int QueueSize;
+};
+
+struct task_client 
+{
+    Task* clientTask;
+    taskClient* next;
+};
+
+// EDF
+void EdfCalculateSchedTest(Task* task, int tasksCount);
+bool EdfRunSchedTest();
+void EdfStartSched(Task* task, int tasksCount);
+void RunEdfSched();
+
+// ready queue
+void AddTaskToReadyQueue(Task* task, int simPeriod);
+bool RemoveCompletedTasks();
+void InitReadyQueue(Task* task, int tasksCount);
+bool AddNewTasks(int t);
+void UpdateTaskComputationTime(int id);
+taskClient* GetTaskFromReadyQueue();
+
+// debug utils
+void EdfPopulateTaskstructures();
 
 #ifdef __cplusplus
 }

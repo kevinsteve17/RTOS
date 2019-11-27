@@ -18,6 +18,8 @@
 extern "C" {
 #endif
 
+#define NUM_OF_TASKS 6
+    
     int tasksCount;
     typedef struct SchedTask Task;
     typedef struct SchedulingResult SchedResult;
@@ -25,17 +27,18 @@ extern "C" {
     struct SchedTask
     {
         int Id;
-        int ComputationTime;
-        int Deadline;
-        int Period;
+        double ComputationTime;
+        double Deadline;
+        double Period;
     };
     
     struct SchedulingResult
     {
+        int Color;
         double CPU_Utilization;
         double SchedTest;
-        Task TaskInfo[];
-
+        Task* TaskInfo;
+        int SimulationResults[];
     };
 
 
