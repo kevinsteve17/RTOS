@@ -262,7 +262,6 @@ void EdfStartSched(Task* task, int tasksCount)
                 }
 
                 // update computation time (execute task for one cycle)
-                //task->clientTask->ComputationTime --;
                 UpdateTaskComputationTime(task->clientTask->Id);
 
                 // update simulation results

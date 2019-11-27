@@ -38,7 +38,7 @@ extern "C" {
         double CPU_Utilization;
         double SchedTest;
         Task* TaskInfo;
-        int SimulationResults[35];
+        int SimulationResults[];
     };
 
 
