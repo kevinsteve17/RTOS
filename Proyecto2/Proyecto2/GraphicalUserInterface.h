@@ -43,9 +43,15 @@ void toggle_RM(GtkWidget *gtk_control, gpointer data);
 void toggle_EDF(GtkWidget *gtk_control, gpointer data);
 void toggle_LLF(GtkWidget *gtk_control, gpointer data);
 void toggle_Output(GtkWidget *gtk_control, gpointer data);
-void DoScheduling(GtkWidget *button_start, gpointer data);
-    
-    
+void DoScheduling(GtkWidget *gtk_control, gpointer data);
+
+// -------
+// UTILITY
+// -------
+void CalculateLeastCommonMultiple();
+void ReadSpreadsheet();
+
+
 #ifdef __cplusplus
 }
 #endif

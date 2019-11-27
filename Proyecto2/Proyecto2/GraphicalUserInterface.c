@@ -1,4 +1,6 @@
 #include "GraphicalUserInterface.h"
+#include "Task.h"
+#include "LeastLaxityFirstScheduler.h"
 
 // Global Variables
 int GuiWindowWidth = 1;
@@ -9,9 +11,20 @@ GtkWidget *window;
 GtkWidget *grid_main;
 
 // Task Spreadsheet
-GtkWidget *entry_computation[10];
-GtkWidget *entry_period[10];
+GtkWidget *entry_computation[6];
+GtkWidget *entry_period[6];
 
+// Tasks struct
+int leastCommonMultiple = 1;
+int maxNumberOfTasks = 6;
+int numberOfTasks;
+Task tasks[6];
+
+// Control variables (0=Off, 1=On)
+int isRmEnabled = 0;
+int isEdfEnabled = 0;
+int isLlfEnabled = 0;
+int isSinglePageOutputEnabled = 0;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -125,20 +138,20 @@ void CreateResultsFrameAndControls()
 // *****************************************************************************
 void CreateButtonControls()
 {
-    GtkWidget *button_addTask;
-    button_addTask = gtk_button_new_with_label("Agregar Tarea");
-    g_signal_connect(button_addTask, "clicked", G_CALLBACK(DoScheduling), NULL);
-    gtk_grid_attach(GTK_GRID(grid_main), button_addTask, 0,2,1,1);
+    //GtkWidget *button_addTask;
+    //button_addTask = gtk_button_new_with_label("Agregar Tarea");
+    //g_signal_connect(button_addTask, "clicked", G_CALLBACK(DoScheduling), NULL);
+    //gtk_grid_attach(GTK_GRID(grid_main), button_addTask, 0,2,1,1);
     
-    GtkWidget *button_deleteTask;
-    button_deleteTask = gtk_button_new_with_label("Borrar Tarea");
-    g_signal_connect(button_deleteTask, "clicked", G_CALLBACK(DoScheduling), NULL);
-    gtk_grid_attach(GTK_GRID(grid_main), button_deleteTask, 0,3,1,1);
+    //GtkWidget *button_deleteTask;
+    //button_deleteTask = gtk_button_new_with_label("Borrar Tarea");
+    //g_signal_connect(button_deleteTask, "clicked", G_CALLBACK(DoScheduling), NULL);
+    //gtk_grid_attach(GTK_GRID(grid_main), button_deleteTask, 0,3,1,1);
     
     GtkWidget *button_start;
     button_start = gtk_button_new_with_label("Calendarizar");
     g_signal_connect(button_start, "clicked", G_CALLBACK(DoScheduling), NULL);
-    gtk_grid_attach(GTK_GRID(grid_main), button_start, 0,4,1,1);
+    gtk_grid_attach(GTK_GRID(grid_main), button_start, 0,2,1,1);
 }
 
 
@@ -152,7 +165,7 @@ void CreateTaskSpreadsheet()
     gtk_widget_set_size_request(frame_tasks, 1, 1);
 
     // 2. Add the frame to the main grid (left, top, width, height)
-    gtk_grid_attach(GTK_GRID(grid_main), frame_tasks, 1,0,1,5);
+    gtk_grid_attach(GTK_GRID(grid_main), frame_tasks, 1,0,1,3);
 
     // 3. Create a grid inside the frame to hold the controls
     GtkWidget *grid_tasks;
@@ -167,7 +180,7 @@ void CreateTaskSpreadsheet()
     gtk_grid_attach(GTK_GRID(grid_tasks), label_taskId, 0,0,1,1);
     
     GtkWidget *label_taskComputation;
-    label_taskComputation = gtk_label_new("Computo");
+    label_taskComputation = gtk_label_new("Ejecucion");
     gtk_grid_attach(GTK_GRID(grid_tasks), label_taskComputation, 1,0,1,1);
     
     GtkWidget *label_taskPeriod;
@@ -177,8 +190,8 @@ void CreateTaskSpreadsheet()
     // Create entries
     
     // ID
-    GtkWidget *label_id[10];
-    for(int i=0; i < 10; i++)
+    GtkWidget *label_id[maxNumberOfTasks];
+    for(int i=0; i < maxNumberOfTasks; i++)
     {
         char str[2];
         sprintf(str, "%d", i);
@@ -188,18 +201,20 @@ void CreateTaskSpreadsheet()
     }
     
     // Computation   
-    for(int i=0; i < 10; i++)
+    for(int i=0; i < maxNumberOfTasks; i++)
     {
         entry_computation[i] = gtk_entry_new();
+        gtk_entry_set_text(GTK_ENTRY(entry_computation[i]), "0");
         gtk_entry_set_max_length(GTK_ENTRY(entry_computation[i]), 2);
         gtk_entry_set_max_width_chars(GTK_ENTRY(entry_computation[i]), 2);
         gtk_grid_attach(GTK_GRID(grid_tasks), entry_computation[i], 1,i+1,1,1);
     }
     
     // Period    
-    for(int i=0; i < 10; i++)
+    for(int i=0; i < maxNumberOfTasks; i++)
     {
         entry_period[i] = gtk_entry_new();
+        gtk_entry_set_text(GTK_ENTRY(entry_period[i]), "0");
         gtk_entry_set_max_length(GTK_ENTRY(entry_period[i]), 2);
         gtk_entry_set_max_width_chars(GTK_ENTRY(entry_period[i]), 2);
         gtk_grid_attach(GTK_GRID(grid_tasks), entry_period[i], 2,i+1,1,1);
@@ -210,13 +225,80 @@ void CreateTaskSpreadsheet()
 
 
 
+void ReadSpreadsheet()
+{
+    // Read task spreadsheet 
+    const gchar *text;
+    int computation;
+    int period;
+    numberOfTasks = 0;
+    
+    // For each row
+    for(int i=0; i < maxNumberOfTasks; i++)
+    {
+        // Read computation time
+        text = gtk_entry_get_text (GTK_ENTRY (entry_computation[i]));
+        sscanf(text, "%d", &computation); 
+        // Read period
+        text = gtk_entry_get_text (GTK_ENTRY (entry_period[i]));
+        sscanf(text, "%d", &period); 
+        
+        // Populate task struct array
+        tasks[i].Id = i;
+        tasks[i].ComputationTime = computation;
+        tasks[i].Period = period;
+        tasks[i].Deadline = period;
+        
+        // For each task with period > 0 increment the task counter
+        if (period > 0)
+        {
+            numberOfTasks++;
+        }
+    }
+}
+
+
 
 // *****************************************************************************
-// *****************************************************************************
-void DoScheduling(GtkWidget *button_start, gpointer data) 
-{
-    printf("ejecutar clicked.\n");
+// Function:    CalculateLeastCommonMultiple
+// Description: Calculates the Least Common Multiple of the available tasks.
+//              This sets the limit of the simulation time.
+void CalculateLeastCommonMultiple()
+{  
+    printf("Function call: CalculateLeastCommonMultiple()\n");
+    
+    int num[maxNumberOfTasks];
+    
+    for (int i = 0; i < maxNumberOfTasks; i++)
+    {
+        if (tasks[i].Period > 0)
+        {
+            num[i] = tasks[i].Period;
+        }
+        else
+        {
+            num[i] = 1;
+        }    
+    }
+
+    // Always True
+    while(1) 
+    {
+    	if (leastCommonMultiple % num[0] == 0 && 
+            leastCommonMultiple % num[1] == 0 &&
+            leastCommonMultiple % num[2] == 0 &&
+            leastCommonMultiple % num[3] == 0 &&
+            leastCommonMultiple % num[4] == 0 &&
+            leastCommonMultiple % num[5] == 0)
+        {
+            printf ("LeastCommonMultiple = %d\n", leastCommonMultiple);
+            return;
+        }
+        
+        leastCommonMultiple++;
+    }   
 }
+
 
 
 // *****************************************************************************
@@ -225,11 +307,13 @@ void toggle_RM(GtkWidget *gtk_control, gpointer data)
 {
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
     {
-        printf("RM = ON.\n");
+        // ON
+        isRmEnabled = 1;
     }
     else
     {
-        printf("RM = OFF.\n");
+        // OFF
+        isRmEnabled = 0;
     } 
 }
 
@@ -239,11 +323,13 @@ void toggle_EDF(GtkWidget *gtk_control, gpointer data)
 {
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
     {
-        printf("EDF = ON.\n");
+        // ON
+        isEdfEnabled = 1;
     }
     else
     {
-        printf("EDF = OFF.\n");
+        // OFF
+        isEdfEnabled = 0;
     } 
 }
 
@@ -253,11 +339,13 @@ void toggle_LLF(GtkWidget *gtk_control, gpointer data)
 {
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
     {
-        printf("LLF = ON.\n");
+        // ON
+        isLlfEnabled = 1;
     }
     else
     {
-        printf("LLF = OFF.\n");
+        // OFF
+        isLlfEnabled = 0;
     } 
 }
 
@@ -267,10 +355,12 @@ void toggle_Output(GtkWidget *gtk_control, gpointer data)
 {
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
     {
-        printf("Single Slide = ON.\n");
+        // ON
+        isSinglePageOutputEnabled = 1;
     }
     else
     {
-        printf("Single Slide = OFF.\n");
+        // OFF
+        isSinglePageOutputEnabled = 0;
     } 
 }

@@ -18,12 +18,12 @@
 extern "C" {
 #endif
 #include "Task.h"
+
     
-    void LLF_PopulateDummyTasks();
-    int  LLF_CalculateLeastCommonMultiple();
-    int  LLF_CalculateTaskLaxity();
-    int  LLF_TaskWithLeastLaxity();
-    void LLF_RunSchedTest();
+// ----------
+// SCHEDULING
+// ----------
+void LLF_RunSchedTest();
 
 
 
