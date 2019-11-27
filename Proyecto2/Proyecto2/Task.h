@@ -25,16 +25,16 @@ extern "C" {
     struct SchedTask
     {
         int Id;
-        int ComputationTime;
-        int Deadline;
-        int Period;
+        double ComputationTime;
+        double Deadline;
+        double Period;
     };
     
     struct SchedulingResult
     {
         double CPU_Utilization;
         double SchedTest;
-        Task TaskInfo[];
+        Task* TaskInfo;
 
     };
 

@@ -13,25 +13,42 @@
 
 #ifndef EARLIESTDEADLINEFIRSTSCHEDULER_H
 #define EARLIESTDEADLINEFIRSTSCHEDULER_H
+#define NUM_OF_TASKS 3
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
-    #include "Task.h"
-    
-    typedef struct EarliestDeadlineFirstTask EDFTask;
-    
-    struct EarliestDeadlineFirstTask
-    {
-        Task TaskInfo;
-        int CPU_Utilization;
-        int SchedTest;
-    };
-    
-    void CalculateEdfSchedTest(Task* task, int tasksCount);
-    bool RunEdfSchedTest();
-    void PerformEdfSched(Task* task, int tasksCount);
+
+#include <stdbool.h>    
+#include "Task.h"
+
+// Structures
+typedef struct ready_queue readyQueue;
+typedef struct task_client taskClient;
+typedef struct SchedulingResult EDFTask;
+
+struct ready_queue 
+{
+    taskClient* head;
+    taskClient* tail;
+    int QueueSize;
+};
+
+struct task_client 
+{
+    Task* clientTask;
+    taskClient* next;
+};
+
+void EdfCalculateSchedTest(Task* task, int tasksCount);
+bool EdfRunSchedTest();
+void EdfStartSched(Task* task, int tasksCount);
+void AddTaskToReadyQueue(Task* task, int simPeriod);
+taskClient* GetTaskFromReadyQueue();
+
+// debug utils
+void EdfPopulateTaskstructures();
+void edf_test();
 
 
 #ifdef __cplusplus
