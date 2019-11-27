@@ -275,7 +275,6 @@ void EdfStartSched(Task* task, int tasksCount)
             }
 
             printf("update simulation (%i ,%i) \n", t, Results->SimulationResults[t]);
-
             readyqueueUpdate = false;
         }
 
