@@ -11,11 +11,84 @@
 
 SchedResult* Results;
 RMSchedulerTask* RMTs; 
-RMSchedulerTask* ReadyQueue; 
+Queue* ReadyQueue;
 
+void InitFCFSSched()
+{
+    // initialize the Queue
+    ReadyQueue = malloc(sizeof(Queue));
+    ReadyQueue->head =  NULL;
+    ReadyQueue->tail = NULL;
+    ReadyQueue->QueueSize = 0;
+}
+
+void Push(RMSchedulerTask* process)
+{
+    Element* newProcess = malloc(sizeof(Element));
+    newProcess->rMTask = process;
+
+    if (ReadyQueue->tail != NULL)
+    {
+        newProcess->next = ReadyQueue->head;
+        ReadyQueue->head = newProcess;
+    }
+    else
+    {
+        ReadyQueue->tail = newProcess;
+        ReadyQueue->head = newProcess;
+        ReadyQueue->tail->next = NULL;
+        //ProcessQueue->head->next = NULL; 
+    }
+
+    // Update counter
+    ReadyQueue->QueueSize += 1;
+}
+
+Element* Pop()
+{
+    Element* neededClient = ReadyQueue->head;
+    Element* tempClient = ReadyQueue->head;
+
+    while (neededClient != ReadyQueue->tail)
+    {
+        tempClient = neededClient;
+        neededClient =  tempClient->next;
+    }
+    tempClient->next=NULL;
+    ReadyQueue->tail = tempClient;
+    
+    ReadyQueue->QueueSize -= 1;
+    
+    return neededClient;
+}
+
+void QueueSize()
+{
+    printf("Queue Size: %d \n", ReadyQueue->QueueSize);
+}
+
+void PrintQueue()
+{
+    Element* client = ReadyQueue->head;
+
+    while (client != NULL)
+    {
+        printf("ID: %d \n",client->rMTask->task.Id);
+        client = client->next;
+    }
+}
 
 void ConvertTastToRMTask(Task* tasks)
 {
+    // Order tasks by its priority
+    Task* orderedTasks;
+    for (int i = 0; i < tasksCount; i++)
+    {
+        
+    }
+    
+    
+    // Then push them into newRMT array
     for (int i = 0; i < tasksCount; i++) 
     {
         RMSchedulerTask newRMT;
@@ -84,34 +157,45 @@ void RunSchedTest(Task* tasks)
     
     int schedTestResult[timeLimit];
     
-    for ( int i = 0; i< timeLimit; i++) 
+    // All tasks in ready queue at the beginning.    
+    for (int j = 0; j < tasksCount; j++) 
     {
-        // Get the highest priority tasks, (i.e. task with the lowest deadline)
-        int nextTaskIndex = GetHighestPriority(tasks);
-        
-        if (tasks[nextTaskIndex].Deadline < tasks[nextTaskIndex].ComputationTime) 
-        {
-            printf("\n *FATAL ERROR! - Task %d can't make its deadline*\n", nextTaskIndex+1);
-        }
-            
-        if (tasks[nextTaskIndex].Deadline < timeLimit) 
-        {
-            printf("\n *FATAL ERROR! - Task %d couldn't make its deadline*\n", nextTaskIndex+1);
-        }
-        
-        // Run task
-        schedTestResult[i] = RMTs[nextTaskIndex].task.Id;
-        
-        if (RMTs[nextTaskIndex].currentExecTime == RMTs[nextTaskIndex].task.ComputationTime) {
-
-        }
-
-        
-        
-
+        Push(tasks[j]);
     }
 
+    int k = 0;
+    int t = 0;
     
+    while(1)
+    {
+        for (int i = 0; i < RMTs[t].task.ComputationTime; i++) 
+        {
+            schedTestResult[k] = RMTs[t].task.Id;
+            RMTs[t].currentExecTime++;
+            k++;
+            
+            if (k > timeLimit) 
+            {
+                break;
+            }
+            
+            if (RMTs[t].currentExecTime == RMTs[t].task.ComputationTime)
+            {
+                RMTs[t].deadlineMet = 1;
+                RMTs[t].currentExecTime = 0;
+                t++;
+            }
+            
+            if (RMTs[t].deadlineMet == 0 && RMTs[t].currentExecTime > RMTs[t].task.ComputationTime) 
+            {
+                printf("\nFATAL ERROR: Task %d missed its deadline!\n ", RMTs[t].task.Id);
 
-    
+            }
+        }
+        
+        if (k > timeLimit) 
+        {
+            break;
+        }
+    }
 }
