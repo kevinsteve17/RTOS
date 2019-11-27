@@ -13,9 +13,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Task.h"
+#include "RateMonotonicScheduler.h"
 #include "TexFileGenerator.h"
 #include "GraphicalUserInterface.h"
+
 
 
 void executeScheduler(int tasksID, int execTime, int deadline, int period)
@@ -36,7 +37,16 @@ void executeScheduler(int tasksID, int execTime, int deadline, int period)
 int main(int argc, char** argv) 
 { 
     //////////////////////// Debug
-    GenerateTexFile();
+    //GenerateTexFile();
+    int nums[3] = {6,9,18};
+    int count = 3;
+    
+    int c =  LCM(nums,count);
+    printf("GCD is: %d", c);
+    // int LCM = CalculateLeastCommonMultiple(nums, count);
+    // printf("LCM is: %d", LCM);
+    
+    tasksCount = 3;
     //////////////////////// Debug End
          
     /*

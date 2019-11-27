@@ -12,6 +12,7 @@
       <itemPath>Task.h</itemPath>
       <itemPath>TexFileGenerator.h</itemPath>
       <itemPath>TexUtilities.h</itemPath>
+      <itemPath>Utilities.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -81,6 +82,8 @@
       </item>
       <item path="TexUtilities.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Utilities.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -129,6 +132,8 @@
       <item path="TexFileGenerator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TexUtilities.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utilities.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>

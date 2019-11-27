@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-    
+    int tasksCount;
     typedef struct SchedTask Task;
     typedef struct SchedulingResult SchedResult;
     

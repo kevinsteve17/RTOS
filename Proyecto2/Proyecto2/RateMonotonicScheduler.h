@@ -17,22 +17,25 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
 #include "Task.h"
+
     
-    typedef struct RateMonotonicSched RMScheduler;
+    typedef struct RateMonotonicSched RMSchedulerTask;
     
     struct RateMonotonicSched
     {
         Task task;
-        int currentDeadline;
+        int currentExecTime;
         int nextDeadline;
         int deadlineMet;
         int scaleFactor;
     };
     
-    void CalculateCPU_Utilization(Task* tasks, int taskCount);
-    void CalculateSchedTest(int tasksCount);
+    void ConvertTastToRMTask(Task* tasks);
+    int GetHighestPriority(Task* tasks);
+    void CalculateCPU_Utilization(Task* tasks);
+    void CalculateSchedTest();
     void RunSchedTest();
     
 
