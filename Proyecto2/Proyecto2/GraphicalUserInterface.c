@@ -8,14 +8,14 @@ GtkWidget *window;
 GtkWidget *grid_main;
 
 // Task Spreadsheet
-GtkWidget *entry_computation[6];
-GtkWidget *entry_period[6];
+GtkWidget *entry_computation[NUM_OF_TASKS];
+GtkWidget *entry_period[NUM_OF_TASKS];
 
 // Tasks struct
 int leastCommonMultiple = 1;
-int maxNumberOfTasks = 6;
+int maxNumberOfTasks = NUM_OF_TASKS;
 int numberOfTasks;
-Task tasks[6];
+Task tasks[NUM_OF_TASKS];
 
 // Control variables (0=Off, 1=On)
 int isRmEnabled = 0;

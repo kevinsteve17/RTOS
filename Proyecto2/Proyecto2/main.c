@@ -17,6 +17,7 @@
 #include "TexFileGenerator.h"
 #include "GraphicalUserInterface.h"
 #include "LeastLaxityFirstScheduler.h"
+#include "EarliestDeadlineFirstScheduler.h"
 
 
 // Control variables (0=Off, 1=On)
@@ -102,9 +103,7 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     }
     if (isEdfEnabled == 1)
     {
-        //void CalculateEdfSchedTest(Task* task, int tasksCount);
-        //bool RunEdfSchedTest();
-        //void PerformEdfSched(Task* task, int tasksCount);
+        RunEdfSched();
     }
     if (isLlfEnabled == 1)
     {

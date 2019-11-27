@@ -4,16 +4,16 @@
 #include <unistd.h>
 
 // Program Global Variables
-extern Task tasks[6];
+extern Task tasks[NUM_OF_TASKS];
 extern int maxNumberOfTasks;
 extern int numberOfTasks;
 extern int leastCommonMultiple;
 
 // File Global Variables
-int tasksComputation[6];
-int tasksDeadline[6];
-int tasksPeriod[6];
-int tasksLaxity[6];
+int tasksComputation[NUM_OF_TASKS];
+int tasksDeadline[NUM_OF_TASKS];
+int tasksPeriod[NUM_OF_TASKS];
+int tasksLaxity[NUM_OF_TASKS];
 int minLaxity;
 int minLaxityIndex;
 

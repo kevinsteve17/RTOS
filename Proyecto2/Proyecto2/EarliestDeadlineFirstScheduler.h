@@ -13,7 +13,6 @@
 
 #ifndef EARLIESTDEADLINEFIRSTSCHEDULER_H
 #define EARLIESTDEADLINEFIRSTSCHEDULER_H
-#define NUM_OF_TASKS 3
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,16 +39,22 @@ struct task_client
     taskClient* next;
 };
 
+// EDF
 void EdfCalculateSchedTest(Task* task, int tasksCount);
 bool EdfRunSchedTest();
 void EdfStartSched(Task* task, int tasksCount);
+void RunEdfSched();
+
+// ready queue
 void AddTaskToReadyQueue(Task* task, int simPeriod);
+bool RemoveCompletedTasks();
+void InitReadyQueue(Task* task, int tasksCount);
+bool AddNewTasks(int t);
+void UpdateTaskComputationTime(int id);
 taskClient* GetTaskFromReadyQueue();
 
 // debug utils
 void EdfPopulateTaskstructures();
-void edf_test();
-
 
 #ifdef __cplusplus
 }
