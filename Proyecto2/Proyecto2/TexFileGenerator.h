@@ -20,7 +20,6 @@ extern "C" {
     
     
 #include <string.h>
-#include "RateMonotonicScheduler.h"
 #include "SimulationRTOS.h"
     
     typedef struct CoverPageStruct CoverPage;

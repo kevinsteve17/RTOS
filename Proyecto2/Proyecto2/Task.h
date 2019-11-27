@@ -20,6 +20,7 @@ extern "C" {
 
 #define NUM_OF_TASKS 6
     
+    int tasksCount;
     typedef struct SchedTask Task;
     typedef struct SchedulingResult SchedResult;
     

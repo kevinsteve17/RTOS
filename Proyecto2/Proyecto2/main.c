@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Task.h"
+#include "RateMonotonicScheduler.h"
 #include "TexFileGenerator.h"
 #include "GraphicalUserInterface.h"
 #include "LeastLaxityFirstScheduler.h"
@@ -32,28 +32,19 @@ extern int maxNumberOfTasks;            // Hardcoded to 6
 extern int numberOfTasks;               // Number of tasks with period != 0
 extern int leastCommonMultiple;         // LCM of tasks with period != 0
 
-
-
-// *****************************************************************************
-// *****************************************************************************
-void executeScheduler(int tasksID, int execTime, int deadline, int period)
-{
-    Task newTask;
-    
-    newTask.Id = tasksID;
-    newTask.ComputationTime = execTime;
-    newTask.Period = period;
-    newTask.Deadline = deadline;
-}
-
-
-
-// *****************************************************************************
-// *****************************************************************************
 int main(int argc, char** argv) 
 { 
     //////////////////////// Debug
-    GenerateTexFile();
+    //GenerateTexFile();
+    int nums[3] = {6,9,18};
+    int count = 3;
+    
+    int c =  LCM(nums,count);
+    printf("GCD is: %d", c);
+    // int LCM = CalculateLeastCommonMultiple(nums, count);
+    // printf("LCM is: %d", LCM);
+    
+    tasksCount = 3;
     //////////////////////// Debug End
          
     

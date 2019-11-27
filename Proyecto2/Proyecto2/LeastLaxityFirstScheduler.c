@@ -1,5 +1,4 @@
 #include "LeastLaxityFirstScheduler.h"
-#include "Task.h"
 #include <stdio.h>
 #include <unistd.h>
 
@@ -46,17 +45,17 @@ void LLF_RunSchedTest()
         // For each task, check its deadline and calculate its laxity
         for (int task=0 ; task<numberOfTasks ; task++)
         {
-            // Check tasks deadlines
-            if (tasksComputation[task] > tasksDeadline[task])
-            {
-                // Force the main loop to end
-                printf("\n *Bombastic! - Task %d can't make its deadline*\n", task);
-                time = timeLimit;
-            }
-
             // Check if we need to renew a task values due to new period
             if ((time > 0) && (time % tasksPeriod[task] == 0))
             {
+                // We can't have pending computation time when we hit the
+                // task deadline!
+                if (tasksComputation[task] > 0)
+                {
+                    // Bombastic!
+                    time = timeLimit;
+                }
+                
                 tasksComputation[task] = tasks[task].ComputationTime;
                 tasksDeadline[task] = tasks[task].Deadline;
             }
