@@ -16,24 +16,21 @@
 #include "RateMonotonicScheduler.h"
 #include "TexFileGenerator.h"
 #include "GraphicalUserInterface.h"
+#include "LeastLaxityFirstScheduler.h"
 
 
+// Control variables (0=Off, 1=On)
+extern int isRmEnabled;                 // Rate Monotonic Enable
+extern int isEdfEnabled;                // Earliest Deadline First Enable
+extern int isLlfEnabled;                // Least Laxity Enable
+extern int isSinglePageOutputEnabled;   // Single page Latex output
 
-void executeScheduler(int tasksID, int execTime, int deadline, int period)
-{
-    Task newTask;
-    
-    newTask.Id = tasksID;
-    newTask.ComputationTime = execTime;
-    newTask.Period = period;
-    newTask.Deadline = deadline;
-    
-    
-}
+// Tasks information
+extern Task tasks[6];                   // Task struct array, contains GUI input data
+extern int maxNumberOfTasks;            // Hardcoded to 6
+extern int numberOfTasks;               // Number of tasks with period != 0
+extern int leastCommonMultiple;         // LCM of tasks with period != 0
 
-/*
- * 
- */
 int main(int argc, char** argv) 
 { 
     //////////////////////// Debug
@@ -49,7 +46,7 @@ int main(int argc, char** argv)
     tasksCount = 3;
     //////////////////////// Debug End
          
-    /*
+    
     // Start Debug Display
     GtkApplication *app;
     int status;
@@ -65,9 +62,45 @@ int main(int argc, char** argv)
 
     // CleanUp
     g_object_unref (app);
-   */
+    
     
     //return status;
     return (EXIT_SUCCESS);
 }
+
+
+
+// *****************************************************************************
+// Function:    DoScheduling
+// Description: Event handler of "Calendarizar" button
+//
+void DoScheduling(GtkWidget *gtk_control, gpointer data) 
+{
+    printf("Function call: DoScheduling()\n");
+    
+    // Read values from debug display spreadsheet grid
+    ReadSpreadsheet();
+    // Calculate LCM
+    CalculateLeastCommonMultiple();
+    
+    // Start Scheduling
+    
+    if (isRmEnabled == 1)
+    {
+        //void CalculateCPU_Utilization(Task* tasks, int taskCount);
+        //void CalculateSchedTest(int tasksCount);
+        //void RunSchedTest();
+    }
+    if (isEdfEnabled == 1)
+    {
+        //void CalculateEdfSchedTest(Task* task, int tasksCount);
+        //bool RunEdfSchedTest();
+        //void PerformEdfSched(Task* task, int tasksCount);
+    }
+    if (isLlfEnabled == 1)
+    {
+        LLF_RunSchedTest();
+    }
+}
+
 
