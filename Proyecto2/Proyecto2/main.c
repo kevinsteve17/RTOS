@@ -80,7 +80,9 @@ int main(int argc, char** argv)
 
 
 // *****************************************************************************
-// *****************************************************************************
+// Function:    DoScheduling
+// Description: Event handler of "Calendarizar" button
+//
 void DoScheduling(GtkWidget *gtk_control, gpointer data) 
 {
     printf("Function call: DoScheduling()\n");

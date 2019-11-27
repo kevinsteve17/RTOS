@@ -17,7 +17,7 @@ int tasksLaxity[6];
 int minLaxity;
 int minLaxityIndex;
 
-
+// *****************************************************************************
 // Function:    LLF_CalculateLeastCommonMultiple
 // Description: Calculates the Least Common Multiple of the available tasks.
 //              This sets the limit of the simulation time.
@@ -50,7 +50,7 @@ void LLF_RunSchedTest()
             if (tasksComputation[task] > tasksDeadline[task])
             {
                 // Force the main loop to end
-                printf("\n *Bombastic! - Task %d can't make its deadline*\n", task+1);
+                printf("\n *Bombastic! - Task %d can't make its deadline*\n", task);
                 time = timeLimit;
             }
 

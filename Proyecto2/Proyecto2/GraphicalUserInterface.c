@@ -1,12 +1,9 @@
 #include "GraphicalUserInterface.h"
 #include "Task.h"
-#include "LeastLaxityFirstScheduler.h"
-
-// Global Variables
-int GuiWindowWidth = 1;
-int GuiWindowHeight = 1;
 
 // Main window and grid
+int GuiWindowWidth = 1;
+int GuiWindowHeight = 1;
 GtkWidget *window;
 GtkWidget *grid_main;
 
@@ -26,11 +23,20 @@ int isEdfEnabled = 0;
 int isLlfEnabled = 0;
 int isSinglePageOutputEnabled = 0;
 
+
+// *****************************
+// DISPLAY CONSTRUCTOR FUNCTIONS    
+// *****************************
+
 // *****************************************************************************
-// *****************************************************************************
+// Function:    StartGUI
+// Description: GUI constructor main function
+//
 void StartGUI (GtkApplication *app,
                gpointer        user_data)
 {  
+    printf("Function call: StartGUI()\n");
+    
     // ---------------
     // GUI constructor
     // ---------------
@@ -52,9 +58,13 @@ void StartGUI (GtkApplication *app,
 
 
 // *****************************************************************************
-// *****************************************************************************
+// Function:    CreateMainWindowAndGrid
+// Description: Creates main window and main grid
+//
 void CreateMainWindowAndGrid(GtkApplication *app)
 {
+    printf("Function call: CreateMainWindowAndGrid()\n");
+    
     // Create a new window
     window = gtk_application_window_new (app);
     gtk_window_set_title (GTK_WINDOW (window), "Proyecto 2 - El Calendarizador Real-Time");
@@ -67,9 +77,13 @@ void CreateMainWindowAndGrid(GtkApplication *app)
 
 
 // *****************************************************************************
-// *****************************************************************************
+// Function:    CreateAlgorithmsFrameAndControls
+// Description: Creates the algorithm selection section
+//
 void CreateAlgorithmsFrameAndControls()
 {
+    printf("Function call: CreateAlgorithmsFrameAndControls()\n");
+    
     // 1. Create a frame
     GtkWidget *frame_algoritmos;
     frame_algoritmos = gtk_frame_new("Algoritmos");
@@ -89,27 +103,31 @@ void CreateAlgorithmsFrameAndControls()
     // Rate monotonic button
     GtkWidget *checkButton_RM;
     checkButton_RM = gtk_check_button_new_with_label("RM");
-    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_RM), "toggled", G_CALLBACK(toggle_RM), NULL);
+    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_RM), "toggled", G_CALLBACK(Toggle_RM), NULL);
     gtk_grid_attach(GTK_GRID(grid_algoritmos), checkButton_RM, 0,0,1,1);
     
     // Earliest Deadline First button
     GtkWidget *checkButton_EDF;
     checkButton_EDF = gtk_check_button_new_with_label("EDF");
-    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_EDF), "toggled", G_CALLBACK(toggle_EDF), NULL);
+    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_EDF), "toggled", G_CALLBACK(Toggle_EDF), NULL);
     gtk_grid_attach(GTK_GRID(grid_algoritmos), checkButton_EDF, 0,1,1,1);
     
     // Least Laxity First button
     GtkWidget *checkButton_LLF;
     checkButton_LLF = gtk_check_button_new_with_label("LLF");
-    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_LLF), "toggled", G_CALLBACK(toggle_LLF), NULL);
+    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_LLF), "toggled", G_CALLBACK(Toggle_LLF), NULL);
     gtk_grid_attach(GTK_GRID(grid_algoritmos), checkButton_LLF, 0,2,1,1);  
 }
 
 
 // *****************************************************************************
-// *****************************************************************************
+// Function:    CreateAlgorithmsFrameAndControls
+// Description: Creates the latex output configuration controls
+//
 void CreateResultsFrameAndControls()
 {
+    printf("Function call: CreateResultsFrameAndControls()\n");
+    
     // 1. Create a frame
     GtkWidget *frame_salida;
     frame_salida = gtk_frame_new("Salida");
@@ -129,15 +147,19 @@ void CreateResultsFrameAndControls()
     // Single slide button
     GtkWidget *checkButton_individualSlide;
     checkButton_individualSlide = gtk_check_button_new_with_label("Filmina Individual");
-    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_individualSlide), "toggled", G_CALLBACK(toggle_Output), NULL);
+    g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_individualSlide), "toggled", G_CALLBACK(Toggle_Output), NULL);
     gtk_grid_attach(GTK_GRID(grid_salida), checkButton_individualSlide, 0,0,1,1);
 }
 
 
 // *****************************************************************************
-// *****************************************************************************
+// Function:    CreateButtonControls
+// Description: Creates the button controls
+//
 void CreateButtonControls()
 {
+    printf("Function call: CreateButtonControls()\n");
+    
     //GtkWidget *button_addTask;
     //button_addTask = gtk_button_new_with_label("Agregar Tarea");
     //g_signal_connect(button_addTask, "clicked", G_CALLBACK(DoScheduling), NULL);
@@ -156,9 +178,13 @@ void CreateButtonControls()
 
 
 // *****************************************************************************
-// *****************************************************************************
+// Function:    CreateTaskSpreadsheet
+// Description: Creates spreadsheet grid section
+//
 void CreateTaskSpreadsheet()
 {
+    printf("Function call: CreateTaskSpreadsheet()\n");
+    
     // 1. Create a frame
     GtkWidget *frame_tasks;
     frame_tasks = gtk_frame_new("Tareas");
@@ -221,12 +247,103 @@ void CreateTaskSpreadsheet()
     } 
 }
 
+// **************
+// EVENT HANDLERS
+// **************
 
+// *****************************************************************************
+// Function:    toggle_RM
+// Description: Check button event handler
+//
+void Toggle_RM(GtkWidget *gtk_control, gpointer data) 
+{
+    printf("Function call: Toggle_RM()\n");
+    
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
+    {
+        // ON
+        isRmEnabled = 1;
+    }
+    else
+    {
+        // OFF
+        isRmEnabled = 0;
+    } 
+}
 
+// *****************************************************************************
+// Function:    toggle_EDF
+// Description: Check button event handler
+//
+void Toggle_EDF(GtkWidget *gtk_control, gpointer data) 
+{
+    printf("Function call: Toggle_EDF()\n");
+    
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
+    {
+        // ON
+        isEdfEnabled = 1;
+    }
+    else
+    {
+        // OFF
+        isEdfEnabled = 0;
+    } 
+}
 
+// *****************************************************************************
+// Function:    toggle_LLF
+// Description: Check button event handler
+//
+void Toggle_LLF(GtkWidget *gtk_control, gpointer data) 
+{
+    printf("Function call: Toggle_LLF()\n");
+    
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
+    {
+        // ON
+        isLlfEnabled = 1;
+    }
+    else
+    {
+        // OFF
+        isLlfEnabled = 0;
+    } 
+}
 
+// *****************************************************************************
+// Function:    toggle_Output
+// Description: Check button event handler
+//
+void Toggle_Output(GtkWidget *gtk_control, gpointer data) 
+{
+    printf("Function call: Toggle_Output()\n");
+    
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
+    {
+        // ON
+        isSinglePageOutputEnabled = 1;
+    }
+    else
+    {
+        // OFF
+        isSinglePageOutputEnabled = 0;
+    } 
+}
+
+// *****************
+// UTILITY FUNCTIONS
+// *****************
+
+// *****************************************************************************
+// Function:    ReadSpreadsheet
+// Description: Utility function, reads the spreadsheet grid in the GUI and 
+//              populates the task struct array
+//
 void ReadSpreadsheet()
 {
+    printf("Function call: ReadSpreadsheet()\n");
+    
     // Read task spreadsheet 
     const gchar *text;
     int computation;
@@ -263,6 +380,7 @@ void ReadSpreadsheet()
 // Function:    CalculateLeastCommonMultiple
 // Description: Calculates the Least Common Multiple of the available tasks.
 //              This sets the limit of the simulation time.
+//
 void CalculateLeastCommonMultiple()
 {  
     printf("Function call: CalculateLeastCommonMultiple()\n");
@@ -297,70 +415,4 @@ void CalculateLeastCommonMultiple()
         
         leastCommonMultiple++;
     }   
-}
-
-
-
-// *****************************************************************************
-// *****************************************************************************
-void toggle_RM(GtkWidget *gtk_control, gpointer data) 
-{
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
-    {
-        // ON
-        isRmEnabled = 1;
-    }
-    else
-    {
-        // OFF
-        isRmEnabled = 0;
-    } 
-}
-
-// *****************************************************************************
-// *****************************************************************************
-void toggle_EDF(GtkWidget *gtk_control, gpointer data) 
-{
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
-    {
-        // ON
-        isEdfEnabled = 1;
-    }
-    else
-    {
-        // OFF
-        isEdfEnabled = 0;
-    } 
-}
-
-// *****************************************************************************
-// *****************************************************************************
-void toggle_LLF(GtkWidget *gtk_control, gpointer data) 
-{
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
-    {
-        // ON
-        isLlfEnabled = 1;
-    }
-    else
-    {
-        // OFF
-        isLlfEnabled = 0;
-    } 
-}
-
-// *****************************************************************************
-// *****************************************************************************
-void toggle_Output(GtkWidget *gtk_control, gpointer data) 
-{
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_control)))
-    {
-        // ON
-        isSinglePageOutputEnabled = 1;
-    }
-    else
-    {
-        // OFF
-        isSinglePageOutputEnabled = 0;
-    } 
 }

@@ -20,9 +20,9 @@ extern "C" {
 #include "Task.h"
 
     
-// ----------
-// SCHEDULING
-// ----------
+// ---------------------
+// SCHEDULING SIMULATION
+// ---------------------
 void LLF_RunSchedTest();
 
 
