@@ -52,6 +52,8 @@ extern "C" {
     void GenerateAlgorithmsResults();
     void GenerateTexFile(SchedResult* schedResults);
     char * GenerateTableSimContents();
+    char * GenerateTableContents(SchedResult* schedResults);
+    char * GetTaskColor(int i);
 
 
 

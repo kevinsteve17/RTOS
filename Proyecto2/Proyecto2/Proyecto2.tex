@@ -1,6 +1,6 @@
 \documentclass[aspectratio=43, xcolor=table]{beamer}
 \usepackage[english]{babel}
-\usepackage[table,xcdraw]{xcolor}
+% \usepackage[table,xcdraw]{xcolor}
 \input{preamble}
 \title{RTOS Schedulability}
 \subtitle{Proyecto 2}
@@ -31,9 +31,9 @@
 \centering
 \begin{tabular}{|p{3mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|}
 \hline
-\tiny T1& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline
-\tiny T2& \cellcolor{grey}&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \cellcolor{green}&  \cellcolor{green}&  &  &  &  &  &  &  &  &  \cellcolor{green}&  \cellcolor{green}&  \cellcolor{green}&  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline\tiny T3& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline
-\tiny T4& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\ \hline
+\tiny T1& \cellcolor{red}&  &  &  &  &  \cellcolor{red}&  &  &  &  &  &  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{red}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{red}&  &  &  &  &  \cellcolor{red}&  &  &  &  \cellcolor{white}&  \cellcolor{red}&  \cellcolor{white}&  &  &  \cellcolor{white}&  \cellcolor{red}&  \cellcolor{white}&  \cellcolor{white}&  &  &  \cellcolor{red}&  &  &  &  &  \cellcolor{red}&  &  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{red}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{red}&  \cellcolor{white}&  &  &  &  \cellcolor{red}&  &  &  &\\ \hline
+\tiny T2& &  \cellcolor{green}&  \cellcolor{green}&  &  &  &  &  &  \cellcolor{green}&  \cellcolor{green}&  &  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  &  &  &  &  &  \cellcolor{green}&  &  \cellcolor{green}&  &  &  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{green}&  \cellcolor{green}&  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{white}&  &  &  &  \cellcolor{green}&  \cellcolor{green}&  &  &  &  &  &  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{white}&  &  &  &  &  &  &  &\\ \hline
+\tiny T3& &  &  &  \cellcolor{blue}&  \cellcolor{blue}&  &  \cellcolor{blue}&  \cellcolor{blue}&  &  &  \cellcolor{blue}&  \cellcolor{blue}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{blue}&  &  \cellcolor{blue}&  \cellcolor{blue}&  \cellcolor{blue}&  &  &  &  \cellcolor{blue}&  \cellcolor{blue}&  \cellcolor{white}&  &  \cellcolor{white}&  &  &  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{blue}&  \cellcolor{blue}&  &  &  &  \cellcolor{blue}&  \cellcolor{blue}&  &  \cellcolor{blue}&  \cellcolor{blue}&  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  \cellcolor{white}&  &  \cellcolor{white}&  \cellcolor{blue}&  \cellcolor{blue}&  \cellcolor{blue}&  &  \cellcolor{blue}&  \cellcolor{blue}&  \cellcolor{blue}&\\ \hline
 \end{tabular}
 \end{table}
 \end{frame}
