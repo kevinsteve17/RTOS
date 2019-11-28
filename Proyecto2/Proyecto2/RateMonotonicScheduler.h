@@ -22,6 +22,8 @@ extern "C" {
 
     
     typedef struct RateMonotonicSched RMSchedulerTask;
+    typedef struct RMQueueStruct Queue;
+    typedef struct RMClient Element;
     
     struct RateMonotonicSched
     {
@@ -32,12 +34,30 @@ extern "C" {
         int scaleFactor;
     };
     
+    struct RMQueueStruct 
+    {
+        Element* head;
+        Element* tail;
+        int QueueSize;
+    };
+
+    struct RMClient 
+    {
+        RMSchedulerTask* rMTask;
+        Element* next;
+    };
+    
     void ConvertTastToRMTask(Task* tasks);
     int GetHighestPriority(Task* tasks);
     void CalculateCPU_Utilization(Task* tasks);
     void CalculateSchedTest();
     void RunSchedTest();
     
+    void InitFCFSSched();
+    void Push(RMSchedulerTask* process);
+    Element* Pop();
+    void PrintQueue();
+    void QueueSize();
 
 
 
