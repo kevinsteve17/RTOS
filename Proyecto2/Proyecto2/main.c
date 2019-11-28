@@ -32,6 +32,7 @@ extern int maxNumberOfTasks;            // Hardcoded to 6
 extern int numberOfTasks;               // Number of tasks with period != 0
 extern int leastCommonMultiple;         // LCM of tasks with period != 0
 extern EDFTask* edfResutls;
+extern RMSchedResult* Results;
 
 int main(int argc, char** argv) 
 { 
