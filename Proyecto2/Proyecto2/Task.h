@@ -35,6 +35,7 @@ extern "C" {
     
     struct SchedulingResult
     {
+        int Color;
         double CPU_Utilization;
         double SchedTest;
         Task* TaskInfo;
