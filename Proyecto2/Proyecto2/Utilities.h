@@ -41,7 +41,10 @@ extern "C" {
         int result = input[0];
         for (int i = 0; i < inputCount; i++) 
         {
-            result = lcm(result, input[i]);
+            if (result != 0 && input[i] != 0) 
+            {
+                result = lcm(result, input[i]);
+            }
         }
         return result;
     }
