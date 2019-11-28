@@ -9,11 +9,7 @@
 #include <stdbool.h>
 #include "EarliestDeadlineFirstScheduler.h"
 
-/*
-Task edf_tasks[NUM_OF_TASKS];
-*/
-
-int simulationCicles = 52;
+int simulationCicles = SIM_CYCLES;
 
 EDFTask* edfResutls;
 readyQueue* ReadyQueue;
@@ -234,7 +230,6 @@ void EdfStartSched(Task* task, int tasksCount)
 
         // get earliest deadline task
         taskClient* task = GetTaskFromReadyQueue();
-
 
         // start sim cicles exec
         for (int t = 0; t < simulationCicles; t++)
