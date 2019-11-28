@@ -10,86 +10,195 @@
 #include "Utilities.h"
 
 
-SchedResult* Results;
+RMSchedResult* Results;
 Queue* ReadyQueue;
 
-void InitFCFSSched()
-{
-    // initialize the Queue
-    ReadyQueue = malloc(sizeof(Queue));
-    ReadyQueue->head =  NULL;
-    ReadyQueue->tail = NULL;
-    ReadyQueue->QueueSize = 0;
-}
+extern Task tasks[NUM_OF_TASKS];
+extern int leastCommonMultiple;
 
-void Push(Task* process)
+
+
+/*
+ * Adds task to ready queue
+ */
+void AddRMTaskToReadyQueue(Task* task, int simPeriod)
 {
-    Element* newProcess = malloc(sizeof(Element));
-    newProcess->rMTask = process;
+    RMTaskClient* newTask = malloc(sizeof(RMTaskClient));
+    
+    // update deadline given simulation time
+    task->Deadline += simPeriod;
+
+    newTask->rMTask = task;
 
     if (ReadyQueue->tail != NULL)
     {
-        newProcess->next = ReadyQueue->head;
-        ReadyQueue->head = newProcess;
+        newTask->next = ReadyQueue->head;
+        ReadyQueue->head = newTask;
     }
     else
     {
-        ReadyQueue->tail = newProcess;
-        ReadyQueue->head = newProcess;
+        ReadyQueue->tail = newTask;
+        ReadyQueue->head = newTask;
         ReadyQueue->tail->next = NULL;
-        //ProcessQueue->head->next = NULL; 
     }
-
-    // Update counter
-    ReadyQueue->QueueSize += 1;
 }
 
-Element* Pop()
+/*
+ * Delets task from ready queue
+ */
+bool RemoveRMCompletedTasks() 
 {
-    Element* neededClient = ReadyQueue->head;
-    Element* tempClient = ReadyQueue->head;
+    RMTaskClient* client = ReadyQueue->head;
+    RMTaskClient* target = client, *prev;
 
-    while (neededClient != ReadyQueue->tail)
+    // If head node itself is completed, delete it
+    if (target != NULL && target->rMTask->ComputationTime == 0) 
+    { 
+        ReadyQueue->head = target->next;    // Changed head 
+        free(target);                       // free old head
+        ReadyQueue->QueueSize--;
+        return true; 
+    }
+
+    // Search task be deleted, keep track of the 
+    // previous node as we need to change 'prev->next' 
+    while (target != NULL && target->rMTask->ComputationTime != 0) 
+    { 
+        prev = target; 
+        target = target->next; 
+    }
+  
+    // If key was not present in linked list 
+    if (target == NULL) 
     {
-        tempClient = neededClient;
-        neededClient =  tempClient->next;
+        return false; 
     }
-    tempClient->next=NULL;
-    ReadyQueue->tail = tempClient;
-    
-    ReadyQueue->QueueSize -= 1;
-    
-    return neededClient;
+  
+    // Unlink the node from linked list 
+    prev->next = target->next;
+
+    free(target);  // Free memory 
+    return true; 
 }
 
-void QueueSize()
+void UpdateRMTaskComputationTime(int id)
 {
-    printf("Queue Size: %d \n", ReadyQueue->QueueSize);
-}
+    RMTaskClient* task = ReadyQueue->head;
 
-void PrintQueue()
-{
-    Element* client = ReadyQueue->head;
-
-    while (client != NULL)
+    while (task != NULL)
     {
-        printf("ID: %d \n",client->rMTask->Id);
-        client = client->next;
+        if (task->rMTask->Id == id)
+        {
+            task->rMTask->ComputationTime --;
+            break;
+        }
+        
+        task = task->next;
     }
 }
 
+/*
+ * Gets earliest deadline Task from ReadyQueue
+ */
+RMTaskClient* GetRMTaskFromReadyQueue()
+{
+    RMTaskClient* task = ReadyQueue->head;
+    RMTaskClient* target = NULL;
+
+    if (task != NULL)
+    {
+        int earliestDeadline = task->rMTask->Period;
+        target = task;
+
+        while (task != NULL)
+        {
+            if (task->next == NULL)
+            {
+                break;
+            }
+            else if (task->next->rMTask->Period < earliestDeadline)
+            {
+                target = task->next;
+                earliestDeadline = target->rMTask->Period;
+            }
+            
+            task = task->next;
+        }
+    }
+
+    /*printf("--> GetRMTaskFromReadyQueue() \n");
+    printf("--> id: %i \n",target->clientTask->Id);
+    printf("--> ComputationTime: %f \n",target->clientTask->ComputationTime);
+    printf("--> Deadline: %f \n",target->clientTask->Deadline);*/
+
+    return target;
+}
+
+/*
+ * Inits ReadyQueue
+ */
+void InitRMReadyQueue(Task* task, int tasksCount)
+{
+    if (task != NULL)
+    {
+        for (int i = 0; i < tasksCount; i++) 
+        {
+            if (task[i].ComputationTime>0 && task[i].Period>0)
+            {
+                Task* t = malloc(sizeof(Task));
+                t->Id = task[i].Id;
+                t->ComputationTime = task[i].ComputationTime;
+                t->Deadline = task[i].Deadline;
+                t->Period = task[i].Period;
+                AddRMTaskToReadyQueue(t, 0);                
+            }
+        }    
+    }
+}
+
+/*
+ * Adds new tasks to ready queue based on current t and tasks period
+ */
+bool AddNewRMTasks(int t)
+{
+    bool newTaskAdded = false;
+
+    for (int i=0; i < NUM_OF_TASKS; i++)
+    {
+        if ((t!=0) && ((int)Results->TaskInfo[i].Period != 0) && ((t % (int)Results->TaskInfo[i].Period) == 0))
+        {
+            Task* task = malloc(sizeof(Task));
+            task->Id = Results->TaskInfo[i].Id;
+            task->ComputationTime = Results->TaskInfo[i].ComputationTime;
+            task->Deadline = Results->TaskInfo[i].Deadline + t;
+            task->Period = Results->TaskInfo[i].Period;
+            AddRMTaskToReadyQueue(task, 0);
+
+            newTaskAdded = true; 
+        }
+    }
+    
+    return newTaskAdded;
+}
 
 
+/*
+ * Computes RM CPU utilization
+ * u = Σ (c/p), u<=1
+ */
 bool CalculateCPU_Utilization(Task* task)
 {
     bool result = true;
     int i;
     for (i = 0; i < tasksCount; i++) 
     {
-        Results->CPU_Utilization += (double)(task->ComputationTime/task->Deadline);
+        if (task[i].Deadline != 0) 
+        {
+            Results->CPU_Utilization += (double)(task[i].ComputationTime/task[i].Deadline);
+        }
     }
     
-    if (Results->CPU_Utilization > 1) 
+    if (Results->CPU_Utilization > 1.0) 
     {
         result = false;
         printf("WARNING: CPU utilization for RM is %f and it is greater than one!", Results->CPU_Utilization);
@@ -98,6 +207,10 @@ bool CalculateCPU_Utilization(Task* task)
     return result;
 }
 
+/*
+ * Computes RM Schedulability Test.
+ * U(n) = n(2^(1/n) - 1)
+ */
 bool  CalculateSchedTest()
 {
     double n = (double)tasksCount;
@@ -116,6 +229,10 @@ bool  CalculateSchedTest()
     }
 }
 
+/*
+ * 
+ * 
+ */
 int GetHighestPriority(Task* tasks)
 {
     int highestPriority = 0;
@@ -131,39 +248,112 @@ int GetHighestPriority(Task* tasks)
 }
 
 
-void RunSchedTest(Task* tasks)
+void RunRMSchedTest(Task* tasks)
 {
+    int periods[tasksCount];
+    bool readyqueueUpdate = false;
     
-    if (CalculateCPU_Utilization(tasks)) {
-
+    if (!CalculateCPU_Utilization(tasks)) 
+    {
+        printf("\n CPU utilization is greater than one, RM will not run\n");
+        return;
     }
 
-    // Get CPU utilization factor
-    CalculateCPU_Utilization(tasks);
-    
     // Evaluate Schedulability Test function
     CalculateSchedTest(tasksCount);
-    
-    int periods[tasksCount];
     
     for (int i = 0; i < tasksCount; i++) 
     {
         periods[i] = tasks[i].Period;
     }
 
+    
     // run Least Common Multiple
     int lcm = LCM(periods, tasksCount);
     
     // Set time limit
     int timeLimit = lcm;
     
-    int schedTestResult[timeLimit];
+    int schedTestResult[SIM_CYCLES];
     
-    // All tasks in ready queue at the beginning.    
+    // All tasks in ready queue at the beginning. 
+    InitRMReadyQueue(tasks, tasksCount);
+    
+    // get earliest deadline task
+    RMTaskClient* task = GetRMTaskFromReadyQueue();
 
-    for (int j = 0; j < tasksCount; j++) 
+    for (int j = 0; j < SIM_CYCLES; j++) 
     {
-        //Push(tasks[j]);
+        // remove completed tasks from ready queue
+        readyqueueUpdate = RemoveRMCompletedTasks();
+        
+        // look for new arrivals in ready queue
+        readyqueueUpdate = readyqueueUpdate || AddNewRMTasks(j);
+        
+        if (readyqueueUpdate)
+        {
+            // get high priority task
+           task = GetRMTaskFromReadyQueue();
+        }
+        
+        if (task != NULL)
+        {
+            if (task->rMTask->Deadline < j)
+            {
+                printf("--> Tastk id: %i FAILED to meet deadline \n", task->rMTask->Id);
+                printf("--> Deadline: %f \n",task->rMTask->Deadline);
+                printf("--> Actual time: %i \n",j);
+                break;
+            }
+
+            // update computation time (execute task for one cycle)
+            UpdateRMTaskComputationTime(task->rMTask->Id);
+
+            // update simulation Results
+            Results->SimulationResults[j] = task->rMTask->Id;
+        }
+        else
+        {
+            // update simulation Results
+            Results->SimulationResults[j] = -1; 
+        }
+
+        printf("update simulation (%i ,%i) \n", j, Results->SimulationResults[j]);
+        readyqueueUpdate = false;
+    }
+    
+    
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("Results: \n");
+
+    for (int i = 0; i < SIM_CYCLES; i++)
+    {
+        printf("--> time: %i task: %i \n", i, Results->SimulationResults[i]);
     }
 
+}
+
+/*
+ * Populates dumy tasks for debugging purposes
+ */
+void RunRMSched()
+{
+    // init struct s
+    Results = malloc(sizeof(RMSchedResult));
+    ReadyQueue = malloc(sizeof(Queue));
+    
+    // [DEBUG] create dumy tasks
+    //EdfPopulateTaskstructures();
+    
+    // init results struct members
+    Results->CPU_Utilization = 0;
+    Results->TaskInfo = tasks;
+    Results->numberOfSimCycles = leastCommonMultiple;
+    Results->SimulationResults = (int*)malloc(sizeof(int) * Results->numberOfSimCycles);
+
+    // perform edf sched test and do sched
+    RunRMSchedTest(tasks);
 }

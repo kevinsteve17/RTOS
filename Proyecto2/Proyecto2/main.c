@@ -32,12 +32,13 @@ extern int maxNumberOfTasks;            // Hardcoded to 6
 extern int numberOfTasks;               // Number of tasks with period != 0
 extern int leastCommonMultiple;         // LCM of tasks with period != 0
 extern EDFTask* edfResutls;
+extern RMSchedResult* Results;
 
 int main(int argc, char** argv) 
 { 
     //////////////////////// Debug
     //GenerateTexFile();
-    tasksCount = 3;
+    tasksCount = 6;
     //////////////////////// Debug End
          
     
@@ -81,6 +82,8 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     
     if (isRmEnabled == 1)
     {
+        RunRMSched();
+        GenerateTexFile(Results);
         //void CalculateCPU_Utilization(Task* tasks, int taskCount);
         //void CalculateSchedTest(int tasksCount);
         //void RunSchedTest();

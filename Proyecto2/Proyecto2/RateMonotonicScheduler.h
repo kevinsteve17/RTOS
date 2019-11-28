@@ -23,32 +23,36 @@ extern "C" {
 
     
     typedef struct RMQueueStruct Queue;
-    typedef struct RMClient Element;
+    typedef struct RMClient RMTaskClient;
+    typedef struct SchedulingResult RMSchedResult;
     
     struct RMQueueStruct 
     {
-        Element* head;
-        Element* tail;
+        RMTaskClient* head;
+        RMTaskClient* tail;
         int QueueSize;
     };
 
     struct RMClient 
     {
         Task* rMTask;
-        Element* next;
+        RMTaskClient* next;
     };
     
     void ConvertTastToRMTask(Task* tasks);
     int GetHighestPriority(Task* tasks);
     bool CalculateCPU_Utilization(Task* tasks);
     bool CalculateSchedTest();
-    void RunSchedTest();
+    void RunRMSchedTest();
     
-    void InitFCFSSched();
-    void Push(Task* process);
-    Element* Pop();
-    void PrintQueue();
-    void QueueSize();
+    void AddRMTaskToReadyQueue(Task* task, int simPeriod);
+    bool RemoveRMCompletedTasks();
+    void InitRMReadyQueue(Task* task, int tasksCount);
+    bool AddNewRMTasks(int t);
+    void UpdateRMTaskComputationTime(int id);
+    RMTaskClient* GetRMTaskFromReadyQueue();
+    
+    void RunRMSched();
 
 
 
