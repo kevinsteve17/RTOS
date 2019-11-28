@@ -13,9 +13,9 @@
 Task edf_tasks[NUM_OF_TASKS];
 */
 
-int simulationCicles = 35;
+int simulationCicles = 52;
 
-EDFTask* Results;
+EDFTask* edfResutls;
 readyQueue* ReadyQueue;
 
 extern Task tasks[NUM_OF_TASKS];
@@ -29,13 +29,13 @@ void EdfCalculateSchedTest(Task* task, int tasksCount)
 {
     for (int i = 0; i < tasksCount; i++) 
     {
-        if (Results->TaskInfo[i].ComputationTime>0 && Results->TaskInfo[i].Period>0)
+        if (edfResutls->TaskInfo[i].ComputationTime>0 && edfResutls->TaskInfo[i].Period>0)
         {
-            Results->CPU_Utilization += (Results->TaskInfo[i].ComputationTime / Results->TaskInfo[i].Period);
+            edfResutls->CPU_Utilization += (edfResutls->TaskInfo[i].ComputationTime / edfResutls->TaskInfo[i].Period);
         }
     }
 
-    printf("--> EDF schedulability test: %f \n",Results->CPU_Utilization);
+    printf("--> EDF schedulability test: %f \n",edfResutls->CPU_Utilization);
 }
 
 /*
@@ -45,7 +45,7 @@ bool EdfRunSchedTest(Task* task, int tasksCount)
 {
     EdfCalculateSchedTest(task, tasksCount);    
 
-    if (Results->CPU_Utilization <= 1)
+    if (edfResutls->CPU_Utilization <= 1)
     {
         printf("--> PASSED \n");
         return true;
@@ -204,13 +204,13 @@ bool AddNewTasks(int t)
 
     for (int i=0; i < NUM_OF_TASKS; i++)
     {
-        if ((t!=0) && ((int)Results->TaskInfo[i].Period != 0) && ((t % (int)Results->TaskInfo[i].Period) == 0))
+        if ((t!=0) && ((int)edfResutls->TaskInfo[i].Period != 0) && ((t % (int)edfResutls->TaskInfo[i].Period) == 0))
         {
             Task* task = malloc(sizeof(Task));
-            task->Id = Results->TaskInfo[i].Id;
-            task->ComputationTime = Results->TaskInfo[i].ComputationTime;
-            task->Deadline = Results->TaskInfo[i].Deadline + t;
-            task->Period = Results->TaskInfo[i].Period;
+            task->Id = edfResutls->TaskInfo[i].Id;
+            task->ComputationTime = edfResutls->TaskInfo[i].ComputationTime;
+            task->Deadline = edfResutls->TaskInfo[i].Deadline + t;
+            task->Period = edfResutls->TaskInfo[i].Period;
             AddTaskToReadyQueue(task, 0);
 
             newTaskAdded = true; 
@@ -264,16 +264,16 @@ void EdfStartSched(Task* task, int tasksCount)
                 // update computation time (execute task for one cycle)
                 UpdateTaskComputationTime(task->clientTask->Id);
 
-                // update simulation results
-                Results->SimulationResults[t] = task->clientTask->Id;
+                // update simulation edfResutls
+                edfResutls->SimulationResults[t] = task->clientTask->Id;
             }
             else
             {
-                // update simulation results
-                Results->SimulationResults[t] = -1; 
+                // update simulation edfResutls
+                edfResutls->SimulationResults[t] = -1; 
             }
 
-            printf("update simulation (%i ,%i) \n", t, Results->SimulationResults[t]);
+            printf("update simulation (%i ,%i) \n", t, edfResutls->SimulationResults[t]);
             readyqueueUpdate = false;
         }
 
@@ -282,11 +282,11 @@ void EdfStartSched(Task* task, int tasksCount)
         printf("\n");
         printf("\n");
         printf("\n");
-        printf("RESULTS: \n");
+        printf("edfResutls: \n");
 
         for (int i = 0; i < simulationCicles; i++)
         {
-            printf("--> time: %i task: %i \n", i, Results->SimulationResults[i]);
+            printf("--> time: %i task: %i \n", i, edfResutls->SimulationResults[i]);
         }
         
         
@@ -299,15 +299,19 @@ void EdfStartSched(Task* task, int tasksCount)
 void RunEdfSched()
 {
     // init struct s
-    Results = malloc(sizeof(EDFTask));
+    edfResutls = malloc(sizeof(EDFTask));
     ReadyQueue = malloc(sizeof(readyQueue));
     
     // [DEBUG] create dumy tasks
     //EdfPopulateTaskstructures();
     
-    Results->CPU_Utilization = 0;
-    Results->TaskInfo = tasks;
+    // init results struct members
+    edfResutls->CPU_Utilization = 0;
+    edfResutls->TaskInfo = tasks;
+    edfResutls->numberOfSimCycles = leastCommonMultiple;
+    edfResutls->SimulationResults = (int*)malloc(sizeof(int) * edfResutls->numberOfSimCycles);
 
+    // perform edf sched test and do sched
     EdfStartSched(tasks, NUM_OF_TASKS);
 }
 

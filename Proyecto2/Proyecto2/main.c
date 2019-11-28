@@ -31,6 +31,7 @@ extern Task tasks[6];                   // Task struct array, contains GUI input
 extern int maxNumberOfTasks;            // Hardcoded to 6
 extern int numberOfTasks;               // Number of tasks with period != 0
 extern int leastCommonMultiple;         // LCM of tasks with period != 0
+extern EDFTask* edfResutls;
 
 int main(int argc, char** argv) 
 { 
@@ -87,6 +88,7 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     if (isEdfEnabled == 1)
     {
         RunEdfSched();
+        GenerateTexFile(edfResutls);
     }
     if (isLlfEnabled == 1)
     {

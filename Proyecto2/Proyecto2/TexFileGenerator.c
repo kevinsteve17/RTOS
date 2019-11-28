@@ -8,6 +8,8 @@
 #include "TexUtilities.h"
 #include "TexFileGenerator.h"
 
+extern int numberOfTasks;
+
 void GenerateCoverPage()
 {
     
@@ -18,7 +20,7 @@ void GenerateAlgorithmsResults()
     
 }
 
-void GenerateTexFile()
+void GenerateTexFile(SchedResult* schedResults)
 {
     char fileName[] = "Proyecto2.tex";
     
@@ -50,12 +52,55 @@ void GenerateTexFile()
     fputs(frameSectionPage, texFile);
     fputs(newLine, texFile);
     
-    fputs(tableSectionTemp, texFile);
-    fputs(newLine, texFile);
+    // table
+    fputs(tableSectionHeader, texFile);
+    fputs(tableHeader, texFile);
+    fputs(GenerateTableSimContents(), texFile);
+    fputs(tableEnd, texFile);
+    fputs(tableSectionEnd, texFile);
+    // table
     
     fputs(endDoc, texFile);
     
     fclose(texFile);
            
+}
+
+char * GenerateTableSimContents()
+{
+    return 
+    "\\tiny T1& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n"
+    "\\tiny T2& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline"
+    "\\tiny T3& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n"
+    "\\tiny T4& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n";
+}
+
+void contents(SchedResult* schedResults)
+{
+    char row[2048];
+    char aux[12];
+    char *tiny = "\\tiny T";
+    char *square = "&";
+    char *ret = "\n";
+    char *green = "\\cellcolor{green}";
+    char *grey = "\\cellcolor{grey}";
+    char *red = "\\cellcolor{red}";
+    char *blue = "\\cellcolor{blue}";
+    char *space = " ";
+
+    for (int i = 0; i < numberOfTasks; i++)
+    {
+        strcpy(row, tiny);
+        sprintf(aux, "%d", i);
+        strcat(row, aux);
+        strcat(row, square);
+        strcat(row, space);
+        
+        /*for (int t = 0; i < count; i++)
+        {
+            
+        }*/
+        
+    }    
 }
     
