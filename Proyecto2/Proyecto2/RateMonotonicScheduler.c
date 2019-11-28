@@ -11,7 +11,6 @@
 
 
 SchedResult* Results;
-RMSchedulerTask* RMTs; 
 Queue* ReadyQueue;
 
 void InitFCFSSched()
@@ -23,7 +22,7 @@ void InitFCFSSched()
     ReadyQueue->QueueSize = 0;
 }
 
-void Push(RMSchedulerTask* process)
+void Push(Task* process)
 {
     Element* newProcess = malloc(sizeof(Element));
     newProcess->rMTask = process;
@@ -74,25 +73,12 @@ void PrintQueue()
 
     while (client != NULL)
     {
-        printf("ID: %d \n",client->rMTask->task.Id);
+        printf("ID: %d \n",client->rMTask->Id);
         client = client->next;
     }
 }
 
-void ConvertTastToRMTask(Task* tasks)
-{    
-    // Then push them into newRMT array
-    for (int i = 0; i < tasksCount; i++) 
-    {
-        RMSchedulerTask newRMT;
-        newRMT.task = tasks[i];
-        newRMT.currentExecTime = 0;
-        newRMT.scaleFactor = 1;
-        newRMT.nextDeadline = tasks[i].Deadline;
-        newRMT.deadlineMet = 0;
-        RMTs[i] = newRMT;
-    }
-}
+
 
 bool CalculateCPU_Utilization(Task* task)
 {
@@ -110,8 +96,6 @@ bool CalculateCPU_Utilization(Task* task)
     }
     
     return result;
-    
-
 }
 
 bool  CalculateSchedTest()
@@ -149,7 +133,6 @@ int GetHighestPriority(Task* tasks)
 
 void RunSchedTest(Task* tasks)
 {
-    ConvertTastToRMTask(tasks);
     
     if (CalculateCPU_Utilization(tasks)) {
 
@@ -176,47 +159,11 @@ void RunSchedTest(Task* tasks)
     
     int schedTestResult[timeLimit];
     
-/*
     // All tasks in ready queue at the beginning.    
+
     for (int j = 0; j < tasksCount; j++) 
     {
-        Push(tasks[j]);
+        //Push(tasks[j]);
     }
-*/
 
-    int k = 0;
-    int t = 0;
-    
-    while(1)
-    {
-        for (int i = 0; i < RMTs[t].task.ComputationTime; i++) 
-        {
-            schedTestResult[k] = RMTs[t].task.Id;
-            RMTs[t].currentExecTime++;
-            k++;
-            
-            if (k > timeLimit) 
-            {
-                break;
-            }
-            
-            if (RMTs[t].currentExecTime == RMTs[t].task.ComputationTime)
-            {
-                RMTs[t].deadlineMet = 1;
-                RMTs[t].currentExecTime = 0;
-                t++;
-            }
-            
-            if (RMTs[t].deadlineMet == 0 && RMTs[t].currentExecTime > RMTs[t].task.ComputationTime) 
-            {
-                printf("\nFATAL ERROR: Task %d missed its deadline!\n ", RMTs[t].task.Id);
-
-            }
-        }
-        
-        if (k > timeLimit) 
-        {
-            break;
-        }
-    }
 }

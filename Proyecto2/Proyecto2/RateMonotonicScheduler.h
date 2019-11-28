@@ -22,18 +22,8 @@ extern "C" {
 #include "Task.h"
 
     
-    typedef struct RateMonotonicSched RMSchedulerTask;
     typedef struct RMQueueStruct Queue;
     typedef struct RMClient Element;
-    
-    struct RateMonotonicSched
-    {
-        Task task;
-        int currentExecTime;
-        int nextDeadline;
-        int deadlineMet;
-        int scaleFactor;
-    };
     
     struct RMQueueStruct 
     {
@@ -44,7 +34,7 @@ extern "C" {
 
     struct RMClient 
     {
-        RMSchedulerTask* rMTask;
+        Task* rMTask;
         Element* next;
     };
     
@@ -55,7 +45,7 @@ extern "C" {
     void RunSchedTest();
     
     void InitFCFSSched();
-    void Push(RMSchedulerTask* process);
+    void Push(Task* process);
     Element* Pop();
     void PrintQueue();
     void QueueSize();
