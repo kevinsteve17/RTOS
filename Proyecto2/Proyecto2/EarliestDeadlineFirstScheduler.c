@@ -238,7 +238,7 @@ void EdfStartSched(Task* task, int tasksCount)
             readyqueueUpdate = RemoveCompletedTasks();
 
             // look for new arrivals in ready queue
-            readyqueueUpdate = readyqueueUpdate || AddNewTasks(t);
+            readyqueueUpdate = AddNewTasks(t) || readyqueueUpdate;
             
             if (readyqueueUpdate)
             {
