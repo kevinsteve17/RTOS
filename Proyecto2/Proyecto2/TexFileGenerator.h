@@ -21,6 +21,7 @@ extern "C" {
     
 #include <string.h>
 #include "SimulationRTOS.h"
+#include "Task.h"
     
     typedef struct CoverPageStruct CoverPage;
     typedef struct AlgorithmsStruct Algorithms;
@@ -49,8 +50,8 @@ extern "C" {
     
     void GenerateCoverPage();
     void GenerateAlgorithmsResults();
-    void GenerateTexFile();
-    
+    void GenerateTexFile(SchedResult* schedResults);
+    char * GenerateTableSimContents();
 
 
 
