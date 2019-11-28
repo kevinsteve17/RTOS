@@ -7,9 +7,8 @@
 #include <stdlib.h>
 #include "TexUtilities.h"
 #include "TexFileGenerator.h"
-#include "Utilities.h"
 
-extern int numberOfTasks;
+//extern int numberOfTasks;
 
 void GenerateCoverPage()
 {
@@ -69,8 +68,7 @@ void GenerateTexFile(SchedResult* schedResults)
 
 char * GenerateTableSimContents()
 {
-    return 
-    "\\tiny T1& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n"
+    return "\\tiny T1& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n"
     "\\tiny T2& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline"
     "\\tiny T3& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n"
     "\\tiny T4& &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\\\ \\hline\n";
@@ -89,7 +87,7 @@ void contents(SchedResult* schedResults)
     char *blue = "\\cellcolor{blue}";
     char *space = " ";
 
-    for (int i = 0; i < numberOfTasks; i++)
+    for (int i = 0; i < 666; i++)
     {
         strcpy(row, tiny);
         sprintf(aux, "%d", i);
@@ -97,10 +95,10 @@ void contents(SchedResult* schedResults)
         strcat(row, square);
         strcat(row, space);
         
-        for (int t = 0; i < SIM_CYCLES; i++)
+        /*for (int t = 0; i < SIM_CYCLES; i++)
         {
             
-        }
+        }*/
         
     }    
 }

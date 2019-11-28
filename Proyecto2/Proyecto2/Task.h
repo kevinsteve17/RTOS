@@ -19,6 +19,7 @@ extern "C" {
 #endif
 
 #define NUM_OF_TASKS 6
+#define SIM_CYCLES 65
     
     int tasksCount;
     typedef struct SchedTask Task;

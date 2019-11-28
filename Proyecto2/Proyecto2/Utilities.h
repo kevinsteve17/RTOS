@@ -18,8 +18,6 @@
 extern "C" {
 #endif
 
-#define SIM_CYCLES 65
-
     
     int gcd(int a, int b)
     {
