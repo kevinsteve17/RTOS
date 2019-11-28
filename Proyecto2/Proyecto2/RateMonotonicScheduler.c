@@ -5,6 +5,7 @@
  */
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "RateMonotonicScheduler.h"
 #include "Utilities.h"
 
@@ -79,15 +80,7 @@ void PrintQueue()
 }
 
 void ConvertTastToRMTask(Task* tasks)
-{
-    // Order tasks by its priority
-    Task* orderedTasks;
-    for (int i = 0; i < tasksCount; i++)
-    {
-        
-    }
-    
-    
+{    
     // Then push them into newRMT array
     for (int i = 0; i < tasksCount; i++) 
     {
@@ -101,20 +94,42 @@ void ConvertTastToRMTask(Task* tasks)
     }
 }
 
-void CalculateCPU_Utilization(Task* task)
+bool CalculateCPU_Utilization(Task* task)
 {
+    bool result = true;
     int i;
     for (i = 0; i < tasksCount; i++) 
     {
         Results->CPU_Utilization += (double)(task->ComputationTime/task->Deadline);
     }
+    
+    if (Results->CPU_Utilization > 1) 
+    {
+        result = false;
+        printf("WARNING: CPU utilization for RM is %f and it is greater than one!", Results->CPU_Utilization);
+    }
+    
+    return result;
+    
+
 }
 
-void CalculateSchedTest()
+bool  CalculateSchedTest()
 {
     double n = (double)tasksCount;
     
     double schedTest =  n * (powf(0.5, n) - 1.0);
+    
+    Results->SchedTest = schedTest;
+    
+    if (schedTest <= 1) 
+    {
+        printf("RM Schedulability Test PASSED! \n");
+    }
+    else
+    {
+        printf("RM Schedulability Test FAILED! \n");
+    }
 }
 
 int GetHighestPriority(Task* tasks)
@@ -136,6 +151,10 @@ void RunSchedTest(Task* tasks)
 {
     ConvertTastToRMTask(tasks);
     
+    if (CalculateCPU_Utilization(tasks)) {
+
+    }
+
     // Get CPU utilization factor
     CalculateCPU_Utilization(tasks);
     
@@ -157,11 +176,13 @@ void RunSchedTest(Task* tasks)
     
     int schedTestResult[timeLimit];
     
+/*
     // All tasks in ready queue at the beginning.    
     for (int j = 0; j < tasksCount; j++) 
     {
         Push(tasks[j]);
     }
+*/
 
     int k = 0;
     int t = 0;

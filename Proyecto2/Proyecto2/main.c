@@ -37,14 +37,6 @@ int main(int argc, char** argv)
 { 
     //////////////////////// Debug
     //GenerateTexFile();
-    int nums[3] = {6,9,18};
-    int count = 3;
-    
-    int c =  LCM(nums,count);
-    printf("GCD is: %d", c);
-    // int LCM = CalculateLeastCommonMultiple(nums, count);
-    // printf("LCM is: %d", LCM);
-    
     tasksCount = 3;
     //////////////////////// Debug End
          
