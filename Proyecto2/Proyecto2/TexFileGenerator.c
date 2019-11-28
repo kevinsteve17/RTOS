@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "TexUtilities.h"
 #include "TexFileGenerator.h"
+#include "Utilities.h"
 
 extern int numberOfTasks;
 
@@ -96,10 +97,10 @@ void contents(SchedResult* schedResults)
         strcat(row, square);
         strcat(row, space);
         
-        /*for (int t = 0; i < count; i++)
+        for (int t = 0; i < SIM_CYCLES; i++)
         {
             
-        }*/
+        }
         
     }    
 }

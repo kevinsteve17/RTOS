@@ -34,11 +34,11 @@ extern "C" {
     
     struct SchedulingResult
     {
-        int Color;
         double CPU_Utilization;
         double SchedTest;
         Task* TaskInfo;
-        int SimulationResults[];
+        int numberOfSimCycles;
+        int* SimulationResults;
     };
 
 
