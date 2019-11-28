@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include "Task.h"
 
     
@@ -49,8 +50,8 @@ extern "C" {
     
     void ConvertTastToRMTask(Task* tasks);
     int GetHighestPriority(Task* tasks);
-    void CalculateCPU_Utilization(Task* tasks);
-    void CalculateSchedTest();
+    bool CalculateCPU_Utilization(Task* tasks);
+    bool CalculateSchedTest();
     void RunSchedTest();
     
     void InitFCFSSched();
