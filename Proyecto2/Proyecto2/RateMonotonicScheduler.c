@@ -288,7 +288,7 @@ void RunRMSchedTest(Task* tasks)
         readyqueueUpdate = RemoveRMCompletedTasks();
         
         // look for new arrivals in ready queue
-        readyqueueUpdate = readyqueueUpdate || AddNewRMTasks(j);
+        readyqueueUpdate = readyqueueUpdate | AddNewRMTasks(j);
         
         if (readyqueueUpdate)
         {
