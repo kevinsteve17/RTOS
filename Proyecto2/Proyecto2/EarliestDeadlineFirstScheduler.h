@@ -55,6 +55,7 @@ taskClient* GetTaskFromReadyQueue();
 
 // debug utils
 void EdfPopulateTaskstructures();
+void PrintMissedDeadlineMessage(taskClient* task, int t);
 
 #ifdef __cplusplus
 }

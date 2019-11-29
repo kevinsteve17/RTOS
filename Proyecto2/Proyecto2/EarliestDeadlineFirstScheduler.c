@@ -247,11 +247,12 @@ void EdfStartSched(Task* task, int tasksCount)
             if (task != NULL)
             {
                 // check task's deadline is still on time
-                if (task->clientTask->Deadline < t)
+                //if (task->clientTask->Deadline < t)
+                if (t == 80)
                 {
-                    printf("--> Tastk id: %i FAILED to meet deadline \n", task->clientTask->Id);
-                    printf("--> Deadline: %f \n",task->clientTask->Deadline);
-                    printf("--> Actual time: %i \n",t);
+                    edfResutls->SimulationResults[t] = 666;
+                    edfResutls->numberOfSimCycles = t+1;
+                    PrintMissedDeadlineMessage(task, t);
                     break;
                 }
 
@@ -308,4 +309,19 @@ void RunEdfSched()
  */
 void EdfPopulateTaskstructures()
 {
+}
+
+/*
+ * Prints Missed Deadline Message
+ */
+void PrintMissedDeadlineMessage(taskClient* task, int t)
+{
+    printf("\n");
+    printf("\n");
+    printf("--> Tastk id: %i FAILED to meet deadline \n", task->clientTask->Id);
+    printf("--> Deadline: %f \n",task->clientTask->Deadline);
+    printf("--> Actual time: %i \n",t);
+    printf("XXXXXX Blind grandma brutally killed in a hit and run accident!!! XXXXXX");
+    printf("\n");
+    printf("\n");    
 }

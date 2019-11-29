@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "TexUtilities.h"
 #include "TexFileGenerator.h"
+#include <stdbool.h> 
 
 extern int numberOfTasks;
 
@@ -88,8 +89,10 @@ void GenerateTexFile(SchedResult* schedResults)
  */
 char * GenerateTableContents(SchedResult* schedResults, int offset)
 {
+    bool deadlineMissed = false;
     char row[5048];
     char aux[12];
+    char *huge = "\\Large ";
     char *tiny = "\\tiny ";
     char *supertiny = "\\fontsize{3.5}{4}\\selectfont ";
     char *square = "&";
@@ -121,6 +124,8 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
 
     for (int i = 0; i < numberOfTasks; i++)
     {
+        deadlineMissed = false;
+
         if (i>0)
         {
             strcat(row, tiny);
@@ -140,7 +145,7 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
                 strcat(row, space);
             }
 
-            if (t+offset < schedResults->numberOfSimCycles)
+            if (!deadlineMissed && (t+offset < schedResults->numberOfSimCycles))
             {
                 if (schedResults->SimulationResults[t+offset] == i)
                 {
@@ -152,6 +157,15 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
                 {
                     color = GetTaskColor(-1);
                     strcat(row, color);
+                }
+
+                if (schedResults->SimulationResults[t+offset] == 666)
+                {
+                    deadlineMissed = true;
+                    color = GetTaskColor(-1);
+                    strcat(row, color);
+                    strcat(row, huge);
+                    strcat(row, "DANGER");
                 }
             }            
             
