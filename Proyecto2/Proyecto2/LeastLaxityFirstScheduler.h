@@ -19,6 +19,8 @@ extern "C" {
 #endif
 #include "Task.h"
 
+
+typedef struct SchedulingResult LLFTask;
     
 // ---------------------
 // SCHEDULING SIMULATION
