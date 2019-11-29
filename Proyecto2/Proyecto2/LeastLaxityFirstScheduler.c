@@ -1,5 +1,6 @@
 #include "LeastLaxityFirstScheduler.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 // Program Global Variables
@@ -16,6 +17,10 @@ int tasksLaxity[NUM_OF_TASKS];
 int minLaxity;
 int minLaxityIndex;
 
+// Results
+LLFTask* llfResults;
+
+
 // *****************************************************************************
 // Function:    LLF_CalculateLeastCommonMultiple
 // Description: Calculates the Least Common Multiple of the available tasks.
@@ -23,6 +28,13 @@ int minLaxityIndex;
 void LLF_RunSchedTest()
 {   
     printf("Function call: LLF_RunSchedTest()\n");
+    
+    // Init results data structure
+    llfResults = malloc(sizeof(LLFTask));
+    llfResults->CPU_Utilization = 0;
+    llfResults->TaskInfo = tasks;
+    llfResults->numberOfSimCycles = leastCommonMultiple;
+    llfResults->SimulationResults = (int*)malloc(sizeof(int) * llfResults->numberOfSimCycles);
     
     // Set time limit
     int timeLimit = leastCommonMultiple;
@@ -84,6 +96,7 @@ void LLF_RunSchedTest()
         if (minLaxityIndex == 1000)
         {
             // Special case. Sub-utilization.
+            llfResults->SimulationResults[time]= -1;
             printf("-");
             fflush(stdout);
             
@@ -91,6 +104,7 @@ void LLF_RunSchedTest()
         }
         else 
         {
+            llfResults->SimulationResults[time]= minLaxityIndex;
             printf("%d", minLaxityIndex);
             fflush(stdout);
         }
@@ -106,7 +120,6 @@ void LLF_RunSchedTest()
         
     } // end for (int time=0; time<timeLimit; timeLimit++)
 
-    // PrintTimingDiagram ();
     return;
     
 } // end LLF_RunSchedTest()

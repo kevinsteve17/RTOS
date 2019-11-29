@@ -31,8 +31,12 @@ extern Task tasks[6];                   // Task struct array, contains GUI input
 extern int maxNumberOfTasks;            // Hardcoded to 6
 extern int numberOfTasks;               // Number of tasks with period != 0
 extern int leastCommonMultiple;         // LCM of tasks with period != 0
+
+// Simulation results
 extern EDFTask* edfResutls;
 extern RMSchedResult* Results;
+extern LLFTask* llfResults;
+
 
 int main(int argc, char** argv) 
 { 
@@ -96,6 +100,7 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     if (isLlfEnabled == 1)
     {
         LLF_RunSchedTest();
+        GenerateTexFile(llfResults);
     }
 }
 
