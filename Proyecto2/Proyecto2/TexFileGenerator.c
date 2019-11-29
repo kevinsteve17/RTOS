@@ -196,6 +196,7 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
                     color = GetTaskColor(666);
                     strcat(row, color);
                     strcat(row, huge);
+                    strcat(row, "\\color{red} ");
                     strcat(row, "DANGER");
                 }
             }            
