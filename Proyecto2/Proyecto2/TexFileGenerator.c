@@ -65,13 +65,13 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
             fputs(tableSectionHeader, texFile);
 
             fputs(tableHeader, texFile);
-            fputs(GenerateTableContents(schedResults, 0), texFile);
+            fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
 
             if (schedResults->numberOfSimCycles > SIM_COLUMNS)
             {
                 fputs(tableHeader, texFile);
-                fputs(GenerateTableContents(schedResults, SIM_COLUMNS), texFile);
+                fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
 
@@ -86,13 +86,13 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
             fputs(tableHeader, texFile);
-            fputs(GenerateTableContents(schedResults, 0), texFile);
+            fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
 
             if (schedResults->numberOfSimCycles > SIM_COLUMNS)
             {
                 fputs(tableHeader, texFile);
-                fputs(GenerateTableContents(schedResults, SIM_COLUMNS), texFile);
+                fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
         }
