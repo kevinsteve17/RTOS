@@ -50,7 +50,7 @@ extern "C" {
     
     void GenerateCoverPage();
     void GenerateAlgorithmsResults();
-    void GenerateTexFile(SchedResult* schedResults);
+    void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSinglePageEnabled);
     char * GenerateTableSimContents();
     char * GenerateTableContents(SchedResult* schedResults, int offset);
     char * GetTaskColor(int i);

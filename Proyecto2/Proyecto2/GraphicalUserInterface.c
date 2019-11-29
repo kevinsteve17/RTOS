@@ -22,6 +22,7 @@ int isRmEnabled = 0;
 int isEdfEnabled = 0;
 int isLlfEnabled = 0;
 int isSinglePageOutputEnabled = 0;
+int numberOfAlgorithmsEnabled = 0;
 
 
 // *****************************
@@ -263,11 +264,13 @@ void Toggle_RM(GtkWidget *gtk_control, gpointer data)
     {
         // ON
         isRmEnabled = 1;
+        numberOfAlgorithmsEnabled++;
     }
     else
     {
         // OFF
         isRmEnabled = 0;
+        numberOfAlgorithmsEnabled--;
     } 
 }
 
@@ -283,11 +286,13 @@ void Toggle_EDF(GtkWidget *gtk_control, gpointer data)
     {
         // ON
         isEdfEnabled = 1;
+        numberOfAlgorithmsEnabled++;
     }
     else
     {
         // OFF
         isEdfEnabled = 0;
+        numberOfAlgorithmsEnabled--;
     } 
 }
 
@@ -303,11 +308,13 @@ void Toggle_LLF(GtkWidget *gtk_control, gpointer data)
     {
         // ON
         isLlfEnabled = 1;
+        numberOfAlgorithmsEnabled++;
     }
     else
     {
         // OFF
         isLlfEnabled = 0;
+        numberOfAlgorithmsEnabled--;
     } 
 }
 

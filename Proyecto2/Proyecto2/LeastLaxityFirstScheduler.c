@@ -18,7 +18,7 @@ int minLaxity;
 int minLaxityIndex;
 
 // Results
-LLFTask* llfResults;
+SchedResult* llfResults;
 
 
 // *****************************************************************************
@@ -30,7 +30,7 @@ void LLF_RunSchedTest()
     printf("Function call: LLF_RunSchedTest()\n");
     
     // Init results data structure
-    llfResults = malloc(sizeof(LLFTask));
+    llfResults = malloc(sizeof(SchedResult));
     llfResults->CPU_Utilization = 0;
     llfResults->TaskInfo = tasks;
     llfResults->numberOfSimCycles = leastCommonMultiple;

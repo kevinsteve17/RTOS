@@ -18,6 +18,7 @@
 #include "GraphicalUserInterface.h"
 #include "LeastLaxityFirstScheduler.h"
 #include "EarliestDeadlineFirstScheduler.h"
+#include "Task.h"
 
 
 // Control variables (0=Off, 1=On)
@@ -25,6 +26,7 @@ extern int isRmEnabled;                 // Rate Monotonic Enable
 extern int isEdfEnabled;                // Earliest Deadline First Enable
 extern int isLlfEnabled;                // Least Laxity Enable
 extern int isSinglePageOutputEnabled;   // Single page Latex output
+extern int numberOfAlgorithmsEnabled;   // RM + EDF + LLF
 
 // Tasks information
 extern Task tasks[6];                   // Task struct array, contains GUI input data
@@ -35,7 +37,8 @@ extern int leastCommonMultiple;         // LCM of tasks with period != 0
 // Simulation results
 extern EDFTask* edfResutls;
 extern RMSchedResult* Results;
-extern LLFTask* llfResults;
+extern SchedResult* llfResults;
+SchedResult SchedulingResults[3];
 
 
 int main(int argc, char** argv) 
@@ -84,23 +87,73 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     
     // Start Scheduling
     
-    if (isRmEnabled == 1)
-    {
-        RunRMSched();
-        GenerateTexFile(Results);
-        //void CalculateCPU_Utilization(Task* tasks, int taskCount);
-        //void CalculateSchedTest(int tasksCount);
-        //void RunSchedTest();
-    }
-    if (isEdfEnabled == 1)
-    {
-        RunEdfSched();
-        GenerateTexFile(edfResutls);
-    }
-    if (isLlfEnabled == 1)
+    // LLF
+    if ((isRmEnabled  == 0) && (isEdfEnabled == 0) && (isLlfEnabled == 1))
     {
         LLF_RunSchedTest();
-        GenerateTexFile(llfResults);
+                
+        SchedulingResults[0] = *llfResults;
+    }
+    // EDF
+    else if ((isRmEnabled  == 0) && (isEdfEnabled == 1) && (isLlfEnabled == 0))
+    {
+        RunEdfSched();
+                
+        SchedulingResults[0] = *edfResutls;
+    }
+    // EDF + LLF
+    else if ((isRmEnabled  == 0) && (isEdfEnabled == 1) && (isLlfEnabled == 1))
+    {
+        RunEdfSched();
+        LLF_RunSchedTest();
+                
+        SchedulingResults[0] = *edfResutls;
+        SchedulingResults[1] = *llfResults;
+    }
+    // RM
+    else if ((isRmEnabled  == 1) && (isEdfEnabled == 0) && (isLlfEnabled == 0))
+    {
+        RunRMSched();      
+                
+        SchedulingResults[0] = *Results;
+    }
+    // RM + LLF
+    else if ((isRmEnabled  == 1) && (isEdfEnabled == 0) && (isLlfEnabled == 1))
+    {
+        RunRMSched();      
+        LLF_RunSchedTest();
+                
+        SchedulingResults[0] = *Results;
+        SchedulingResults[1] = *llfResults;
+    }
+    // RM + EDF
+    else if ((isRmEnabled  == 1) && (isEdfEnabled == 1) && (isLlfEnabled == 0))
+    {
+        RunRMSched();      
+        RunEdfSched();
+                
+        SchedulingResults[0] = *Results;
+        SchedulingResults[1] = *edfResutls;
+    }
+    // RM + EDF + LLF
+    else if ((isRmEnabled  == 1) && (isEdfEnabled == 1) && (isLlfEnabled == 1))
+    {
+        // Run the scheduling simulation
+        RunRMSched();      
+        RunEdfSched();
+        LLF_RunSchedTest();
+                
+        SchedulingResults[0] = *Results;
+        SchedulingResults[1] = *edfResutls;
+        SchedulingResults[2] = *llfResults;
+    }
+    
+    
+    
+    // If there are algorithms enabled, run the tex file generation
+    if (numberOfAlgorithmsEnabled > 0)
+    {
+        GenerateTexFile(SchedulingResults, numberOfAlgorithmsEnabled, isSinglePageOutputEnabled);
     }
 }
 
