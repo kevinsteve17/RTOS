@@ -23,7 +23,7 @@ void GenerateAlgorithmsResults()
 /*
  * Generats .tex file
  */
-void GenerateTexFile(SchedResult* schedResults)
+void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSinglePageEnabled)
 {
     char fileName[] = "Proyecto2.tex";
     
@@ -56,20 +56,51 @@ void GenerateTexFile(SchedResult* schedResults)
     fputs(newLine, texFile);
     
     // ----------Sim table----------
-    fputs(tableSectionHeader, texFile);
     
-    fputs(tableHeader, texFile);
-    fputs(GenerateTableContents(schedResults, 0), texFile);
-    fputs(tableEnd, texFile);
-
-    if (schedResults->numberOfSimCycles > SIM_COLUMNS)
+    // Single Page per algorithm
+    if (isSinglePageEnabled == 1)
     {
-        fputs(tableHeader, texFile);
-        fputs(GenerateTableContents(schedResults, SIM_COLUMNS), texFile);
-        fputs(tableEnd, texFile);
-    }
+        for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
+        {
+            fputs(tableSectionHeader, texFile);
 
-    fputs(tableSectionEnd, texFile);
+            fputs(tableHeader, texFile);
+            fputs(GenerateTableContents(schedResults, 0), texFile);
+            fputs(tableEnd, texFile);
+
+            if (schedResults->numberOfSimCycles > SIM_COLUMNS)
+            {
+                fputs(tableHeader, texFile);
+                fputs(GenerateTableContents(schedResults, SIM_COLUMNS), texFile);
+                fputs(tableEnd, texFile);
+            }
+
+            fputs(tableSectionEnd, texFile);
+        }
+    }
+    // Single Page for all algorithms
+    else
+    {
+        fputs(tableSectionHeader, texFile);
+
+        for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
+        {
+            fputs(tableHeader, texFile);
+            fputs(GenerateTableContents(schedResults, 0), texFile);
+            fputs(tableEnd, texFile);
+
+            if (schedResults->numberOfSimCycles > SIM_COLUMNS)
+            {
+                fputs(tableHeader, texFile);
+                fputs(GenerateTableContents(schedResults, SIM_COLUMNS), texFile);
+                fputs(tableEnd, texFile);
+            }
+        }
+
+        fputs(tableSectionEnd, texFile);
+
+    }
+    
     // ----------Sim table----------
     
     fputs(endDoc, texFile);
