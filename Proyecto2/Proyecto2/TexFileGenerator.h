@@ -52,7 +52,7 @@ extern "C" {
     void GenerateAlgorithmsResults();
     void GenerateTexFile(SchedResult* schedResults);
     char * GenerateTableSimContents();
-    char * GenerateTableContents(SchedResult* schedResults);
+    char * GenerateTableContents(SchedResult* schedResults, int offset);
     char * GetTaskColor(int i);
     void CompileTex2Pdf();
     void DisplayOutputFile();
