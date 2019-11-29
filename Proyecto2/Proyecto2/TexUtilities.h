@@ -14,6 +14,8 @@
 #ifndef TEXUTILITIES_H
 #define TEXUTILITIES_H
 
+#define SIM_COLUMNS 64
+
 #ifdef __cplusplus
 extern "C" {
 #endif

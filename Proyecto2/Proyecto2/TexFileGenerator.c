@@ -70,20 +70,41 @@ char * GenerateTableContents(SchedResult* schedResults)
 {
     char row[5048];
     char aux[12];
-    char *tiny = "\\tiny T";
+    char *tiny = "\\tiny ";
+    char *supertiny = "\\fontsize{3.5}{4}\\selectfont ";
     char *square = "&";
     char *ret = "";
     char *space = " ";
     char *endRow = "\\\\ \\hline\n";
     char *color;
 
-    strcpy(row, tiny);
+    strcpy(row, square);
+    strcat(row, space);
+
+    for (int i = 0; i < SIM_COLUMNS; i++)
+    {
+        if (i>0)
+        {
+            strcat(row, space);
+        }
+
+        strcat(row, supertiny);
+        sprintf(aux, "%d", i+1);
+        strcat(row, aux);
+        strcat(row, square);
+    }
+
+    strcat(row, endRow); 
+
+    strcat(row, tiny);
+    strcat(row, "T");
 
     for (int i = 0; i < numberOfTasks; i++)
     {
         if (i>0)
         {
             strcat(row, tiny);
+            strcat(row, "T");
         }
                 
         sprintf(aux, "%d", i+1);
@@ -91,7 +112,7 @@ char * GenerateTableContents(SchedResult* schedResults)
         strcat(row, square);
         strcat(row, space);
         
-        for (int t = 0; t < SIM_CYCLES-1; t++)
+        for (int t = 0; t < SIM_COLUMNS; t++)
         {
             if (t>0)
             {
@@ -99,16 +120,19 @@ char * GenerateTableContents(SchedResult* schedResults)
                 strcat(row, space);
             }
 
-            if (schedResults->SimulationResults[t] == i)
+            if (t < schedResults->numberOfSimCycles)
             {
-               color = GetTaskColor(i);
-               strcat(row, color);
-            }
+                if (schedResults->SimulationResults[t] == i)
+                {
+                    color = GetTaskColor(i);
+                    strcat(row, color);
+                }
 
-            if (schedResults->SimulationResults[t] == -1)
-            {
-               color = GetTaskColor(-1);
-               strcat(row, color);
+                if (schedResults->SimulationResults[t] == -1)
+                {
+                    color = GetTaskColor(-1);
+                    strcat(row, color);
+                }
             }            
             
             strcat(row, square);
@@ -127,7 +151,7 @@ char * GetTaskColor(int i)
     char *tag = "\\cellcolor{";
     char *endTag = "}";
     char color[20];
-    char *aux = "red";
+    char *aux = "blue";
     char *ret = "";
 
     if (i==1)
@@ -136,7 +160,7 @@ char * GetTaskColor(int i)
     }
     else if (i==2)
     {
-        aux = "blue";
+        aux = "red";
     }
     else if (i==3)
     {

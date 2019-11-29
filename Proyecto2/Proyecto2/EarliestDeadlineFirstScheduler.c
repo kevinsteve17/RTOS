@@ -9,8 +9,6 @@
 #include <stdbool.h>
 #include "EarliestDeadlineFirstScheduler.h"
 
-int simulationCicles = SIM_CYCLES;
-
 EDFTask* edfResutls;
 readyQueue* ReadyQueue;
 
@@ -221,7 +219,7 @@ bool AddNewTasks(int t)
  */
 void EdfStartSched(Task* task, int tasksCount)
 {
-    bool readyqueueUpdate = false;
+    bool readyQueueUpdate = false;
 
     if (EdfRunSchedTest(task, NUM_OF_TASKS))
     {
@@ -231,16 +229,16 @@ void EdfStartSched(Task* task, int tasksCount)
         // get earliest deadline task
         taskClient* task = GetTaskFromReadyQueue();
 
-        // start sim cicles exec
-        for (int t = 0; t < simulationCicles; t++)
+        // start sim cycles exec
+        for (int t = 0; t < leastCommonMultiple; t++)
         {
             // remove completed tasks from ready queue
-            readyqueueUpdate = RemoveCompletedTasks();
+            readyQueueUpdate = RemoveCompletedTasks();
 
             // look for new arrivals in ready queue
-            readyqueueUpdate = AddNewTasks(t) || readyqueueUpdate;
+            readyQueueUpdate = AddNewTasks(t) || readyQueueUpdate;
             
-            if (readyqueueUpdate)
+            if (readyQueueUpdate)
             {
                 // get earliest deadline task
                task = GetTaskFromReadyQueue();
@@ -248,6 +246,7 @@ void EdfStartSched(Task* task, int tasksCount)
 
             if (task != NULL)
             {
+                // check task's deadline is still on time
                 if (task->clientTask->Deadline < t)
                 {
                     printf("--> Tastk id: %i FAILED to meet deadline \n", task->clientTask->Id);
@@ -269,17 +268,13 @@ void EdfStartSched(Task* task, int tasksCount)
             }
 
             printf("update simulation (%i ,%i) \n", t, edfResutls->SimulationResults[t]);
-            readyqueueUpdate = false;
+            readyQueueUpdate = false;
         }
 
-
-        printf("\n");
-        printf("\n");
-        printf("\n");
         printf("\n");
         printf("edfResutls: \n");
 
-        for (int i = 0; i < simulationCicles; i++)
+        for (int i = 0; i < leastCommonMultiple; i++)
         {
             printf("--> time: %i task: %i \n", i, edfResutls->SimulationResults[i]);
         }
@@ -304,7 +299,7 @@ void RunEdfSched()
     edfResutls->CPU_Utilization = 0;
     edfResutls->TaskInfo = tasks;
     edfResutls->numberOfSimCycles = leastCommonMultiple;
-    edfResutls->SimulationResults = (int*)malloc(sizeof(int) * edfResutls->numberOfSimCycles);
+    edfResutls->SimulationResults = (int*)malloc(sizeof(int) * leastCommonMultiple);
 
     // perform edf sched test and do sched
     EdfStartSched(tasks, NUM_OF_TASKS);
