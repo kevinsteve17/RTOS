@@ -278,8 +278,6 @@ void EdfStartSched(Task* task, int tasksCount)
         {
             printf("--> time: %i task: %i \n", i, edfResutls->SimulationResults[i]);
         }
-        
-        
     }
 }
 
@@ -292,16 +290,13 @@ void RunEdfSched()
     edfResutls = malloc(sizeof(EDFTask));
     ReadyQueue = malloc(sizeof(readyQueue));
     
-    // [DEBUG] create dumy tasks
-    //EdfPopulateTaskstructures();
-    
     // init results struct members
     edfResutls->CPU_Utilization = 0;
     edfResutls->TaskInfo = tasks;
     edfResutls->numberOfSimCycles = leastCommonMultiple;
     edfResutls->SimulationResults = (int*)malloc(sizeof(int) * leastCommonMultiple);
 
-    // perform edf sched test and do sched
+    // perform edf sched test and start sched
     EdfStartSched(tasks, NUM_OF_TASKS);
 }
 

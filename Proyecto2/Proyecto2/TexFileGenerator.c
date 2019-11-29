@@ -20,6 +20,9 @@ void GenerateAlgorithmsResults()
     
 }
 
+/*
+ * Generats .tex file
+ */
 void GenerateTexFile(SchedResult* schedResults)
 {
     char fileName[] = "Proyecto2.tex";
@@ -52,13 +55,22 @@ void GenerateTexFile(SchedResult* schedResults)
     fputs(frameSectionPage, texFile);
     fputs(newLine, texFile);
     
-    // table
+    // ----------Sim table----------
     fputs(tableSectionHeader, texFile);
+    
     fputs(tableHeader, texFile);
-    fputs(GenerateTableContents(schedResults), texFile);
+    fputs(GenerateTableContents(schedResults, 0), texFile);
     fputs(tableEnd, texFile);
+
+    if (schedResults->numberOfSimCycles > SIM_COLUMNS)
+    {
+        fputs(tableHeader, texFile);
+        fputs(GenerateTableContents(schedResults, SIM_COLUMNS), texFile);
+        fputs(tableEnd, texFile);
+    }
+
     fputs(tableSectionEnd, texFile);
-    // table
+    // ----------Sim table----------
     
     fputs(endDoc, texFile);
     
@@ -71,7 +83,10 @@ void GenerateTexFile(SchedResult* schedResults)
     DisplayOutputFile();
 }
 
-char * GenerateTableContents(SchedResult* schedResults)
+/*
+ * Generates sim table contents based on sim results
+ */
+char * GenerateTableContents(SchedResult* schedResults, int offset)
 {
     char row[5048];
     char aux[12];
@@ -94,7 +109,7 @@ char * GenerateTableContents(SchedResult* schedResults)
         }
 
         strcat(row, supertiny);
-        sprintf(aux, "%d", i+1);
+        sprintf(aux, "%d", i+1+offset);
         strcat(row, aux);
         strcat(row, square);
     }
@@ -125,15 +140,15 @@ char * GenerateTableContents(SchedResult* schedResults)
                 strcat(row, space);
             }
 
-            if (t < schedResults->numberOfSimCycles)
+            if (t+offset < schedResults->numberOfSimCycles)
             {
-                if (schedResults->SimulationResults[t] == i)
+                if (schedResults->SimulationResults[t+offset] == i)
                 {
                     color = GetTaskColor(i);
                     strcat(row, color);
                 }
 
-                if (schedResults->SimulationResults[t] == -1)
+                if (schedResults->SimulationResults[t+offset] == -1)
                 {
                     color = GetTaskColor(-1);
                     strcat(row, color);
@@ -150,6 +165,9 @@ char * GenerateTableContents(SchedResult* schedResults)
     return ret;    
 }
 
+/*
+ * Returns task color based on ID
+ */
 char * GetTaskColor(int i)
 {
     // 
