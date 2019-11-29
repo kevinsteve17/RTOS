@@ -190,10 +190,10 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
                     strcat(row, color);
                 }
 
-                if (schedResults->SimulationResults[t+offset] == 666)
+                if ((schedResults->SimulationResults[t+offset] >= 666) && (schedResults->SimulationResults[t+offset]-666==i))
                 {
                     deadlineMissed = true;
-                    color = GetTaskColor(-1);
+                    color = GetTaskColor(666);
                     strcat(row, color);
                     strcat(row, huge);
                     strcat(row, "DANGER");
@@ -228,7 +228,7 @@ char * GetTaskColor(int i)
     }
     else if (i==2)
     {
-        aux = "red";
+        aux = "orange";
     }
     else if (i==3)
     {
@@ -240,11 +240,15 @@ char * GetTaskColor(int i)
     }
     else if (i==5)
     {
-        aux = "orange";
+        aux = "purple";
     }  
     else if (i==-1)
     {
         aux = "white";
+    }
+        else if (i==666)
+    {
+        aux = "red";
     }
 
     strcpy(color, tag);

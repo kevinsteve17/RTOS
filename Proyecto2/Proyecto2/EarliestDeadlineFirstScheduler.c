@@ -247,10 +247,9 @@ void EdfStartSched(Task* task, int tasksCount)
             if (task != NULL)
             {
                 // check task's deadline is still on time
-                //if (task->clientTask->Deadline < t)
-                if (t == 80)
+                if (task->clientTask->Deadline < t)
                 {
-                    edfResutls->SimulationResults[t] = 666;
+                    edfResutls->SimulationResults[t] = 666+task->clientTask->Id;
                     edfResutls->numberOfSimCycles = t+1;
                     PrintMissedDeadlineMessage(task, t);
                     break;
