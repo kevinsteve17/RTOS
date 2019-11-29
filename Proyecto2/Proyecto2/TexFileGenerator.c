@@ -63,7 +63,12 @@ void GenerateTexFile(SchedResult* schedResults)
     fputs(endDoc, texFile);
     
     fclose(texFile);
-           
+    
+    // Compile output tex file
+    CompileTex2Pdf();
+    
+    // Display pdf using default application
+    DisplayOutputFile();
 }
 
 char * GenerateTableContents(SchedResult* schedResults)
@@ -161,5 +166,18 @@ char * GetTaskColor(int i)
 
     ret = color;
     return ret;      
+}
+
+
+
+void CompileTex2Pdf()
+{
+    system("pdflatex -interaction=nonstopmode Proyecto2.tex");
+}
+
+
+void DisplayOutputFile()
+{
+    system("xdg-open Proyecto2.pdf");
 }
     

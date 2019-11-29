@@ -54,7 +54,8 @@ extern "C" {
     char * GenerateTableSimContents();
     char * GenerateTableContents(SchedResult* schedResults);
     char * GetTaskColor(int i);
-
+    void CompileTex2Pdf();
+    void DisplayOutputFile();
 
 
 
