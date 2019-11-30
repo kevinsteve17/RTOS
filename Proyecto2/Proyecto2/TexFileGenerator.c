@@ -59,7 +59,7 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     // RM Theory Slide
     if (isRmEnabled == 1)
     {
-        //fputs(rmTheory, texFile);
+        fputs(RMTheory, texFile);
         fputs(newLine, texFile);
     }
     

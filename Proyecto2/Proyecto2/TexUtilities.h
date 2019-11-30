@@ -21,7 +21,7 @@ extern "C" {
 #endif
     
     
-    char header[] = "\\documentclass[aspectratio=43, xcolor=table twocolumn]{beamer}\n"
+    char header[] = "\\documentclass[aspectratio=43, xcolor=table]{beamer}\n"
                     "\\usepackage[english]{babel}\n"
                     "\\usepackage{pifont}\n"
                     "\\usepackage{amsmath}\n"
@@ -153,6 +153,42 @@ extern "C" {
     "\\onecolumn\n"
     "\\end{footnotesize}\n";
 
+    char RMTheory[] =
+    // Divide the theory in 2 colums
+    "\\twocolumn\n"
+    "\\begin{normal}\n"  
+    
+    // Algorithm Name
+    "\\textbf{Rate Monotonic (RM)}\n"
+    
+    "\\vspace{2mm}\n"
+    "\\end{normal}\n\n"
+    "\\begin{footnotesize}\n"
+    
+    // Theory
+    "El RM es un algoritmo dinamico en donde la prioridad de cada tarea  es inversamente proporcional a su Deadline.\n"
+    
+    // Formulas
+    "\\[ $ \\mu = \\sum_{n=1}^{\\ n} \\frac{C_{i}}{P_{i}}$ \\] y \\[ $ U(n) = \\sum_{1}^{\\ n} n(2^{\\frac{1}{n}} - 1) $ \\]\n"
+    
+    // Bullets
+    "En donde:\n"
+    "\\begin{itemize}\n"
+    "\\item C: Tiempo de Computacion\n"
+    "\\item P: Periodo (Deadline)\n"
+    "\\item \\mu \\leq U(n): Condicion de suficiencia\n"
+    "\\end{itemize}\n"
+      
+    "Ante una cantidad infinita de tareas, U(n) tiende a 0.6931. Por lo tanto si \\mu es menor o igual a 0.6931 son calendarizables.\n"
+    "En caso de ser mayor que 0.6931 y menor que 1, se debe evaluar el algoritmo para verificar si son calendariables \n\n"
+    // Images
+    "\\begin{center}\n"        
+        "\\includegraphics[scale=0.2]{RM}\n"
+    "\\end{center}\n"
+    
+    // Return settings to normal
+    "\\onecolumn\n"
+    "\\end{footnotesize}\n";
     
 #ifdef __cplusplus
 }
