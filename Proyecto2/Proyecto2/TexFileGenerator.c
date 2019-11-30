@@ -10,6 +10,9 @@
 #include <stdbool.h> 
 
 extern int numberOfTasks;
+extern int isRmEnabled;                 // Rate Monotonic Enable
+extern int isEdfEnabled;                // Earliest Deadline First Enable
+extern int isLlfEnabled;                // Least Laxity Enable
 
 void GenerateCoverPage()
 {
@@ -52,6 +55,27 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     
     fputs(algsection, texFile);
     fputs(newLine, texFile);
+    
+    // RM Theory Slide
+    if (isRmEnabled == 1)
+    {
+        //fputs(rmTheory, texFile);
+        fputs(newLine, texFile);
+    }
+    
+    // EDF Theory Slide
+    if (isEdfEnabled == 1)
+    {
+        //fputs(edfTheory, texFile);
+        fputs(newLine, texFile);
+    }
+    
+    // LLF Theory Slide
+    if (isLlfEnabled == 1)
+    {
+        fputs(llfTheory, texFile);
+        fputs(newLine, texFile);
+    }
     
     fputs(frameSectionPage, texFile);
     fputs(newLine, texFile);
