@@ -212,7 +212,35 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
 
         fputs("\\]\n", texFile);
         
-        }  
+    }
+
+    // Sched test
+    if (schedResults->SchedTest > 0)
+    {
+        
+        fputs("\\[  U(n) = \\sum_{1}^{\\ n} n(2^{\\frac{1}{n}} - 1) ", texFile);
+
+        if (schedResults->SchedTest > 1)
+        {
+            fputs(">", texFile);
+        }
+        else if (schedResults->SchedTest < 1)
+        {
+            fputs("<", texFile);
+        }
+        else if (schedResults->SchedTest == 1)
+        {
+            fputs("=", texFile);
+        }
+
+        fputs(" ", texFile); 
+
+        sprintf(aux, "%f", schedResults->SchedTest);
+        fputs(aux, texFile);
+
+        fputs("\\]\n", texFile);
+        
+    }        
         
         // Close the 2 columns section
         fputs("\\end{multicols}\n", texFile);
