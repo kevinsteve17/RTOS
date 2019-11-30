@@ -116,6 +116,11 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
 
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
+            // slide header (alogorithm name)
+            fputs("\\textbf{\n", texFile);
+            fputs(schedResults[algorithm].algorithmName, texFile);
+            fputs("}\n", texFile);
+
             fputs(simTableHeader, texFile);
             fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
@@ -126,6 +131,13 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
                 fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
+
+            if (schedResults->numberOfSimCycles > SIM_COLUMNS*2)
+            {
+                fputs(simTableHeader, texFile);
+                fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS*2), texFile);
+                fputs(tableEnd, texFile);
+            }            
         }
 
         fputs(tableSectionEnd, texFile);

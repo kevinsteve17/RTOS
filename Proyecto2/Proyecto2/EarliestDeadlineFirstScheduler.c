@@ -131,6 +131,27 @@ void UpdateTaskComputationTime(int id)
 }
 
 /*
+ * Return true if task is present on ready queue
+ */
+bool IsTaskOnReadyQueue(int id)
+{
+    taskClient* task = ReadyQueue->head;
+
+    while (task != NULL)
+    {
+        if (task->clientTask->Id == id)
+        {
+            task->clientTask->ComputationTime --;
+            return true;
+        }
+        
+        task = task->next;
+    }
+
+    return false;
+}
+
+/*
  * Gets earliest deadline Task from ReadyQueue
  */
 taskClient* GetTaskFromReadyQueue()
@@ -200,6 +221,7 @@ bool AddNewTasks(int t)
     {
         if ((t!=0) && ((int)edfResutls->TaskInfo[i].Period != 0) && ((t % (int)edfResutls->TaskInfo[i].Period) == 0))
         {
+
             Task* task = malloc(sizeof(Task));
             task->Id = edfResutls->TaskInfo[i].Id;
             task->ComputationTime = edfResutls->TaskInfo[i].ComputationTime;

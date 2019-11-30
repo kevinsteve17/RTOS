@@ -148,8 +148,6 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
         SchedulingResults[2] = *llfResults;
     }
     
-    
-    
     // If there are algorithms enabled, run the tex file generation
     if (numberOfAlgorithmsEnabled > 0)
     {

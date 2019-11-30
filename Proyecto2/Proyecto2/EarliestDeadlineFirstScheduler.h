@@ -52,6 +52,7 @@ void InitReadyQueue(Task* task, int tasksCount);
 bool AddNewTasks(int t);
 void UpdateTaskComputationTime(int id);
 taskClient* GetTaskFromReadyQueue();
+bool IsTaskOnReadyQueue(int id);
 
 // debug utils
 void EdfPopulateTaskstructures();
