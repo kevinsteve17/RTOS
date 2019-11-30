@@ -309,6 +309,9 @@ void RunEdfSched()
     // init struct s
     edfResutls = malloc(sizeof(EDFTask));
     ReadyQueue = malloc(sizeof(readyQueue));
+    ReadyQueue->QueueSize=0;
+    ReadyQueue->head = NULL;
+    ReadyQueue->tail = NULL;
     
     // init results struct members
     edfResutls->CPU_Utilization = 0;

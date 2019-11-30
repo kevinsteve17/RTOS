@@ -239,7 +239,7 @@ extern "C" {
 
     // Images
     "\\begin{center}\n"        
-        "\\includegraphics[scale=0.2]{RM}\n"
+        "\\includegraphics[scale=0.3]{RM}\n"
     "\\end{center}\n"
     
     // Return settings to normal

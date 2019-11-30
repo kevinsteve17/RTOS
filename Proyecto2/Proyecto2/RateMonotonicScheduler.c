@@ -11,7 +11,7 @@
 
 
 RMSchedResult* Results;
-Queue* ReadyQueue;
+Queue* RMReadyQueue;
 
 bool MetDeadline = true;
 
@@ -49,18 +49,18 @@ void AddRMTaskToReadyQueue(Task* task, int simPeriod)
 
     newTask->rMTask = task;
 
-    if (ReadyQueue->tail != NULL)
+    if (RMReadyQueue->tail != NULL)
     {
-        newTask->next = ReadyQueue->head;
-        ReadyQueue->head = newTask;
+        newTask->next = RMReadyQueue->head;
+        RMReadyQueue->head = newTask;
     }
     else
     {
-        ReadyQueue->tail = newTask;
-        ReadyQueue->head = newTask;
-        ReadyQueue->tail->next = NULL;
+        RMReadyQueue->tail = newTask;
+        RMReadyQueue->head = newTask;
+        RMReadyQueue->tail->next = NULL;
     }
-    ReadyQueue->QueueSize++;
+    RMReadyQueue->QueueSize++;
 }
 
 /*
@@ -68,15 +68,15 @@ void AddRMTaskToReadyQueue(Task* task, int simPeriod)
  */
 bool RemoveRMCompletedTasks() 
 {
-    RMTaskClient* client = ReadyQueue->head;
+    RMTaskClient* client = RMReadyQueue->head;
     RMTaskClient* target = client, *prev;
 
     // If head node itself is completed, delete it
     if (target != NULL && target->rMTask->ComputationTime == 0) 
     { 
-        ReadyQueue->head = target->next;    // Changed head 
+        RMReadyQueue->head = target->next;    // Changed head 
         // free(target);                       // free old head
-        ReadyQueue->QueueSize--;
+        RMReadyQueue->QueueSize--;
         return true; 
     }
     
@@ -94,11 +94,11 @@ bool RemoveRMCompletedTasks()
     {
         return false; 
     }
-    if (target == ReadyQueue->tail) 
+    if (target == RMReadyQueue->tail) 
     {
         // Unlink the node from linked list
         prev->next = NULL;
-        ReadyQueue->tail = prev;
+        RMReadyQueue->tail = prev;
     }
     else
     {
@@ -112,17 +112,17 @@ bool RemoveRMCompletedTasks()
 
 void UpdateRMTaskComputationTime(int id)
 {
-    RMTaskClient* task = ReadyQueue->head;
+    RMTaskClient* rmtask = RMReadyQueue->head;
 
-    while (task != NULL)
+    while (rmtask != NULL)
     {
-        if (task->rMTask->Id == id)
+        if (rmtask->rMTask->Id == id)
         {
-            task->rMTask->ComputationTime --;
+            rmtask->rMTask->ComputationTime --;
             break;
         }
         
-        task = task->next;
+        rmtask = rmtask->next;
     }
 }
 
@@ -131,42 +131,36 @@ void UpdateRMTaskComputationTime(int id)
  */
 RMTaskClient* GetRMTaskFromReadyQueue()
 {
-    RMTaskClient* task = ReadyQueue->head;
-    RMTaskClient* target = NULL;
+    RMTaskClient* rmtask = RMReadyQueue->head;
+    RMTaskClient* rmtarget = NULL;
 
-    if (task != NULL)
+    if (rmtask != NULL)
     {
-        if (task->rMTask != NULL) 
+        if (rmtask->rMTask != NULL) 
         {
-            int minPeriod = task->rMTask->Period;
-            target = task;
+            int minPeriod = rmtask->rMTask->Period;
+            rmtarget = rmtask;
 
-            while (task != NULL)
+            while (rmtask != NULL)
             {
-                if (task->next == NULL)
+                if (rmtask->next == NULL)
                 {
                     break;
                 }
-                else if (task->next->rMTask->Period < minPeriod)
+                else if (rmtask->next->rMTask->Period < minPeriod)
                 {
-                    target = task->next;
-                    minPeriod = target->rMTask->Period;
+                    rmtarget = rmtask->next;
+                    minPeriod = rmtarget->rMTask->Period;
                 }
 
-                task = task->next;
+                rmtask = rmtask->next;
             }
 
         }
 
         
     }
-
-    /*printf("--> GetRMTaskFromReadyQueue() \n");
-    printf("--> id: %i \n",target->clientTask->Id);
-    printf("--> ComputationTime: %f \n",target->clientTask->ComputationTime);
-    printf("--> Deadline: %f \n",target->clientTask->Deadline);*/
-
-    return target;
+    return rmtarget;
 }
 
 /*
@@ -195,7 +189,7 @@ bool VerifyRepeatedTasksIdsInQueue(int id, int t)
 {
     bool missedDeadline = false;
     RMTaskClient* task = malloc(sizeof(RMTaskClient));
-    task = ReadyQueue->head;
+    task = RMReadyQueue->head;
     
     while(task != NULL)
     {
@@ -422,7 +416,11 @@ void RunRMSched()
 {
     // init struct s
     Results = malloc(sizeof(RMSchedResult));
-    ReadyQueue = malloc(sizeof(Queue));
+    RMReadyQueue = malloc(sizeof(Queue));
+    RMReadyQueue->head = NULL;
+    RMReadyQueue->tail = NULL;
+    RMReadyQueue->QueueSize = 0;
+    
 
     // init results struct members
     Results->CPU_Utilization = 0;

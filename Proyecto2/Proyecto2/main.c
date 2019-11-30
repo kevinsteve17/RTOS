@@ -129,8 +129,9 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     // RM + EDF
     else if ((isRmEnabled  == 1) && (isEdfEnabled == 1) && (isLlfEnabled == 0))
     {
-        RunRMSched();      
         RunEdfSched();
+        RunRMSched();      
+
                 
         SchedulingResults[0] = *Results;
         SchedulingResults[1] = *edfResutls;
