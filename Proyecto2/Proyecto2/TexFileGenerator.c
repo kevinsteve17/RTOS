@@ -10,6 +10,7 @@
 #include <stdbool.h> 
 
 extern int numberOfTasks;
+FILE* texFile;
 extern int isRmEnabled;                 // Rate Monotonic Enable
 extern int isEdfEnabled;                // Earliest Deadline First Enable
 extern int isLlfEnabled;                // Least Laxity Enable
@@ -30,8 +31,6 @@ void GenerateAlgorithmsResults()
 void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSinglePageEnabled)
 {
     char fileName[] = "Proyecto2.tex";
-    
-    FILE* texFile;
     
     texFile = fopen(fileName, "w");
     
@@ -87,15 +86,20 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     {
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
+            fputs(tableFrameHeader, texFile);
+
+            //algo task info
+            GenerateAlgorithmSimHeadear(&schedResults[algorithm]);
+
             fputs(tableSectionHeader, texFile);
 
-            fputs(tableHeader, texFile);
+            fputs(simTableHeader, texFile);
             fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
 
             if (schedResults->numberOfSimCycles > SIM_COLUMNS)
             {
-                fputs(tableHeader, texFile);
+                fputs(simTableHeader, texFile);
                 fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
@@ -106,24 +110,47 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     // Single Page for all algorithms
     else
     {
+        //fputs(tableFrameHeader, texFile);
+        fputs(tableSectionHeader, texFile);
+        
+        for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
+        {
+            GenerateAlgorithmSimHeadear(&schedResults[algorithm]);
+        }
+        
+        fputs(tableSectionEnd, texFile);
+
+        // sim table
+        fputs(tableFrameHeader, texFile);
         fputs(tableSectionHeader, texFile);
 
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
-            fputs(tableHeader, texFile);
+            // slide header (alogorithm name)
+            fputs("\\textbf{\n", texFile);
+            fputs(schedResults[algorithm].algorithmName, texFile);
+            fputs("}\n", texFile);
+
+            fputs(simTableHeader, texFile);
             fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
 
             if (schedResults->numberOfSimCycles > SIM_COLUMNS)
             {
-                fputs(tableHeader, texFile);
+                fputs(simTableHeader, texFile);
                 fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
+
+            if (schedResults->numberOfSimCycles > SIM_COLUMNS*2)
+            {
+                fputs(simTableHeader, texFile);
+                fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS*2), texFile);
+                fputs(tableEnd, texFile);
+            }            
         }
 
         fputs(tableSectionEnd, texFile);
-
     }
     
     // ----------Sim table----------
@@ -137,6 +164,120 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     
     // Display pdf using default application
     DisplayOutputFile();
+}
+
+
+void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
+{
+    char aux[12];
+
+    // slide header (alogorithm name)
+    fputs("\\textbf{\n", texFile);
+    fputs(schedResults->algorithmName, texFile);
+    fputs("}\n", texFile);
+
+    // Start the 2 columns section
+    fputs("\\begin{multicols}{2}\n", texFile);
+
+    // tasks table
+    fputs(tasksTableHeader, texFile);
+    fputs(GenerateTaskTable(schedResults), texFile);
+    fputs(tableEnd, texFile);
+    
+    // CPU utilization
+    if (schedResults->CPU_Utilization > 0)
+    {
+        
+        fputs("\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} =", texFile);
+        sprintf(aux, "%f", schedResults->CPU_Utilization);
+        fputs(aux, texFile);
+        fputs(" ", texFile);
+
+        if (schedResults->CPU_Utilization > 1)
+        {
+            fputs(">", texFile);
+        }
+        else if (schedResults->CPU_Utilization < 1)
+        {
+            fputs("<", texFile);
+        }
+        else if (schedResults->CPU_Utilization == 1)
+        {
+            fputs("=", texFile);
+        }
+
+        fputs(" ", texFile);    
+        
+        fputs("1", texFile);
+
+        fputs("\\]\n", texFile);
+        
+        }  
+        
+        // Close the 2 columns section
+        fputs("\\end{multicols}\n", texFile);
+}
+
+/*
+ * Generates tasks table 
+ */
+char * GenerateTaskTable(SchedResult* schedResults)
+{
+    char row[5048];
+    char aux[12];
+    char *tiny = "\\tiny ";
+    char *square = "&";
+    char *ret = "";
+    char *space = " ";
+    char *endRow = " \\\\ \\hline\n";
+    char *color;
+
+    strcpy(row, tiny);
+    strcat(row, "Tarea");
+    strcat(row, space);
+    strcat(row, square);
+    strcat(row, space);
+    strcat(row, tiny);
+    strcat(row, "Color");
+    strcat(row, space);
+    strcat(row, square);
+    strcat(row, space);
+    strcat(row, tiny);
+    strcat(row, "$c_i$");
+    strcat(row, space);
+    strcat(row, square);
+    strcat(row, space);
+    strcat(row, tiny);
+    strcat(row, "$p_i$");
+    strcat(row, endRow);
+
+    for (int i = 0; i < numberOfTasks; i++)
+    {
+        strcat(row, tiny);
+        strcat(row, "T");
+        sprintf(aux, "%d", i+1);
+        strcat(row, aux);
+        strcat(row, space);
+        strcat(row, square);
+        strcat(row, space);
+        color = GetTaskColor(i);
+        strcat(row, color);
+        strcat(row, square);
+        strcat(row, tiny);
+        strcat(row, space);
+        sprintf(aux, "%d", (int)schedResults->TaskInfo[i].ComputationTime);
+        strcat(row, aux);
+        strcat(row, space);
+        strcat(row, square);
+        strcat(row, tiny);
+        strcat(row, space); 
+        sprintf(aux, "%d", (int)schedResults->TaskInfo[i].Period);
+        strcat(row, aux);       
+        strcat(row, endRow);
+    }
+
+    ret = row;
+    return ret;     
 }
 
 /*
@@ -154,7 +295,7 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
     char *ret = "";
     char *space = " ";
     char *endRow = "\\\\ \\hline\n";
-    char *color;
+    char *color;    
 
     strcpy(row, square);
     strcat(row, space);
