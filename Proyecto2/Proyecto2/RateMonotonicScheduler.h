@@ -44,15 +44,19 @@ extern "C" {
     bool CalculateCPU_Utilization(Task* tasks);
     bool CalculateSchedTest();
     void RunRMSchedTest();
-    
+    bool MonitorDeadlines(int t);
+    bool VerifyRepeatedTasksIdsInQueue(int id, int t);
     void AddRMTaskToReadyQueue(Task* task, int simPeriod);
     bool RemoveRMCompletedTasks();
     void InitRMReadyQueue(Task* task, int tasksCount);
     bool AddNewRMTasks(int t);
     void UpdateRMTaskComputationTime(int id);
     RMTaskClient* GetRMTaskFromReadyQueue();
+    void PrintRMMissedDeadlineMessage(RMTaskClient* task, int t);
     
     void RunRMSched();
+    
+
 
 
 
