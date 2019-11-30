@@ -151,11 +151,7 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     // If there are algorithms enabled, run the tex file generation
     if (numberOfAlgorithmsEnabled > 0)
     {
-<<<<<<< HEAD
-        // GenerateTexFile(SchedulingResults, numberOfAlgorithmsEnabled, isSinglePageOutputEnabled);
-=======
-        //GenerateTexFile(SchedulingResults, numberOfAlgorithmsEnabled, isSinglePageOutputEnabled);
->>>>>>> 9cb4c1604771e244d609ded56371001f01211426
+        GenerateTexFile(SchedulingResults, numberOfAlgorithmsEnabled, isSinglePageOutputEnabled);
     }
 
     leastCommonMultiple = 1;
