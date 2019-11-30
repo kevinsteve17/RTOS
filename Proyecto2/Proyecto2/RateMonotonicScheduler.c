@@ -303,7 +303,7 @@ bool  CalculateSchedTest()
 {
     double n = (double)tasksCount;
     
-    double schedTest =  n * (powf(0.5, n) - 1.0);
+    double schedTest =  n * (powf(2.0, 1.0/n) - 1.0);
     
     Results->SchedTest = schedTest;
     

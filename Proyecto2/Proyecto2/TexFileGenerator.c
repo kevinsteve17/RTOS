@@ -55,8 +55,8 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     //fputs(algsection, texFile);
     //fputs(newLine, texFile);
     
-    fputs(frameSectionPage, texFile);
-    fputs(newLine, texFile);
+    //fputs(frameSectionPage, texFile);
+    //fputs(newLine, texFile);
     
     // RM Theory Slide
     if (isRmEnabled == 1)
@@ -220,18 +220,7 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
         
         fputs("\\[  U(n) = \\sum_{1}^{\\ n} n(2^{\\frac{1}{n}} - 1) ", texFile);
 
-        if (schedResults->SchedTest > 1)
-        {
-            fputs(">", texFile);
-        }
-        else if (schedResults->SchedTest < 1)
-        {
-            fputs("<", texFile);
-        }
-        else if (schedResults->SchedTest == 1)
-        {
-            fputs("=", texFile);
-        }
+        fputs("=", texFile);
 
         fputs(" ", texFile); 
 

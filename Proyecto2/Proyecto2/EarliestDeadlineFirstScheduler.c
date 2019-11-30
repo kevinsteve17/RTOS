@@ -316,6 +316,7 @@ void RunEdfSched()
     // init results struct members
     edfResutls->CPU_Utilization = 0;
     edfResutls->TaskInfo = tasks;
+    edfResutls->SchedTest = -1;
     edfResutls->numberOfSimCycles = leastCommonMultiple;
     edfResutls->SimulationResults = (int*)malloc(sizeof(int) * leastCommonMultiple);
     edfResutls->algorithmName = "Earliest Deadline First (EDF)";
