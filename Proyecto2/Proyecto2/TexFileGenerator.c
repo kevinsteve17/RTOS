@@ -56,6 +56,9 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     fputs(algsection, texFile);
     fputs(newLine, texFile);
     
+    fputs(frameSectionPage, texFile);
+    fputs(newLine, texFile);
+    
     // RM Theory Slide
     if (isRmEnabled == 1)
     {
@@ -66,7 +69,7 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     // EDF Theory Slide
     if (isEdfEnabled == 1)
     {
-        //fputs(edfTheory, texFile);
+        fputs(edfTheory, texFile);
         fputs(newLine, texFile);
     }
     
@@ -76,9 +79,6 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
         fputs(llfTheory, texFile);
         fputs(newLine, texFile);
     }
-    
-    fputs(frameSectionPage, texFile);
-    fputs(newLine, texFile);
     
     // ----------Sim table----------
     

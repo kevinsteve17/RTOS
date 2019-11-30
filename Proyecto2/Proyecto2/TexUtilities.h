@@ -114,6 +114,7 @@ extern "C" {
     
     char tableSectionEnd[] ="\\end{frame}\n";
     
+    //--------------------------------------------------------------------------
     char llfTheory[] =
     // Divide the theory in 2 colums
     "\\twocolumn\n"
@@ -146,7 +147,50 @@ extern "C" {
 
     // Images
     "\\begin{center}\n"        
-        "\\includegraphics[scale=0.8]{llf_theory_flow}\n"
+        "\\includegraphics[scale=0.82]{llf_theory_flow}\n"
+    "\\end{center}\n"
+    
+    // Return settings to normal
+    "\\onecolumn\n"
+    "\\end{footnotesize}\n";
+    
+    
+    //--------------------------------------------------------------------------
+    char edfTheory[] =
+    // Divide the theory in 2 colums
+    "\\twocolumn\n"
+    "\\begin{normal}\n"  
+    
+    // Algorithm Name
+    "\\textbf{Earliest Deadline First (EDF)}\n"
+    
+    "\\vspace{4mm}\n"
+    "\\end{normal}\n\n"
+    "\\begin{footnotesize}\n"
+    
+    // Theory
+    "Es un algoritmo de sistemas de tiempo real de prioridad dinamica, en donde, la prioridad se asigna a la tarea "
+    "con el deadline mas proximo cada vez que una tarea entra en la cola de estado “ready”.\n\n"
+    
+    "\\vspace{4mm}\n"
+    "Su prueba de suficiencia esta dada por:\n"
+    
+    // Formulas
+    "\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} <= 1 \\]\n"
+    
+    // Bullets
+    "En donde:\n"
+    "\\begin{itemize}\n"
+    "\\item U: utilizacion\n"
+    "\\item C: tiempo de computacion\n"
+    "\\item P: periodo\n"
+    "\\end{itemize}\n"
+      
+    "Es un algoritmo optimo y permite una utilizacion del CPU del 100\\%.\n\n"
+
+    // Images
+    "\\begin{center}\n"        
+        "\\includegraphics[scale=0.74]{edf_theory_flow}\n"
     "\\end{center}\n"
     
     // Return settings to normal
