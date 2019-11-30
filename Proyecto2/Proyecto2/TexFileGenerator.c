@@ -157,6 +157,7 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     DisplayOutputFile();
 }
 
+
 void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
 {
     char aux[12];
@@ -166,7 +167,8 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
     fputs(schedResults->algorithmName, texFile);
     fputs("}\n", texFile);
 
-    fputs("\\twocolumn\n", texFile);
+    // Start the 2 columns section
+    fputs("\\begin{multicols}{2}\n", texFile);
 
     // tasks table
     fputs(tasksTableHeader, texFile);
@@ -176,6 +178,7 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
     // CPU utilization
     if (schedResults->CPU_Utilization > 0)
     {
+        
         fputs("\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} =", texFile);
         sprintf(aux, "%f", schedResults->CPU_Utilization);
         fputs(aux, texFile);
@@ -199,10 +202,11 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
         fputs("1", texFile);
 
         fputs("\\]\n", texFile);
+        
         }  
-
-        fputs("\\onecolumn\n", texFile);
-        //fputs("\\end{columns}\n", texFile);
+        
+        // Close the 2 columns section
+        fputs("\\end{multicols}\n", texFile);
 }
 
 /*
