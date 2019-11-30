@@ -13,8 +13,27 @@
 RMSchedResult* Results;
 Queue* ReadyQueue;
 
+bool MetDeadline = true;
+
 extern Task tasks[NUM_OF_TASKS];
 extern int leastCommonMultiple;
+
+
+
+/*
+ * Prints Missed Deadline Message
+ */
+void PrintRMMissedDeadlineMessage(RMTaskClient* task, int t)
+{
+    printf("\n");
+    printf("\n");
+    printf("--> Tastk id: %i FAILED to meet deadline \n", task->rMTask->Id);
+    printf("--> Deadline: %f \n",task->rMTask->Deadline);
+    printf("--> Actual time: %i \n",t);
+    printf("XXXXXX Blind grandma brutally killed in a hit and run accident!!! XXXXXX");
+    printf("\n");
+    printf("\n");    
+}
 
 
 
@@ -41,6 +60,7 @@ void AddRMTaskToReadyQueue(Task* task, int simPeriod)
         ReadyQueue->head = newTask;
         ReadyQueue->tail->next = NULL;
     }
+    ReadyQueue->QueueSize++;
 }
 
 /*
@@ -59,6 +79,7 @@ bool RemoveRMCompletedTasks()
         ReadyQueue->QueueSize--;
         return true; 
     }
+    
 
     // Search task be deleted, keep track of the 
     // previous node as we need to change 'prev->next' 
@@ -73,9 +94,17 @@ bool RemoveRMCompletedTasks()
     {
         return false; 
     }
-  
-    // Unlink the node from linked list 
-    prev->next = target->next;
+    if (target == ReadyQueue->tail) 
+    {
+        // Unlink the node from linked list
+        prev->next = NULL;
+        ReadyQueue->tail = prev;
+    }
+    else
+    {
+        // Unlink the node from linked list
+        prev->next = target->next;
+    }
 
     free(target);  // Free memory 
     return true; 
@@ -107,7 +136,7 @@ RMTaskClient* GetRMTaskFromReadyQueue()
 
     if (task != NULL)
     {
-        int earliestDeadline = task->rMTask->Period;
+        int minPeriod = task->rMTask->Period;
         target = task;
 
         while (task != NULL)
@@ -116,10 +145,10 @@ RMTaskClient* GetRMTaskFromReadyQueue()
             {
                 break;
             }
-            else if (task->next->rMTask->Period < earliestDeadline)
+            else if (task->next->rMTask->Period < minPeriod)
             {
                 target = task->next;
-                earliestDeadline = target->rMTask->Period;
+                minPeriod = target->rMTask->Period;
             }
             
             task = task->next;
@@ -156,6 +185,53 @@ void InitRMReadyQueue(Task* task, int tasksCount)
     }
 }
 
+bool VerifyRepeatedTasksIdsInQueue(int id, int t)
+{
+    bool missedDeadline = false;
+    RMTaskClient* task = malloc(sizeof(RMTaskClient));
+    task = ReadyQueue->head;
+    
+    while(task != NULL)
+    {
+        if (task->rMTask->Id == id) 
+        {
+            if ((task->rMTask->Deadline-1 < t) && (task->rMTask->ComputationTime > 0)) 
+            {
+                Results->SimulationResults[t] = 666+id;
+                Results->numberOfSimCycles = t+1;
+                //PrintRMMissedDeadlineMessage(task, t);
+                missedDeadline = true;
+                MetDeadline = false;
+            break;
+
+            }
+        }
+        task = task->next;
+    }
+    
+    free(task);
+    return missedDeadline;
+}
+
+
+bool MonitorDeadlines(int t)
+{
+    bool  missedDeadline = false;
+    for (int i=0; i < NUM_OF_TASKS; i++)
+    {
+        if (((int)Results->TaskInfo[i].ComputationTime > 0) && ((int)Results->TaskInfo[i].Deadline < t))
+        {
+            Results->SimulationResults[t] = 666+Results->TaskInfo[i].Id;
+            Results->numberOfSimCycles = t+1;
+            //PrintRMMissedDeadlineMessage(task, t);
+            missedDeadline = true;
+            MetDeadline = false;
+            break;
+        }
+    }
+    return missedDeadline;
+}
+
 /*
  * Adds new tasks to ready queue based on current t and tasks period
  */
@@ -172,9 +248,21 @@ bool AddNewRMTasks(int t)
             task->ComputationTime = Results->TaskInfo[i].ComputationTime;
             task->Deadline = Results->TaskInfo[i].Deadline + t;
             task->Period = Results->TaskInfo[i].Period;
+            if (VerifyRepeatedTasksIdsInQueue(task->Id, t)) 
+            {
+                MetDeadline = false;
+                break;
+            }
+            else
+            {
+                AddRMTaskToReadyQueue(task, 0);
+                newTaskAdded = true;
+                MetDeadline = true;
+            }
+/*
             AddRMTaskToReadyQueue(task, 0);
-
-            newTaskAdded = true; 
+            newTaskAdded = true;
+*/
         }
     }
     
@@ -267,7 +355,6 @@ void RunRMSchedTest(Task* tasks)
         periods[i] = tasks[i].Period;
     }
 
-    
     // run Least Common Multiple
     int lcm = LCM(periods, tasksCount);
     
@@ -288,7 +375,7 @@ void RunRMSchedTest(Task* tasks)
         readyqueueUpdate = RemoveRMCompletedTasks();
         
         // look for new arrivals in ready queue
-        readyqueueUpdate = readyqueueUpdate | AddNewRMTasks(j);
+        readyqueueUpdate = AddNewRMTasks(j) || readyqueueUpdate;
         
         if (readyqueueUpdate)
         {
@@ -296,15 +383,29 @@ void RunRMSchedTest(Task* tasks)
            task = GetRMTaskFromReadyQueue();
         }
         
+        if (MetDeadline == false) 
+        {
+            break;
+        }
+        
         if (task != NULL)
         {
             if (task->rMTask->Deadline < j)
             {
-                printf("--> Tastk id: %i FAILED to meet deadline \n", task->rMTask->Id);
-                printf("--> Deadline: %f \n",task->rMTask->Deadline);
-                printf("--> Actual time: %i \n",j);
+                Results->SimulationResults[j] = 666+task->rMTask->Id;
+                Results->numberOfSimCycles = j+1;
+                PrintRMMissedDeadlineMessage(task, j);
                 break;
             }
+            
+            /*if ((task->rMTask->ComputationTime > 0)  && (j % (int)task->rMTask->Deadline == 0.0)) 
+            {
+                Results->SimulationResults[j] = 666+task->rMTask->Id;
+                Results->numberOfSimCycles = j+1;
+                PrintRMMissedDeadlineMessage(task, j);
+                break;
+            }*/
+
 
             // update computation time (execute task for one cycle)
             UpdateRMTaskComputationTime(task->rMTask->Id);

@@ -202,7 +202,10 @@ extern "C" {
     // Return settings to normal
     "\\onecolumn\n"
     "\\end{footnotesize}\n";
-
+    
+    // -------------------------------------------------------------------------
+    
+    //--------------------------------------------------------------------------
     char RMTheory[] =
     // Divide the theory in 2 colums
     "\\twocolumn\n"
@@ -211,26 +214,29 @@ extern "C" {
     // Algorithm Name
     "\\textbf{Rate Monotonic (RM)}\n"
     
-    "\\vspace{2mm}\n"
+    "\\vspace{4mm}\n"
     "\\end{normal}\n\n"
     "\\begin{footnotesize}\n"
     
     // Theory
-    "El RM es un algoritmo dinamico en donde la prioridad de cada tarea  es inversamente proporcional a su Deadline.\n"
+    "El RM es un algoritmo dinamico en donde la prioridad de cada tarea  es inversamente proporcional a su Deadline. "
+    " $\\mu$ es la utilizacion del CPU y debe ser menor o igual a 1. \n\n"
+    
+    "\\vspace{4mm}\n"
+    "Su prueba de suficiencia esta dada por:\n"
     
     // Formulas
-    "\\[ $ \\mu = \\sum_{n=1}^{\\ n} \\frac{C_{i}}{P_{i}}$ \\] y \\[ $ U(n) = \\sum_{1}^{\\ n} n(2^{\\frac{1}{n}} - 1) $ \\]\n"
+    "\\[ \\mu = \\sum_{n=1}^{\\ n} \\frac{C_{i}}{P_{i}} \\] y \\[  U(n) = \\sum_{1}^{\\ n} n(2^{\\frac{1}{n}} - 1) \\]\n"
     
     // Bullets
     "En donde:\n"
     "\\begin{itemize}\n"
     "\\item C: Tiempo de Computacion\n"
     "\\item P: Periodo (Deadline)\n"
-    "\\item \\mu \\leq U(n): Condicion de suficiencia\n"
     "\\end{itemize}\n"
       
-    "Ante una cantidad infinita de tareas, U(n) tiende a 0.6931. Por lo tanto si \\mu es menor o igual a 0.6931 son calendarizables.\n"
-    "En caso de ser mayor que 0.6931 y menor que 1, se debe evaluar el algoritmo para verificar si son calendariables \n\n"
+    "Es un algoritmo optimo y permite una utilizacion del CPU del 100\\%.\n\n"
+
     // Images
     "\\begin{center}\n"        
         "\\includegraphics[scale=0.2]{RM}\n"
