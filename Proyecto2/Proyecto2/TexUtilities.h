@@ -102,7 +102,7 @@ extern "C" {
     
     char tasksTableHeader[] = "\\begin{table}[]\n"
     "\\centering\n"
-    "\\begin{tabular}{|p{4mm}|p{4mm}|p{3mm}|p{3mm}|}\n"
+    "\\begin{tabular}{|p{5mm}|p{5mm}|p{3mm}|p{3mm}|}\n"
     "\\hline\n";
 
     char simTableHeader[] = "\\begin{table}[]\n"
