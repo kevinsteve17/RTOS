@@ -157,6 +157,8 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     }
 
     free(edfResutls);
+    free(Results);
+    free(llfResults);
     leastCommonMultiple = 1;
 }
 
