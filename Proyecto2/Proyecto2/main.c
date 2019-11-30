@@ -155,6 +155,9 @@ void DoScheduling(GtkWidget *gtk_control, gpointer data)
     {
         GenerateTexFile(SchedulingResults, numberOfAlgorithmsEnabled, isSinglePageOutputEnabled);
     }
+
+    free(edfResutls);
+    leastCommonMultiple = 1;
 }
 
 
