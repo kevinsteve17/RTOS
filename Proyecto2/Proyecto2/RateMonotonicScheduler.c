@@ -75,7 +75,7 @@ bool RemoveRMCompletedTasks()
     if (target != NULL && target->rMTask->ComputationTime == 0) 
     { 
         ReadyQueue->head = target->next;    // Changed head 
-        free(target);                       // free old head
+        // free(target);                       // free old head
         ReadyQueue->QueueSize--;
         return true; 
     }
@@ -136,23 +136,29 @@ RMTaskClient* GetRMTaskFromReadyQueue()
 
     if (task != NULL)
     {
-        int minPeriod = task->rMTask->Period;
-        target = task;
-
-        while (task != NULL)
+        if (task->rMTask != NULL) 
         {
-            if (task->next == NULL)
+            int minPeriod = task->rMTask->Period;
+            target = task;
+
+            while (task != NULL)
             {
-                break;
+                if (task->next == NULL)
+                {
+                    break;
+                }
+                else if (task->next->rMTask->Period < minPeriod)
+                {
+                    target = task->next;
+                    minPeriod = target->rMTask->Period;
+                }
+
+                task = task->next;
             }
-            else if (task->next->rMTask->Period < minPeriod)
-            {
-                target = task->next;
-                minPeriod = target->rMTask->Period;
-            }
-            
-            task = task->next;
+
         }
+
+        
     }
 
     /*printf("--> GetRMTaskFromReadyQueue() \n");
@@ -338,30 +344,11 @@ int GetHighestPriority(Task* tasks)
 
 void RunRMSchedTest(Task* tasks)
 {
-    int periods[tasksCount];
     bool readyqueueUpdate = false;
-    
-    if (!CalculateCPU_Utilization(tasks)) 
-    {
-        printf("\n CPU utilization is greater than one, RM will not run\n");
-        return;
-    }
+    CalculateCPU_Utilization(tasks);
 
     // Evaluate Schedulability Test function
     CalculateSchedTest(tasksCount);
-    
-    for (int i = 0; i < tasksCount; i++) 
-    {
-        periods[i] = tasks[i].Period;
-    }
-
-    // run Least Common Multiple
-    int lcm = LCM(periods, tasksCount);
-    
-    // Set time limit
-    int timeLimit = lcm;
-    
-    int schedTestResult[SIM_CYCLES];
     
     // All tasks in ready queue at the beginning. 
     InitRMReadyQueue(tasks, tasksCount);
@@ -369,7 +356,7 @@ void RunRMSchedTest(Task* tasks)
     // get earliest deadline task
     RMTaskClient* task = GetRMTaskFromReadyQueue();
 
-    for (int j = 0; j < SIM_CYCLES; j++) 
+    for (int j = 0; j < leastCommonMultiple; j++) 
     {
         // remove completed tasks from ready queue
         readyqueueUpdate = RemoveRMCompletedTasks();
@@ -398,15 +385,6 @@ void RunRMSchedTest(Task* tasks)
                 break;
             }
             
-            /*if ((task->rMTask->ComputationTime > 0)  && (j % (int)task->rMTask->Deadline == 0.0)) 
-            {
-                Results->SimulationResults[j] = 666+task->rMTask->Id;
-                Results->numberOfSimCycles = j+1;
-                PrintRMMissedDeadlineMessage(task, j);
-                break;
-            }*/
-
-
             // update computation time (execute task for one cycle)
             UpdateRMTaskComputationTime(task->rMTask->Id);
 
@@ -445,16 +423,16 @@ void RunRMSched()
     // init struct s
     Results = malloc(sizeof(RMSchedResult));
     ReadyQueue = malloc(sizeof(Queue));
-    
-    // [DEBUG] create dumy tasks
-    //EdfPopulateTaskstructures();
-    
+
     // init results struct members
     Results->CPU_Utilization = 0;
     Results->TaskInfo = tasks;
     Results->numberOfSimCycles = leastCommonMultiple;
     Results->SimulationResults = (int*)malloc(sizeof(int) * Results->numberOfSimCycles);
     Results->algorithmName = "Rate Monotonic (RM)";
+    
+    // initializes variable
+    MetDeadline = true;
 
     // perform edf sched test and do sched
     RunRMSchedTest(tasks);
