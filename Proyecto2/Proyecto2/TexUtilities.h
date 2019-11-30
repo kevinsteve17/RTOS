@@ -34,7 +34,7 @@ extern "C" {
                     "\\institute[ITCR]{\n"
                     "    Maestria en Sistemas Empotrados%\n"
                     "    \\\\%\n"
-                    "    Instituto Tenologico de Costa Rica%\n"
+                    "    Instituto Tecnologico de Costa Rica%\n"
                     "}"
                     "\\date{Diciembre 07, 2019}\n";
     
@@ -182,7 +182,7 @@ extern "C" {
     "Su prueba de suficiencia esta dada por:\n"
     
     // Formulas
-    "\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} <= 1 \\]\n"
+    "\\[ \\mu = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} <= 1 \\]\n"
     
     // Bullets
     "En donde:\n"
