@@ -21,7 +21,7 @@ extern "C" {
 #endif
     
     
-    char header[] = "\\documentclass[aspectratio=43, xcolor=table]{beamer}\n"
+    char header[] = "\\documentclass[aspectratio=43, xcolor=table twocolumn]{beamer}\n"
                     "\\usepackage[english]{babel}\n"
                     "\\usepackage{pifont}\n"
                     "\\usepackage{amsmath}\n"
@@ -119,10 +119,90 @@ extern "C" {
     
     char tableSectionEnd[] ="\\end{frame}\n";
     
+    //--------------------------------------------------------------------------
+    char llfTheory[] =
+    // Divide the theory in 2 colums
+    "\\twocolumn\n"
+    "\\begin{normal}\n"  
+    
+    // Algorithm Name
+    "\\textbf{Least Laxity First (LLF)}\n"
+    
+    "\\vspace{4mm}\n"
+    "\\end{normal}\n\n"
+    "\\begin{footnotesize}\n"
+    
+    // Theory
+    "Tambien conocido como Least Slack Time (LST) es un algoritmo de calendarizacion de tiempo real.\n"
+    "Es un algoritmo dinamico en donde la prioridad se asigna a la tarea con el menor laxity en el estado actual.\n"
+    
+    // Formulas
+    "\\[ l = (D-t)-C' \\]\n"
+    
+    // Bullets
+    "En donde:\n"
+    "\\begin{itemize}\n"
+    "\\item l: laxity\n"
+    "\\item D: deadline\n"
+    "\\item t: tiempo\n"
+    "\\item C': tiempo remanente de computacion\n"
+    "\\end{itemize}\n"
+      
+    "Al igual que el algoritmo Earliest Deadline First (EDF) permite una utilizacion del CPU del 100\\%.\n\n"
 
+    // Images
+    "\\begin{center}\n"        
+        "\\includegraphics[scale=0.82]{llf_theory_flow}\n"
+    "\\end{center}\n"
+    
+    // Return settings to normal
+    "\\onecolumn\n"
+    "\\end{footnotesize}\n";
+    
+    
+    //--------------------------------------------------------------------------
+    char edfTheory[] =
+    // Divide the theory in 2 colums
+    "\\twocolumn\n"
+    "\\begin{normal}\n"  
+    
+    // Algorithm Name
+    "\\textbf{Earliest Deadline First (EDF)}\n"
+    
+    "\\vspace{4mm}\n"
+    "\\end{normal}\n\n"
+    "\\begin{footnotesize}\n"
+    
+    // Theory
+    "Es un algoritmo de sistemas de tiempo real de prioridad dinamica, en donde, la prioridad se asigna a la tarea "
+    "con el deadline mas proximo cada vez que una tarea entra en la cola de estado “ready”.\n\n"
+    
+    "\\vspace{4mm}\n"
+    "Su prueba de suficiencia esta dada por:\n"
+    
+    // Formulas
+    "\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} <= 1 \\]\n"
+    
+    // Bullets
+    "En donde:\n"
+    "\\begin{itemize}\n"
+    "\\item U: utilizacion\n"
+    "\\item C: tiempo de computacion\n"
+    "\\item P: periodo\n"
+    "\\end{itemize}\n"
+      
+    "Es un algoritmo optimo y permite una utilizacion del CPU del 100\\%.\n\n"
 
+    // Images
+    "\\begin{center}\n"        
+        "\\includegraphics[scale=0.74]{edf_theory_flow}\n"
+    "\\end{center}\n"
+    
+    // Return settings to normal
+    "\\onecolumn\n"
+    "\\end{footnotesize}\n";
 
-
+    
 #ifdef __cplusplus
 }
 #endif
