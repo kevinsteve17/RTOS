@@ -65,11 +65,12 @@ void LLF_RunSchedTest()
                 // task deadline!
                 if (tasksComputation[task] > 0)
                 {
-                    // Bombastic!
-                    time = timeLimit;
                     // Load the last value
                     llfResults->SimulationResults[time]= 666+task;
                     llfResults->numberOfSimCycles = time+1;
+                    
+                    // Bombastic!
+                    time = timeLimit;
                 }
                 
                 tasksComputation[task] = tasks[task].ComputationTime;

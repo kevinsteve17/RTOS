@@ -61,6 +61,7 @@ build: .build-post
 	cp preamble.tex ${CND_ARTIFACT_DIR_${CONF}}
 	cp llf_theory_flow.png ${CND_ARTIFACT_DIR_${CONF}}
 	cp edf_theory_flow.png ${CND_ARTIFACT_DIR_${CONF}}
+	cp RM.png ${CND_ARTIFACT_DIR_${CONF}}
 
 # clean
 clean: .clean-post
