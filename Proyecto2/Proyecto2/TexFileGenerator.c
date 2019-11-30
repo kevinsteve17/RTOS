@@ -188,7 +188,7 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
     if (schedResults->CPU_Utilization > 0)
     {
         
-        fputs("\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} =", texFile);
+        fputs("\\[ \\mu = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} =", texFile);
         sprintf(aux, "%f", schedResults->CPU_Utilization);
         fputs(aux, texFile);
         fputs(" ", texFile);
