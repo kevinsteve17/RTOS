@@ -147,7 +147,7 @@ void CreateResultsFrameAndControls()
 
     // Single slide button
     GtkWidget *checkButton_individualSlide;
-    checkButton_individualSlide = gtk_check_button_new_with_label("Filmina Individual");
+    checkButton_individualSlide = gtk_check_button_new_with_label("Algoritmo por slide");
     g_signal_connect(GTK_TOGGLE_BUTTON(checkButton_individualSlide), "toggled", G_CALLBACK(Toggle_Output), NULL);
     gtk_grid_attach(GTK_GRID(grid_salida), checkButton_individualSlide, 0,0,1,1);
 }
