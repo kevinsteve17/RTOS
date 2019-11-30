@@ -23,6 +23,9 @@ extern "C" {
     
     char header[] = "\\documentclass[aspectratio=43, xcolor=table]{beamer}\n"
                     "\\usepackage[english]{babel}\n"
+                    "\\usepackage{pifont}\n"
+                    "\\usepackage{amsmath}\n"
+                    "\\usepackage[utf8]{inputenc}\n"
                     "% \\usepackage[table,xcdraw]{xcolor}\n"
                     "\\input{preamble}\n"
                     "\\title{RTOS Schedulability}\n"
