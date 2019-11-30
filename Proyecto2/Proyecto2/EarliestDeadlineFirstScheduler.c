@@ -293,6 +293,7 @@ void RunEdfSched()
     edfResutls->TaskInfo = tasks;
     edfResutls->numberOfSimCycles = leastCommonMultiple;
     edfResutls->SimulationResults = (int*)malloc(sizeof(int) * leastCommonMultiple);
+    edfResutls->algorithmName = "Earliest Deadline First (EDF)";
 
     // perform edf sched test and start sched
     EdfStartSched(tasks, NUM_OF_TASKS);

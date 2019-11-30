@@ -41,6 +41,8 @@ extern "C" {
         Task* TaskInfo;
         int numberOfSimCycles;
         int* SimulationResults;
+        char* algorithmName;
+        char* cpuUtilEq;
     };
 
 

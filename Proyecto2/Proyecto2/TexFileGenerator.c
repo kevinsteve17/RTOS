@@ -86,11 +86,12 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     {
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
+            fputs(tableFrameHeader, texFile);
+
+            //algo task info
+            GenerateAlgorithmSimHeadear(&schedResults[algorithm]);
+
             fputs(tableSectionHeader, texFile);
-            // tasks table
-            //fputs(tasksTableHeader, texFile);
-            //fputs(GenerateTaskTable(&schedResults[algorithm]), texFile);
-            //fputs(tableEnd, texFile);
 
             fputs(simTableHeader, texFile);
             fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
@@ -110,6 +111,7 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     else
     {
         // sim table
+        fputs(tableFrameHeader, texFile);
         fputs(tableSectionHeader, texFile);
 
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
@@ -141,6 +143,54 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     
     // Display pdf using default application
     DisplayOutputFile();
+}
+
+void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
+{
+    char aux[12];
+
+    // slide header (alogorithm name)
+    fputs("\\textbf{\n", texFile);
+    fputs(schedResults->algorithmName, texFile);
+    fputs("}\n", texFile);
+
+    fputs("\\twocolumn\n", texFile);
+
+    // tasks table
+    fputs(tasksTableHeader, texFile);
+    fputs(GenerateTaskTable(schedResults), texFile);
+    fputs(tableEnd, texFile);
+
+    // CPU utilization
+    if (schedResults->CPU_Utilization > 0)
+    {
+        fputs("\\[ U = \\sum\\limits_{i=1}^n \\frac{C_i}{P_i} =", texFile);
+        sprintf(aux, "%f", schedResults->CPU_Utilization);
+        fputs(aux, texFile);
+        fputs(" ", texFile);
+
+        if (schedResults->CPU_Utilization > 1)
+        {
+            fputs(">", texFile);
+        }
+        else if (schedResults->CPU_Utilization < 1)
+        {
+            fputs("<", texFile);
+        }
+        else if (schedResults->CPU_Utilization == 1)
+        {
+            fputs("=", texFile);
+        }
+
+        fputs(" ", texFile);    
+        
+        fputs("1", texFile);
+
+        fputs("\\]\n", texFile);
+        }  
+
+        fputs("\\onecolumn\n", texFile);
+        //fputs("\\end{columns}\n", texFile);
 }
 
 /*

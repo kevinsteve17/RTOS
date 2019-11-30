@@ -35,6 +35,7 @@ void LLF_RunSchedTest()
     llfResults->TaskInfo = tasks;
     llfResults->numberOfSimCycles = leastCommonMultiple;
     llfResults->SimulationResults = (int*)malloc(sizeof(int) * llfResults->numberOfSimCycles);
+    llfResults->algorithmName = "Least Laxity First (LLF)";
     
     // Set time limit
     int timeLimit = leastCommonMultiple;

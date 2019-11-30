@@ -93,15 +93,16 @@ extern "C" {
     "\\end{tabular}\n"
     "\\end{table}\n"
     "\\end{frame}\n";
-    
-    char tableSectionHeader[] = "\\begin{frame}{Scheduling tables}\n"
-    "\\setlength{\\arrayrulewidth}{0.1mm}\n"
+
+    char tableFrameHeader[] = "\\begin{frame}{Scheduling tables}\n";
+
+    char tableSectionHeader[] = "\\setlength{\\arrayrulewidth}{0.1mm}\n"
     "\\setlength{\\tabcolsep}{1pt}\n"
     "\\renewcommand{\\arraystretch}{0.5}\n";
     
     char tasksTableHeader[] = "\\begin{table}[]\n"
     "\\centering\n"
-    "\\begin{tabular}{|r|r|r|r|}\n"
+    "\\begin{tabular}{|p{4mm}|p{4mm}|p{3mm}|p{3mm}|}\n"
     "\\hline\n";
 
     char simTableHeader[] = "\\begin{table}[]\n"

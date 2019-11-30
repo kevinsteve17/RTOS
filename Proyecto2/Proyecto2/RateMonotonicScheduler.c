@@ -353,6 +353,7 @@ void RunRMSched()
     Results->TaskInfo = tasks;
     Results->numberOfSimCycles = leastCommonMultiple;
     Results->SimulationResults = (int*)malloc(sizeof(int) * Results->numberOfSimCycles);
+    Results->algorithmName = "Rate Monotonic (RM)";
 
     // perform edf sched test and do sched
     RunRMSchedTest(tasks);

@@ -54,6 +54,7 @@ extern "C" {
     char * GenerateTableSimContents();
     char * GenerateTableContents(SchedResult* schedResults, int offset);
     char * GenerateTaskTable(SchedResult* schedResults);
+    void GenerateAlgorithmSimHeadear(SchedResult* schedResults);
     char * GetTaskColor(int i);
     void CompileTex2Pdf();
     void DisplayOutputFile();
