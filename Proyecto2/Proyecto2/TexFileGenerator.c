@@ -110,6 +110,16 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     // Single Page for all algorithms
     else
     {
+        //fputs(tableFrameHeader, texFile);
+        fputs(tableSectionHeader, texFile);
+        
+        for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
+        {
+            GenerateAlgorithmSimHeadear(&schedResults[algorithm]);
+        }
+        
+        fputs(tableSectionEnd, texFile);
+
         // sim table
         fputs(tableFrameHeader, texFile);
         fputs(tableSectionHeader, texFile);
@@ -129,7 +139,6 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
         }
 
         fputs(tableSectionEnd, texFile);
-
     }
     
     // ----------Sim table----------
@@ -162,7 +171,7 @@ void GenerateAlgorithmSimHeadear(SchedResult* schedResults)
     fputs(tasksTableHeader, texFile);
     fputs(GenerateTaskTable(schedResults), texFile);
     fputs(tableEnd, texFile);
-
+    
     // CPU utilization
     if (schedResults->CPU_Utilization > 0)
     {
