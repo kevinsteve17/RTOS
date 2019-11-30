@@ -99,7 +99,12 @@ extern "C" {
     "\\setlength{\\tabcolsep}{1pt}\n"
     "\\renewcommand{\\arraystretch}{0.5}\n";
     
-    char tableHeader[] = "\\begin{table}[]\n"
+    char tasksTableHeader[] = "\\begin{table}[]\n"
+    "\\centering\n"
+    "\\begin{tabular}{|r|r|r|r|}\n"
+    "\\hline\n";
+
+    char simTableHeader[] = "\\begin{table}[]\n"
     "\\centering\n"
     "\\begin{tabular}{|p{3mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|p{1mm}|}\n"
     "\\hline\n";

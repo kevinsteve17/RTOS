@@ -10,6 +10,7 @@
 #include <stdbool.h> 
 
 extern int numberOfTasks;
+FILE* texFile;
 
 void GenerateCoverPage()
 {
@@ -27,8 +28,6 @@ void GenerateAlgorithmsResults()
 void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSinglePageEnabled)
 {
     char fileName[] = "Proyecto2.tex";
-    
-    FILE* texFile;
     
     texFile = fopen(fileName, "w");
     
@@ -64,14 +63,18 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
             fputs(tableSectionHeader, texFile);
+            // tasks table
+            //fputs(tasksTableHeader, texFile);
+            //fputs(GenerateTaskTable(&schedResults[algorithm]), texFile);
+            //fputs(tableEnd, texFile);
 
-            fputs(tableHeader, texFile);
+            fputs(simTableHeader, texFile);
             fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
 
             if (schedResults->numberOfSimCycles > SIM_COLUMNS)
             {
-                fputs(tableHeader, texFile);
+                fputs(simTableHeader, texFile);
                 fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
@@ -82,17 +85,18 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     // Single Page for all algorithms
     else
     {
+        // sim table
         fputs(tableSectionHeader, texFile);
 
         for (int algorithm=0; algorithm<numberOfAlgorithms; algorithm++)
         {
-            fputs(tableHeader, texFile);
+            fputs(simTableHeader, texFile);
             fputs(GenerateTableContents(&schedResults[algorithm], 0), texFile);
             fputs(tableEnd, texFile);
 
             if (schedResults->numberOfSimCycles > SIM_COLUMNS)
             {
-                fputs(tableHeader, texFile);
+                fputs(simTableHeader, texFile);
                 fputs(GenerateTableContents(&schedResults[algorithm], SIM_COLUMNS), texFile);
                 fputs(tableEnd, texFile);
             }
@@ -116,6 +120,68 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
 }
 
 /*
+ * Generates tasks table 
+ */
+char * GenerateTaskTable(SchedResult* schedResults)
+{
+    char row[5048];
+    char aux[12];
+    char *tiny = "\\tiny ";
+    char *square = "&";
+    char *ret = "";
+    char *space = " ";
+    char *endRow = " \\\\ \\hline\n";
+    char *color;
+
+    strcpy(row, tiny);
+    strcat(row, "Tarea");
+    strcat(row, space);
+    strcat(row, square);
+    strcat(row, space);
+    strcat(row, tiny);
+    strcat(row, "Color");
+    strcat(row, space);
+    strcat(row, square);
+    strcat(row, space);
+    strcat(row, tiny);
+    strcat(row, "$c_i$");
+    strcat(row, space);
+    strcat(row, square);
+    strcat(row, space);
+    strcat(row, tiny);
+    strcat(row, "$p_i$");
+    strcat(row, endRow);
+
+    for (int i = 0; i < numberOfTasks; i++)
+    {
+        strcat(row, tiny);
+        strcat(row, "T");
+        sprintf(aux, "%d", i+1);
+        strcat(row, aux);
+        strcat(row, space);
+        strcat(row, square);
+        strcat(row, space);
+        color = GetTaskColor(i);
+        strcat(row, color);
+        strcat(row, square);
+        strcat(row, tiny);
+        strcat(row, space);
+        sprintf(aux, "%d", (int)schedResults->TaskInfo[i].ComputationTime);
+        strcat(row, aux);
+        strcat(row, space);
+        strcat(row, square);
+        strcat(row, tiny);
+        strcat(row, space); 
+        sprintf(aux, "%d", (int)schedResults->TaskInfo[i].Period);
+        strcat(row, aux);       
+        strcat(row, endRow);
+    }
+
+    ret = row;
+    return ret;     
+}
+
+/*
  * Generates sim table contents based on sim results
  */
 char * GenerateTableContents(SchedResult* schedResults, int offset)
@@ -130,7 +196,7 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
     char *ret = "";
     char *space = " ";
     char *endRow = "\\\\ \\hline\n";
-    char *color;
+    char *color;    
 
     strcpy(row, square);
     strcat(row, space);
