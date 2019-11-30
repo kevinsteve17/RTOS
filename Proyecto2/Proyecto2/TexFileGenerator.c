@@ -49,11 +49,11 @@ void GenerateTexFile(SchedResult* schedResults, int numberOfAlgorithms, int isSi
     fputs(titlePage, texFile);
     fputs(newLine, texFile);
     
-    fputs(outline, texFile);
-    fputs(newLine, texFile);
+    //fputs(outline, texFile);
+    //fputs(newLine, texFile);
     
-    fputs(algsection, texFile);
-    fputs(newLine, texFile);
+    //fputs(algsection, texFile);
+    //fputs(newLine, texFile);
     
     fputs(frameSectionPage, texFile);
     fputs(newLine, texFile);
