@@ -147,7 +147,7 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
     bool deadlineMissed = false;
     char row[5048];
     char aux[12];
-    char *huge = "\\Large ";
+    char *huge = "\\fontsize{4}{4}\\selectfont  ";
     char *tiny = "\\tiny ";
     char *supertiny = "\\fontsize{3.5}{4}\\selectfont ";
     char *square = "&";
@@ -218,10 +218,10 @@ char * GenerateTableContents(SchedResult* schedResults, int offset)
                 {
                     deadlineMissed = true;
                     color = GetTaskColor(666);
-                    strcat(row, color);
+                    //strcat(row, color);
                     strcat(row, huge);
                     strcat(row, "\\color{red} ");
-                    strcat(row, "DANGER");
+                    strcat(row, "\\ding{54}");
                 }
             }            
             

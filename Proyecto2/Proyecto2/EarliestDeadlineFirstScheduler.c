@@ -217,67 +217,65 @@ bool AddNewTasks(int t)
 /*
  * Starts EDF scheduler
  */
-void EdfStartSched(Task* task, int tasksCount)
+void EdfStartSched(Task* tasks, int tasksCount)
 {
     bool readyQueueUpdate = false;
+    EdfRunSchedTest(tasks, NUM_OF_TASKS);
 
-    if (EdfRunSchedTest(task, NUM_OF_TASKS))
+    // init ready queue
+    InitReadyQueue(tasks, tasksCount);
+
+    // get earliest deadline task
+    taskClient* task = GetTaskFromReadyQueue();
+
+    // start sim cycles exec
+    for (int t = 0; t < leastCommonMultiple; t++)
     {
-        // init ready queue
-        InitReadyQueue(task, tasksCount);
+        // remove completed tasks from ready queue
+        readyQueueUpdate = RemoveCompletedTasks();
 
-        // get earliest deadline task
-        taskClient* task = GetTaskFromReadyQueue();
-
-        // start sim cycles exec
-        for (int t = 0; t < leastCommonMultiple; t++)
+        // look for new arrivals in ready queue
+        readyQueueUpdate = AddNewTasks(t) || readyQueueUpdate;
+        
+        if (readyQueueUpdate)
         {
-            // remove completed tasks from ready queue
-            readyQueueUpdate = RemoveCompletedTasks();
-
-            // look for new arrivals in ready queue
-            readyQueueUpdate = AddNewTasks(t) || readyQueueUpdate;
-            
-            if (readyQueueUpdate)
-            {
-                // get earliest deadline task
-               task = GetTaskFromReadyQueue();
-            }
-
-            if (task != NULL)
-            {
-                // check task's deadline is still on time
-                if (task->clientTask->Deadline < t)
-                {
-                    edfResutls->SimulationResults[t] = 666+task->clientTask->Id;
-                    edfResutls->numberOfSimCycles = t+1;
-                    PrintMissedDeadlineMessage(task, t);
-                    break;
-                }
-
-                // update computation time (execute task for one cycle)
-                UpdateTaskComputationTime(task->clientTask->Id);
-
-                // update simulation edfResutls
-                edfResutls->SimulationResults[t] = task->clientTask->Id;
-            }
-            else
-            {
-                // update simulation edfResutls
-                edfResutls->SimulationResults[t] = -1; 
-            }
-
-            printf("update simulation (%i ,%i) \n", t, edfResutls->SimulationResults[t]);
-            readyQueueUpdate = false;
+            // get earliest deadline task
+            task = GetTaskFromReadyQueue();
         }
 
-        printf("\n");
-        printf("edfResutls: \n");
-
-        for (int i = 0; i < leastCommonMultiple; i++)
+        if (task != NULL)
         {
-            printf("--> time: %i task: %i \n", i, edfResutls->SimulationResults[i]);
+            // check task's deadline is still on time
+            if (task->clientTask->Deadline < t)
+            {
+                edfResutls->SimulationResults[t] = 666+task->clientTask->Id;
+                edfResutls->numberOfSimCycles = t+1;
+                PrintMissedDeadlineMessage(task, t);
+                break;
+            }
+
+            // update computation time (execute task for one cycle)
+            UpdateTaskComputationTime(task->clientTask->Id);
+
+            // update simulation edfResutls
+            edfResutls->SimulationResults[t] = task->clientTask->Id;
         }
+        else
+        {
+            // update simulation edfResutls
+            edfResutls->SimulationResults[t] = -1; 
+        }
+
+        printf("update simulation (%i ,%i) \n", t, edfResutls->SimulationResults[t]);
+        readyQueueUpdate = false;
+    }
+
+    printf("\n");
+    printf("edfResutls: \n");
+
+    for (int i = 0; i < leastCommonMultiple; i++)
+    {
+        printf("--> time: %i task: %i \n", i, edfResutls->SimulationResults[i]);
     }
 }
 
