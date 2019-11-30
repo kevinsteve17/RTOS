@@ -21,7 +21,7 @@ extern "C" {
 #endif
     
     
-    char header[] = "\\documentclass[aspectratio=43, xcolor=table twocolumn]{beamer}\n"
+    char header[] = "\\documentclass[aspectratio=43, xcolor=table]{beamer}\n"
                     "\\usepackage[english]{babel}\n"
                     "\\usepackage{pifont}\n"
                     "\\usepackage{amsmath}\n"

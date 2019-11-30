@@ -59,6 +59,8 @@ build: .build-post
 .build-post: .build-impl
 # Add your post 'build' code here...
 	cp preamble.tex ${CND_ARTIFACT_DIR_${CONF}}
+	cp llf_theory_flow.png ${CND_ARTIFACT_DIR_${CONF}}
+	cp edf_theory_flow.png ${CND_ARTIFACT_DIR_${CONF}}
 
 # clean
 clean: .clean-post
